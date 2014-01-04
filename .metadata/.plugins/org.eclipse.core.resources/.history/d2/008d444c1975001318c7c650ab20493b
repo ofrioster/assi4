@@ -1,0 +1,8 @@
+
+public interface ClientInterfce {
+	
+	public String getClientUserName();
+	public String getClientPassword();
+	
+
+}

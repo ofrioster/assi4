@@ -1,0 +1,23 @@
+import java.util.ArrayList;
+
+
+public class Client {
+	
+	private String userName;
+	private ArrayList<Client> followers;
+	private String hostIP;
+	private String hostPort;
+	private String password;
+	
+	
+	public Client(String userName,String hostIP, String hostPort,String password){
+		this.userName=userName;
+		this.followers= new ArrayList<Client>();
+		this.hostIP=hostIP;
+		this.hostPort=hostPort;
+		this.password=password;
+		
+	}
+	
+
+}
