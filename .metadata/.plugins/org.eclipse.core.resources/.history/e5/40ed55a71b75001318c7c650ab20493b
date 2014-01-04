@@ -64,24 +64,7 @@ public class Client implements ClientInterfce{
 	}
 
 
-	@Override
-	public void addClientToFollow(Client clienTofollow) {
-		this.following.add(clienTofollow);
-		
-	}
-
-
-	@Override
-	public void removeFollowingClient(Client followingClient) {
-		Boolean found=false;
-		for (int i=0; i<this.following.size() && !found;i++){
-			if (this.following.get(i).equals(followingClient)){
-				this.following.remove(i);
-				found=true;
-			}
-		}
-		
-	}
+	
 	/** (non-Javadoc)
 	 * @param newHostIP
 	 */
@@ -136,9 +119,6 @@ public class Client implements ClientInterfce{
 		Boolean res= this.hostPort.equals(hostPort);
 		return res;
 	}
-
-
-
 	
 
 }
