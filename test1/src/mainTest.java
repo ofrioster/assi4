@@ -3,13 +3,11 @@ import java.net.*;
 import java.nio.channels.ServerSocketChannel;
 
 
-
-
 public class mainTest {
 	 public static void main(String[] args) throws IOException{
 			 System.out.println("work");
 			// Get port
-		        int port = Integer.decode(args[0]).intValue();
+		        int port = 50001;//Integer.decode(args[0]).intValue();
 		        
 		        MultipleClientProtocolServer server = new MultipleClientProtocolServer(port, new EchoProtocolFactory());
 		        Thread serverThread = new Thread(server);
