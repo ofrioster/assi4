@@ -4,7 +4,7 @@ import java.net.*;
 
 public class mainTest {
 	 public static void main(String[] args) throws IOException{
-		 System.out.println("work");///
+		 System.out.println("work");
 
 		        ServerSocket lpServerSocket = null;
 		 
