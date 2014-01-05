@@ -1,4 +1,4 @@
 
-public class SendFrame {
+public class SendFrame extends StompFrame{
 
 }

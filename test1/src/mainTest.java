@@ -1,10 +1,29 @@
 import java.io.*;
 import java.net.*;
+import java.nio.channels.ServerSocketChannel;
+
+
 
 
 public class mainTest {
 	 public static void main(String[] args) throws IOException{
-		 System.out.println("work");
+			 System.out.println("work");
+			// Get port
+		        int port = Integer.decode(args[0]).intValue();
+		        
+		        MultipleClientProtocolServer server = new MultipleClientProtocolServer(port, new EchoProtocolFactory());
+		        Thread serverThread = new Thread(server);
+		        serverThread.start();
+		        try {
+		            serverThread.join();
+		        }
+		        catch (InterruptedException e)
+		        {
+		            System.out.println("Server stopped");
+		        }
+			 
+			 
+			 /*
 
 		        ServerSocket lpServerSocket = null;
 		 
@@ -52,7 +71,7 @@ public class mainTest {
 		        lpServerSocket.close();
 		        lpClientSocket.close();
 		        in.close();
-		        
+		     */   
 		    }
 
 }

@@ -1,4 +1,4 @@
 
-public class ConnectFrame {
+public class ConnectFrame extends StompFrame{
 
 }

@@ -1,4 +1,4 @@
 
-public class DisconnectFrame {
+public class DisconnectFrame extends StompFrame{
 
 }
