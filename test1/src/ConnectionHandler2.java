@@ -6,14 +6,14 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 
-public class ConnectionHandler implements Runnable{
+public class ConnectionHandler2 implements Runnable{
         
         private BufferedReader in;
         private PrintWriter out;
         Socket clientSocket;
         ServerProtocol protocol;
         
-        public ConnectionHandler(Socket acceptedSocket, ServerProtocol p)
+        public ConnectionHandler2(Socket acceptedSocket, ServerProtocol p)
         {
             in = null;
             out = null;
