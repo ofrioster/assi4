@@ -1,14 +1,20 @@
+import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 
 
 
-public abstract class  StompFrame {
+public abstract class  StompFrame implements StompFrameInterface{
 	
-	public StompCommand command;
-    public Map<String, String> header = new HashMap<String, String>();
-    public String body;
+	protected StompCommand command;
+    protected Map<String, String> header = new HashMap<String, String>();
+    protected String body;
+    protected String sessionId;
+    protected Client client;
+    protected Socket socket;
+    protected ArrayList<Client> clients;
 
     /** constructor
      *
@@ -22,6 +28,16 @@ public abstract class  StompFrame {
     public StompFrame(StompCommand command) {
             this.command = command;
     }
+    /** constructor
+    *
+    */
+   public StompFrame(ArrayList<Client> clients,StompCommand command,String body,String sessionId, Client client) {
+	   this.command=command;
+	   this.body=body;
+	   this.client=client;
+	   this.sessionId=sessionId;
+	   this.clients=clients;
+   }
 
     public String toString() {
             return String.format("command: %s, header: %s, body: %s", this.command,
@@ -49,24 +65,50 @@ public abstract class  StompFrame {
      * @param raw frame as string
      * @return frame object
      */
-    public static StompFrame parse(String raw) {
-    	StompFrame frame = new StompFrame() {
-		};
-    //        StompFrame frame = new StompFrame();
+    public StompFrame(String raw) {
+     //       StompFrame frame = new StompFrame();
 
             String commandheaderSections = raw.split("\n\n")[0];
             String[] headerLines = commandheaderSections.split("\n");
 
-            frame.command = StompCommand.valueOf(headerLines[0]);
+            this.command = StompCommand.valueOf(headerLines[0]);
 
             for (int i = 1; i < headerLines.length; i++) {
                     String key = headerLines[i].split(":")[0];
-                    frame.header.put(key, headerLines[i].substring(key.length() + 1));
+                    this.header.put(key, headerLines[i].substring(key.length() + 1));
             }
 
-            frame.body = raw.substring(commandheaderSections.length() + 2);
+            this.body = raw.substring(commandheaderSections.length() + 2);
 
-            return frame;
+   //         return frame;
     }
+    /** 
+     * @return the commend
+     */
+    public StompCommand getCommend(){
+    	return this.command;
+    }
+	/** (non-Javadoc)
+	 * @return body
+	 */
+	public String getBody(){
+		return this.body;
+	}
+	/** (non-Javadoc)
+	 * @return SessionId
+	 */
+	public String getSessionId(){
+		return this.sessionId;
+	}
+	public Map<String, String> getHeader(){
+		return this.header;
+	}
+	public Client getClient(){
+		return this.client;
+	}
+	public ArrayList<Client> getClients(){
+		return this.clients;
+	}
+	
 
 }

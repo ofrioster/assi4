@@ -1,0 +1,35 @@
+import java.awt.Frame;
+import java.net.Socket;
+
+
+
+
+public class DisconnectFrame extends StompFrame implements DisconnectFrameInterface{
+
+
+	
+	public DisconnectFrame(StompCommand disconnected){
+		this.command= disconnected;
+		this.header.put("session", sessionId);
+	}
+    /**
+     * disconnect() - finalize work with STOMP server
+     */
+    public void disconnect() {
+            if (socket.isConnected()) {
+                    try {
+                            // sending DISCONNECT command
+                            StompFrame frame = new StompFrame(StompCommand.DISCONNECTED);
+                            frame.header.put("session", sessionId);
+                            send(frame);
+
+                            // stopping reader thread
+                            running = false;
+                            
+                            // close socket
+                            socket.close();
+                    } catch (Exception e) {
+                    }
+            }
+    }
+}

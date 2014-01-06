@@ -15,6 +15,7 @@ public interface ClientInterfce {
 	public Boolean confirmPassword(String Password);
 	public Boolean confirmHostIP(String hostIP);
 	public Boolean confirmHostPort(String hostPort);
+	public void setClientIsOnline(Boolean clientIsOnline);
 	
 
 }

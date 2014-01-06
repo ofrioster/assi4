@@ -5,7 +5,8 @@ http://www.youtube.com/watch?v=U1kXlahkwd4
 
 or use the program (like the on on windows): cola git GUI
 
-connection assuming :
-TCP
+what is:
+* hostIP
+* hostPort
 
 

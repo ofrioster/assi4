@@ -4,6 +4,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import stomp.StompException;
+
 
 
 public class ConnectionHandler2 implements Runnable{
@@ -97,5 +99,19 @@ public class ConnectionHandler2 implements Runnable{
             {
                 System.out.println("Exception in closing I/O");
             }
+        }
+        /**
+         * send - help function for sending any frame to STOMP server
+         * @param frame
+         * @throws StompException
+         */
+        private synchronized void send(StompFrame frame) throws StompException {
+                try {
+                        clientSocket.getOutputStream().write(frame.getBytes());
+                } catch (IOException e) {
+                        StompException ex = new StompException("Problem with sending frame");
+                        ex.initCause(e);
+                        throw ex;
+                }
         }
 }

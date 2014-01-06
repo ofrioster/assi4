@@ -1,0 +1,10 @@
+
+public interface StompFrameInterface {
+//	public StompFrame parse(String raw);
+	public byte[] getBytes();
+	public String toString();
+	public StompCommand getCommend();
+	public String getBody();
+	public String getSessionId();
+	
+}

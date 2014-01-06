@@ -9,6 +9,7 @@ public class Client implements ClientInterfce{
 	private String hostIP;
 	private String hostPort;
 	private String password;
+	private Boolean clientIsOnline;
 	
 	
 	public Client(String userName,String hostIP, String hostPort,String password){
@@ -18,6 +19,17 @@ public class Client implements ClientInterfce{
 		this.hostIP=hostIP;
 		this.hostPort=hostPort;
 		this.password=password;
+		this.clientIsOnline=false;
+		
+	}
+	public Client(String userName,String hostIP,String password){
+		this.userName=userName;
+		this.followers= new ArrayList<Client>();
+		this.following= new ArrayList<Client>();
+		this.hostIP=hostIP;
+//		this.hostPort=hostPort;
+		this.password=password;
+		this.clientIsOnline=false;
 		
 	}
 
@@ -136,9 +148,10 @@ public class Client implements ClientInterfce{
 		Boolean res= this.hostPort.equals(hostPort);
 		return res;
 	}
-
-
-
-	
-
+	/** (non-Javadoc)
+	 * @param boolean if the client is on line
+	 */
+	public void setClientIsOnline(Boolean clientIsOnline){
+		this.clientIsOnline=clientIsOnline;
+	}
 }

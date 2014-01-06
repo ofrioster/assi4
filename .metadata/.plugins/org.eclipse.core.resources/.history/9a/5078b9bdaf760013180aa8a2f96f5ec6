@@ -1,0 +1,38 @@
+import java.util.ArrayList;
+
+
+public class ConnectFrame extends StompFrame implements ConnectFrameInterface{
+	
+	/** constructor, set client is offline
+    *
+    */
+	public ConnectFrame(ArrayList<Client> clients,StompCommand disconnected,String body,String sessionId, Client client){
+		this.command= disconnected;
+		this.header.put("session", sessionId);
+		this.body=body;
+		this.client=client;
+		this.sessionId=sessionId;
+		this.client.setClientIsOnline(false);
+		this.clients=clients;
+	}
+	/** constructor, set client is offline
+    *
+    */
+	public ConnectFrame(StompFrame frame, StompCommand command){
+		this.command= command;
+		this.header=frame.getHeader();
+		this.body=frame.getBody();
+		this.client=frame.getClient();
+		this.sessionId=frame.getSessionId();
+		this.client.setClientIsOnline(false);
+		this.clients=frame.getClients();
+	}
+	@Override
+	public Client serchForClient(String userName, String password) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public 
+
+}

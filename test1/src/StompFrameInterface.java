@@ -1,7 +1,16 @@
+import java.util.ArrayList;
+import java.util.Map;
+
 
 public interface StompFrameInterface {
-	public StompFrame parse(String raw);
+//	public StompFrame parse(String raw);
 	public byte[] getBytes();
 	public String toString();
-
+	public StompCommand getCommend();
+	public String getBody();
+	public String getSessionId();
+	public Map<String, String> getHeader();
+	public Client getClient();
+	public ArrayList<Client> getClients();
+	
 }
