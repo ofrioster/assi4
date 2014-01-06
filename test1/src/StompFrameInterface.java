@@ -1,3 +1,4 @@
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -12,5 +13,6 @@ public interface StompFrameInterface {
 	public Map<String, String> getHeader();
 	public Client getClient();
 	public ArrayList<Client> getClients();
+	public Socket getSocket();
 	
 }

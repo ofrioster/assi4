@@ -1,0 +1,4 @@
+
+public class MessageFrame extends StompFrame implements MessageFrameInterface{
+
+}

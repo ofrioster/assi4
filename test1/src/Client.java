@@ -10,26 +10,35 @@ public class Client implements ClientInterfce{
 	private String hostPort;
 	private String password;
 	private Boolean clientIsOnline;
+	private ArrayList<String> tweets;
+	private ArrayList<MessageFrame> friendsMessage;
+	private ArrayList<Client> clients;
 	
 	
-	public Client(String userName,String hostIP, String hostPort,String password){
+	public Client(String userName,String hostIP, String hostPort,String password,ArrayList<Client> clients){
 		this.userName=userName;
 		this.followers= new ArrayList<Client>();
 		this.following= new ArrayList<Client>();
+		this.tweets= new ArrayList<String>();
+		this.friendsMessage=new ArrayList<MessageFrame>();
 		this.hostIP=hostIP;
 		this.hostPort=hostPort;
 		this.password=password;
 		this.clientIsOnline=false;
+		this.clients=clients;
 		
 	}
-	public Client(String userName,String hostIP,String password){
+	public Client(String userName,String hostIP,String password,ArrayList<Client> clients){
 		this.userName=userName;
 		this.followers= new ArrayList<Client>();
 		this.following= new ArrayList<Client>();
+		this.tweets= new ArrayList<String>();
+		this.friendsMessage=new ArrayList<MessageFrame>();
 		this.hostIP=hostIP;
 //		this.hostPort=hostPort;
 		this.password=password;
 		this.clientIsOnline=false;
+		this.clients=clients;
 		
 	}
 
@@ -79,6 +88,18 @@ public class Client implements ClientInterfce{
 	@Override
 	public void addClientToFollow(Client clienTofollow) {
 		this.following.add(clienTofollow);
+		clienTofollow.addFollower(this);
+		
+	}
+	public void addClientToFollow(String clienNameTofollow) {
+		Boolean found=false;
+		for (int i=0; i<this.clients.size() && !found;i++){
+			if (this.clients.get(i).getClientUserName().equals(clienNameTofollow)){
+				this.following.add(this.clients.get(i));
+				found=true;
+				this.clients.get(i).addFollower(this);
+			}
+		}
 		
 	}
 
@@ -88,6 +109,21 @@ public class Client implements ClientInterfce{
 		Boolean found=false;
 		for (int i=0; i<this.following.size() && !found;i++){
 			if (this.following.get(i).equals(followingClient)){
+				this.following.remove(i);
+				found=true;
+				followingClient.removeFollower(this);
+			}
+		}
+		
+	}
+	/**SUBSCRIBE Client Name
+	 * @param following Client Name
+	 */
+	public void removeFollowingClient(String followingClientName) {
+		Boolean found=false;
+		for (int i=0; i<this.following.size() && !found;i++){
+			if (this.following.get(i).getClientUserName().equals(followingClientName)){
+				this.following.get(i).removeFollower(this);
 				this.following.remove(i);
 				found=true;
 			}
@@ -153,5 +189,28 @@ public class Client implements ClientInterfce{
 	 */
 	public void setClientIsOnline(Boolean clientIsOnline){
 		this.clientIsOnline=clientIsOnline;
+	}
+	/** (non-Javadoc)
+	 * @param tweet to add
+	 */
+	public void addTweet(String tweet){
+		this.tweets.add(tweet);
+	}
+	/** (non-Javadoc)
+	 * @return the tweet in the index
+	 */
+	public String getTweet(int index){
+		return this.tweets.get(index);
+	}
+	public ArrayList<MessageFrame> getFriendsMessage(){
+		return this.friendsMessage;
+	}
+	public void addFriendsMessage(MessageFrame newMessage){
+		this.friendsMessage.add(newMessage);
+	}
+	public void addmessageToFollowers(MessageFrame message){
+		for (int i=0; i<this.followers.size();i++){
+			this.followers.get(i).addFriendsMessage(message);
+		}
 	}
 }

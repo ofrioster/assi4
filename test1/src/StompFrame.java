@@ -6,7 +6,7 @@ import java.util.Map;
 
 
 
-public abstract class  StompFrame implements StompFrameInterface{
+public  class  StompFrame implements StompFrameInterface{
 	
 	protected StompCommand command;
     protected Map<String, String> header = new HashMap<String, String>();
@@ -65,7 +65,9 @@ public abstract class  StompFrame implements StompFrameInterface{
      * @param raw frame as string
      * @return frame object
      */
-    public StompFrame(String raw) {
+    public StompFrame(String raw, ArrayList<Client> clients,Socket socket) {
+    	this.clients=clients;
+    	this.socket=socket;
      //       StompFrame frame = new StompFrame();
 
             String commandheaderSections = raw.split("\n\n")[0];
@@ -109,6 +111,8 @@ public abstract class  StompFrame implements StompFrameInterface{
 	public ArrayList<Client> getClients(){
 		return this.clients;
 	}
-	
+	public Socket getSocket(){
+		return this.socket;
+	}
 
 }

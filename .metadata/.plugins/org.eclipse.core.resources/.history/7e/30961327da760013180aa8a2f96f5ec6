@@ -1,0 +1,21 @@
+
+public class MessageFrame extends StompFrame implements MessageFrameInterface{
+	
+	private String messageId; 
+	
+	/** constructor, set client is offline
+    *
+    */
+	public MessageFrame(StompFrame frame,StompCommand command,String messageId){
+		this.command= command;
+		this.header=frame.getHeader();
+		this.body=frame.getBody();
+		this.client=frame.getClient();
+		this.sessionId=frame.getSessionId();
+		this.client.setClientIsOnline(true);
+		this.clients=frame.getClients();
+		this.messageId=messageId;
+		this.client.addTweet(frame.body);
+	}
+
+}

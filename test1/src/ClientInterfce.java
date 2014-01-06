@@ -16,6 +16,11 @@ public interface ClientInterfce {
 	public Boolean confirmHostIP(String hostIP);
 	public Boolean confirmHostPort(String hostPort);
 	public void setClientIsOnline(Boolean clientIsOnline);
+	public void addTweet(String tweet);
+	public String getTweet(int index);
+	public ArrayList<MessageFrame> getFriendsMessage();
+	public void addFriendsMessage(MessageFrame newMessage);
+	public void removeFollowingClient(String followingClientName);
 	
 
 }
