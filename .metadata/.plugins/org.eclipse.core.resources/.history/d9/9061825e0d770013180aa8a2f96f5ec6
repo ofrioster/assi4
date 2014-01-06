@@ -1,0 +1,17 @@
+import java.io.BufferedReader;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CharacterCodingException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+
+public class StompTokenizer implements StompTokenizerInterface{
+
+	@Override
+	public StompFrame getFrame(BufferedReader br) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

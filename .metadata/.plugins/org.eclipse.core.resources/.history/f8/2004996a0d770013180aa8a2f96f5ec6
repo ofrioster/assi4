@@ -1,0 +1,31 @@
+import java.io.BufferedReader;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CharacterCodingException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+
+public class StompTokenizer implements StompTokenizerInterface{
+	private final String _messageSeparator;
+	 
+    private final StringBuffer _stringBuf = new StringBuffer();
+ 
+    private final CharsetDecoder _decoder;
+    private final CharsetEncoder _encoder;
+    
+    public StompTokenizer(String separator, Charset charset) {
+        this._messageSeparator = separator;
+        this._decoder = charset.newDecoder();
+        this._encoder = charset.newEncoder();
+    }
+ 
+    
+
+	@Override
+	public StompFrame getFrame(BufferedReader br) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

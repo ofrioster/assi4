@@ -1,15 +1,10 @@
 import java.io.*;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.net.*;
 import java.nio.channels.ServerSocketChannel;
 
 
 public class mainTest {
-	private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	 public static void main(String[] args) throws IOException{
-		 logger.log(Level.INFO, "main has start");
 			 System.out.println("work");
 			// Get port
 		        int port = Integer.decode(args[0]).intValue();

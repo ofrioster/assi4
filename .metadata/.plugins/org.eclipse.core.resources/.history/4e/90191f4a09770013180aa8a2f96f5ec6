@@ -7,9 +7,8 @@ import java.nio.channels.ServerSocketChannel;
 
 
 public class mainTest {
-	private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	 public static void main(String[] args) throws IOException{
-		 logger.log(Level.INFO, "main has start");
+		 logger.log(Level.INFO, statistics.toString());
 			 System.out.println("work");
 			// Get port
 		        int port = Integer.decode(args[0]).intValue();
