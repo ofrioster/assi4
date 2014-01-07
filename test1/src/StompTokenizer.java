@@ -78,6 +78,8 @@ public class StompTokenizer implements StompTokenizerInterface{
 
 	@Override
 	public StompFrame getFrame(BufferedReader br) {
+		// used for reading
+        
 		String raw;
 		try {
 			raw = br.readLine();
@@ -89,18 +91,26 @@ public class StompTokenizer implements StompTokenizerInterface{
 		return null;
 		
 	}
+	//TODO add "^@" in the end of the message
 	/** parse string to frame object
      * @param raw frame as string
      * @return frame object
      */
     public StompFrame parse(String raw) {
-            StompFrame frame = new StompFrame();
+    	Boolean msgIsGood=true;
+            StompFrame frame = new StompFrame(this.clients);
 
             String commandheaderSections = raw.split("\n\n")[0];
             String[] headerLines = commandheaderSections.split("\n");
 
             frame.command = StompCommand.valueOf(headerLines[0]);
-
+          //TODO error case
+            /*if (!headerLines[headerLines.length-1].equals("\0")){
+            	msgIsGood=false;
+            	StompFrame res= new ErorFrame(this.clients);
+            	return res;
+            }
+*/
             for (int i = 1; i < headerLines.length; i++) {
                     String key = headerLines[i].split(":")[0];
                     frame.header.put(key, headerLines[i].substring(key.length() + 1));

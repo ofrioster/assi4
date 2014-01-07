@@ -7,8 +7,6 @@ import java.net.Socket;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-import Tokenizer.FixedSeparatorMessageTokenizer;
-import Tokenizer.StringMessageTokenizer;
 
 import stomp.StompException;
 
@@ -84,12 +82,15 @@ public class ConnectionHandler2 implements Runnable{
                                 String sessionId = frame.header.get("session");
                                 this.connectFrame=new ConnectFrame(frame,frame.getCommend(),sessionId);
                                 this.client=this.connectFrame.getClient();
+                                StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, StompCommand.valueOf("CONNECTED"));
+                                this.send(receiptFramConnectFrameToSend);
                                 break;
                         case DISCONNECT:
                                 this.disconnectFrame=new DisconnectFrame(frame, frame.command,this.clientSocket);
+                                StompFrame receiptFramDisconnectFrameToSend=new ReceiptFram(frame, StompCommand.valueOf("DISCONNECT"));
+                                this.send(receiptFramDisconnectFrameToSend);
                                 break;
                         case SEND:
-                            String messageId = frame.header.get("message-id");
                             MessageFrame messageFrame=new MessageFrame(frame);
                             this.messageFrameList.add(messageFrame);
                             break;
@@ -154,7 +155,9 @@ public class ConnectionHandler2 implements Runnable{
          * @param frame
          * @throws StompException
          */
-        private synchronized void send(StompFrame frame) throws StompException {
+        /*
+        private synchronized void send(StompFrame frame) throws StompExceptionn {
+        	out.println(frame.getString());
                 try {
                         clientSocket.getOutputStream().write(frame.getBytes());
                 } catch (IOException e) {
@@ -162,5 +165,11 @@ public class ConnectionHandler2 implements Runnable{
                         ex.initCause(e);
                         throw ex;
                 }
+        }*/
+        /**
+         * @param frame to send
+         */
+        private void send(StompFrame frame) {
+        	out.println(frame.getString());
         }
 }
