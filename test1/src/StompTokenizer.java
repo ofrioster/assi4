@@ -15,12 +15,14 @@ public class StompTokenizer implements StompTokenizerInterface{
     private final CharsetDecoder _decoder;
     private final CharsetEncoder _encoder;
     private ArrayList<Client> clients;
+    private ArrayList<Topic> topics;
     
-    public StompTokenizer(String separator, Charset charset,ArrayList<Client> clients) {
+    public StompTokenizer(String separator, Charset charset,ArrayList<Client> clients,ArrayList<Topic> topics) {
         this._messageSeparator = separator;
         this._decoder = charset.newDecoder();
         this._encoder = charset.newEncoder();
         this.clients=clients;
+        this.topics=topics;
     }
     
     /**
@@ -98,7 +100,7 @@ public class StompTokenizer implements StompTokenizerInterface{
      */
     public StompFrame parse(String raw) {
     	Boolean msgIsGood=true;
-            StompFrame frame = new StompFrame(this.clients);
+            StompFrame frame = new StompFrame(this.clients,this.topics);
 
             String commandheaderSections = raw.split("\n\n")[0];
             String[] headerLines = commandheaderSections.split("\n");

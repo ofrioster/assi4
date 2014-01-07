@@ -6,8 +6,8 @@ public class ConnectFrame extends StompFrame implements ConnectFrameInterface{
 	/** constructor, set client is offline
     *
     */
-	public ConnectFrame(ArrayList<Client> clients,StompCommand command,String body,String sessionId, String userName,String password, String serverIP){
-		super(clients);
+	public ConnectFrame(ArrayList<Client> clients,StompCommand command,String body,String sessionId, String userName,String password, String serverIP,ArrayList<Topic> topics){
+		super(clients,topics);
 		this.command= command;
 		this.header.put("session", sessionId);
 		this.body=body;
@@ -19,7 +19,7 @@ public class ConnectFrame extends StompFrame implements ConnectFrameInterface{
     *
     */
 	public ConnectFrame(StompFrame frame, StompCommand command,String sessionId){
-		super(frame.getClients());
+		super(frame.getClients(),frame.getTopics());
 		this.command= command;
 		this.header=frame.getHeader();
 		this.body=frame.getBody();

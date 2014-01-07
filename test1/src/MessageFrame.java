@@ -8,7 +8,7 @@ public class MessageFrame extends StompFrame implements MessageFrameInterface{
     *
     */
 	public MessageFrame(StompFrame frame){
-		super(frame.getClients());
+		super(frame.getClients(),frame.getTopics());
 		this.command= frame.command;
 		this.header=frame.getHeader();
 		this.body=frame.getBody();

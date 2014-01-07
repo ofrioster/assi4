@@ -24,20 +24,22 @@ public class ConnectionHandler2 implements Runnable{
         private ArrayList<Client> clients;
         private Client client;
         private StompTokenizer tokenizer;
+        private ArrayList<Topic> topics;
         
         
         
-        public ConnectionHandler2(Socket acceptedSocket, ServerProtocol p,ArrayList<Client> clients)
+        public ConnectionHandler2(Socket acceptedSocket, ServerProtocol p,ArrayList<Client> clients,ArrayList<Topic> topics)
         {
             in = null;
             out = null;
             clientSocket = acceptedSocket;
             protocol = p;
             this.clients=clients;
+            this.topics=topics;
             this.messageFrameList=new ArrayList<MessageFrame>();
             System.out.println("Accepted connection from client!");
             System.out.println("The client is from: " + acceptedSocket.getInetAddress() + ":" + acceptedSocket.getPort());
-            this.tokenizer=new StompTokenizer("\n",Charset.forName("UTF-8"),this.clients);
+            this.tokenizer=new StompTokenizer("\n",Charset.forName("UTF-8"),this.clients,this.topics);
         }
         
         public void run()

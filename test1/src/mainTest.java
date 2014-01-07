@@ -13,10 +13,11 @@ public class mainTest {
 		 logger.log(Level.INFO, "main has start");
 			 System.out.println("work");
 			 ArrayList<Client> clients=new ArrayList<Client>();
+			 ArrayList<Topic> topics=new ArrayList<Topic>();
 			// Get port
 		        int port = Integer.decode(args[0]).intValue();
 		        
-		        MultipleClientProtocolServer server = new MultipleClientProtocolServer(port, new EchoProtocolFactory(),clients);
+		        MultipleClientProtocolServer server = new MultipleClientProtocolServer(port, new EchoProtocolFactory(),clients,topics);
 		        Thread serverThread = new Thread(server);
 		        serverThread.start();
 		        try {

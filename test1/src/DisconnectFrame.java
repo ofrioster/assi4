@@ -11,8 +11,8 @@ public class DisconnectFrame extends StompFrame implements DisconnectFrameInterf
 	/** constructor, set client is offline
     *
     */
-	public DisconnectFrame(ArrayList<Client> clients,Socket socket,StompCommand disconnected,String body,String sessionId, Client client){
-		super(clients);
+	public DisconnectFrame(ArrayList<Client> clients,Socket socket,StompCommand disconnected,String body,String sessionId, Client client,ArrayList<Topic> topics){
+		super(clients,topics);
 		this.command= disconnected;
 		this.header.put("session", sessionId);
 		this.body=body;
@@ -25,7 +25,7 @@ public class DisconnectFrame extends StompFrame implements DisconnectFrameInterf
     *
     */
 	public DisconnectFrame(StompFrame frame, StompCommand command,Socket socket){
-		super(frame.getClients());
+		super(frame.getClients(),frame.getTopics());
 		this.command= command;
 		this.header=frame.getHeader();
 		this.body=frame.getBody();

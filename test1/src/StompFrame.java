@@ -15,12 +15,14 @@ public class  StompFrame implements StompFrameInterface{
     protected Client client;
     protected Socket socket;
     protected ArrayList<Client> clients;
+    protected ArrayList<Topic> topics;
 
     /** constructor
      *
      */
-    public StompFrame(ArrayList<Client> clients) {
+    public StompFrame(ArrayList<Client> clients,ArrayList<Topic> topics) {
     	this.clients=clients;
+    	this.topics=topics;
     }
 
     /** constructor
@@ -132,6 +134,9 @@ public class  StompFrame implements StompFrameInterface{
 	}
 	public Socket getSocket(){
 		return this.socket;
+	}
+	public ArrayList<Topic> getTopics(){
+		return this.topics;
 	}
 
 }
