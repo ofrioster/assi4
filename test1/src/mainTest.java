@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,10 +12,11 @@ public class mainTest {
 	 public static void main(String[] args) throws IOException{
 		 logger.log(Level.INFO, "main has start");
 			 System.out.println("work");
+			 ArrayList<Client> clients=new ArrayList<Client>();
 			// Get port
 		        int port = Integer.decode(args[0]).intValue();
 		        
-		        MultipleClientProtocolServer server = new MultipleClientProtocolServer(port, new EchoProtocolFactory());
+		        MultipleClientProtocolServer server = new MultipleClientProtocolServer(port, new EchoProtocolFactory(),clients);
 		        Thread serverThread = new Thread(server);
 		        serverThread.start();
 		        try {

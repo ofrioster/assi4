@@ -1,21 +1,26 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CharacterCodingException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.util.ArrayList;
+
 
 public class StompTokenizer implements StompTokenizerInterface{
 	private final String _messageSeparator;
     private final StringBuffer _stringBuf = new StringBuffer();
     private final CharsetDecoder _decoder;
     private final CharsetEncoder _encoder;
+    private ArrayList<Client> clients;
     
-    public StompTokenizer(String separator, Charset charset) {
+    public StompTokenizer(String separator, Charset charset,ArrayList<Client> clients) {
         this._messageSeparator = separator;
         this._decoder = charset.newDecoder();
         this._encoder = charset.newEncoder();
+        this.clients=clients;
     }
     
     /**
@@ -73,8 +78,38 @@ public class StompTokenizer implements StompTokenizerInterface{
 
 	@Override
 	public StompFrame getFrame(BufferedReader br) {
-		// TODO Auto-generated method stub
+		String raw;
+		try {
+			raw = br.readLine();
+			return this.parse(raw);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
+		
 	}
+	/** parse string to frame object
+     * @param raw frame as string
+     * @return frame object
+     */
+    public StompFrame parse(String raw) {
+            StompFrame frame = new StompFrame();
+
+            String commandheaderSections = raw.split("\n\n")[0];
+            String[] headerLines = commandheaderSections.split("\n");
+
+            frame.command = StompCommand.valueOf(headerLines[0]);
+
+            for (int i = 1; i < headerLines.length; i++) {
+                    String key = headerLines[i].split(":")[0];
+                    frame.header.put(key, headerLines[i].substring(key.length() + 1));
+            }
+
+            frame.body = raw.substring(commandheaderSections.length() + 2);
+
+            return frame;
+    }
+
 
 }

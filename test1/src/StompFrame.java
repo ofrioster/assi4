@@ -6,7 +6,7 @@ import java.util.Map;
 
 
 
-public  class  StompFrame implements StompFrameInterface{
+public class  StompFrame implements StompFrameInterface{
 	
 	protected StompCommand command;
     protected Map<String, String> header = new HashMap<String, String>();
@@ -84,6 +84,7 @@ public  class  StompFrame implements StompFrameInterface{
 
    //         return frame;
     }
+    
     /** 
      * @return the commend
      */

@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 
 
 
@@ -7,13 +8,15 @@ public class MultipleClientProtocolServer implements Runnable{
         private ServerSocket serverSocket;
         private int listenPort;
         private ServerProtocolFactory factory;
+        private static ArrayList<Client> clients;
         
         
-        public MultipleClientProtocolServer(int port, ServerProtocolFactory p)
+        public MultipleClientProtocolServer(int port, ServerProtocolFactory p,ArrayList<Client> clients)
         {
             serverSocket = null;
             listenPort = port;
             factory = p;
+            this.clients=clients;
         }
         
         public void run()
@@ -29,7 +32,8 @@ public class MultipleClientProtocolServer implements Runnable{
             while (true)
             {
                 try {
-                    ConnectionHandler newConnection = new ConnectionHandler(serverSocket.accept(), factory.create());
+                    //ConnectionHandler newConnection = new ConnectionHandler(serverSocket.accept(), factory.create());
+                    ConnectionHandler2 newConnection = new ConnectionHandler2(serverSocket.accept(), factory.create(),this.clients);
                 new Thread(newConnection).start();
                 }
                 catch (IOException e)
@@ -51,7 +55,7 @@ public class MultipleClientProtocolServer implements Runnable{
             // Get port
             int port = Integer.decode(args[0]).intValue();
             
-            MultipleClientProtocolServer server = new MultipleClientProtocolServer(port, new EchoProtocolFactory());
+            MultipleClientProtocolServer server = new MultipleClientProtocolServer(port, new EchoProtocolFactory(), clients);
             Thread serverThread = new Thread(server);
           serverThread.start();
             try {
