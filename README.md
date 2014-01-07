@@ -11,8 +11,3 @@ https://github.com/YaroslavGaponov/StompLib/blob/master/stomp/src/stomp/client/S
 what is:
 * hostIP
 * hostPort
-
-
-
-
-
