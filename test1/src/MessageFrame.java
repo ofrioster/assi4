@@ -3,6 +3,8 @@ import java.util.ArrayList;
 
 public class MessageFrame extends StompFrame implements MessageFrameInterface{
 	
+	private String destination;
+	private String subscription;
 	private String messageId;
 	private String tweet;
 	
@@ -11,21 +13,26 @@ public class MessageFrame extends StompFrame implements MessageFrameInterface{
     */
 	public MessageFrame(StompFrame frame){
 		super(frame.getClients(),frame.getTopics());
-		this.command= frame.command;
+		this.command= StompCommand.valueOf("MESSAGE");
 		this.header=frame.getHeader();
 		this.body=frame.getBody();
 		this.client=frame.getClient();
-		this.sessionId=frame.getSessionId();
-		this.client.setClientIsOnline(true);
+		//this.client.setClientIsOnline(true);
 		this.messageId=frame.header.get("message-id");
-		this.client.addTweet(frame.body);
+		this.destination=frame.header.get("destination");
+		this.subscription=frame.header.get("subscription");
+	//	this.client.addTweet(frame.body);
 		this.tweet=frame.body;
-//		this.client.addmessageToFollowers(this);
 	}
-	public MessageFrame(ArrayList<Client> clients,ArrayList<Topic> topics,StompCommand command, String msg){
+	public MessageFrame(ArrayList<Client> clients,ArrayList<Topic> topics, String msg){
 		super(clients,topics);
-		this.command=command;
+		this.command=StompCommand.valueOf("MESSAGE");
 		this.addHeaderAndBody(msg);
+		this.messageId=this.header.get("message-id");
+		this.destination=this.header.get("destination");
+		this.subscription=this.header.get("subscription");
+	//	this.client.addTweet(this.body);
+		this.tweet=this.body;
 	}
 	public String getTweet(){
 		return this.tweet;

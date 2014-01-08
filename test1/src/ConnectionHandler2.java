@@ -74,9 +74,12 @@ public class ConnectionHandler2 implements Runnable{
             while ((msg = in.readLine()) != null)
             {
                 System.out.println("Received \"" + msg + "\" from client");
-//TODO check for new messages
                 // parsing raw data to StompFrame format
                 StompFrame frame=this.tokenizer.getFrame(in);
+                
+                if (this.client.hasNewMessage()){
+                	this.sendNewMessage();
+                }
                 // run handlers
                 switch (frame.command) {
                         case CONNECT:
@@ -175,7 +178,7 @@ public class ConnectionHandler2 implements Runnable{
             this.send(receiptFramConnectFrameToSend);
         }
         public void DISCONNECT(StompFrame frame){
-        	this.disconnectFrame=new DisconnectFrame(frame, frame.command,this.clientSocket);
+        	this.disconnectFrame=new DisconnectFrame(frame, frame.command);
             StompFrame receiptFramDisconnectFrameToSend=new ReceiptFram(frame, StompCommand.valueOf("DISCONNECT"));
             this.send(receiptFramDisconnectFrameToSend);
         }
@@ -206,7 +209,10 @@ public class ConnectionHandler2 implements Runnable{
         	this.client.removeFollowingClient(frame.header.get("id:"));
         }
         public void sendNewMessage(){
-        	
+        	if (this.client.hasNewMessage()){
+        		this.send(this.client.getNextMessage());
+        		
+        	}
         }
         
 }

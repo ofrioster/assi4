@@ -185,7 +185,10 @@ public class Client implements ClientInterfce{
 	 */
 	public void setPassword(String password) {
 		this.password=password;
-		
+		/*
+		public Socket getSocket(){
+			return this.socket;
+		}*/
 	}
 
 
@@ -245,7 +248,7 @@ public class Client implements ClientInterfce{
 	/** index 0=subscription, index 1=message-id
 	 * @param string array newMessage
 	 */
-	public void addFriendsMessage(String[] newMessage){
+	public synchronized void addFriendsMessage(String[] newMessage){
 		this.friendsMessage.add(newMessage);
 	}
 	/**index 0=subscription, index 1=message-id
@@ -281,13 +284,13 @@ public class Client implements ClientInterfce{
 	/**
 	 * @return Boolean if this client have a new message that has not been send
 	 */
-	public Boolean thereNewMessage(){
+	public synchronized Boolean hasNewMessage(){
 		return (this.messageCount<(this.friendsMessage.size()-1));
 	}
 	/**
 	 * @return the new message as String
 	 */
-	public String getNewMessage(){
+	public synchronized String getNewMessage(){
 		if(this.messageCount<(this.friendsMessage.size()-1)){
 			StringBuilder builder = new StringBuilder();
 			builder.append("destination:");
@@ -306,6 +309,11 @@ public class Client implements ClientInterfce{
 		}
 		
 		return null;
+	}
+	public synchronized MessageFrame getNextMessage(){
+		String msg=this.getNewMessage();
+		MessageFrame res=new MessageFrame(this.clients,this.topics,msg);
+		return res;
 	}
 
 

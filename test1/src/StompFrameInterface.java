@@ -9,11 +9,11 @@ public interface StompFrameInterface {
 	public String toString();
 	public StompCommand getCommend();
 	public String getBody();
-	public String getSessionId();
+//	public String getSessionId();
 	public Map<String, String> getHeader();
 	public Client getClient();
 	public ArrayList<Client> getClients();
-	public Socket getSocket();
+//	public Socket getSocket();
 	public String getString();
 	public ArrayList<Topic> getTopics();
 	public void addHeaderAndBody(String raw);

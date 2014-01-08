@@ -24,10 +24,11 @@ public interface ClientInterfce {
 	public void addMessageToFollowers(String message);
 	public void addTopic(Topic newTopic);
 	public void removeTopic(Topic topicToRemove);
-	public Boolean thereNewMessage();
+	public Boolean hasNewMessage();
 	public void thisClientIsOffLine();
 	public void thisClientIsOnLine();
 	public void removeFollowingClientByID(String clientID);
+	public MessageFrame getNextMessage();
 	
 	
 
