@@ -16,5 +16,6 @@ public interface StompFrameInterface {
 	public Socket getSocket();
 	public String getString();
 	public ArrayList<Topic> getTopics();
+	public void addHeaderAndBody(String raw);
 	
 }

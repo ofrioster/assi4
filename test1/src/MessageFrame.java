@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 
 public class MessageFrame extends StompFrame implements MessageFrameInterface{
 	
@@ -18,7 +20,12 @@ public class MessageFrame extends StompFrame implements MessageFrameInterface{
 		this.messageId=frame.header.get("message-id");
 		this.client.addTweet(frame.body);
 		this.tweet=frame.body;
-		this.client.addmessageToFollowers(this);
+//		this.client.addmessageToFollowers(this);
+	}
+	public MessageFrame(ArrayList<Client> clients,ArrayList<Topic> topics,StompCommand command, String msg){
+		super(clients,topics);
+		this.command=command;
+		this.addHeaderAndBody(msg);
 	}
 	public String getTweet(){
 		return this.tweet;

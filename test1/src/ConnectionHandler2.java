@@ -74,33 +74,26 @@ public class ConnectionHandler2 implements Runnable{
             while ((msg = in.readLine()) != null)
             {
                 System.out.println("Received \"" + msg + "\" from client");
-
+//TODO check for new messages
                 // parsing raw data to StompFrame format
                 StompFrame frame=this.tokenizer.getFrame(in);
                 // run handlers
                 switch (frame.command) {
                         case CONNECT:
 
-                                String sessionId = frame.header.get("session");
-                                this.connectFrame=new ConnectFrame(frame,frame.getCommend(),sessionId);
-                                this.client=this.connectFrame.getClient();
-                                StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, StompCommand.valueOf("CONNECTED"));
-                                this.send(receiptFramConnectFrameToSend);
+                                this.CONNECT(frame);
                                 break;
                         case DISCONNECT:
-                                this.disconnectFrame=new DisconnectFrame(frame, frame.command,this.clientSocket);
-                                StompFrame receiptFramDisconnectFrameToSend=new ReceiptFram(frame, StompCommand.valueOf("DISCONNECT"));
-                                this.send(receiptFramDisconnectFrameToSend);
+                                this.DISCONNECT(frame);
                                 break;
                         case SEND:
-                            MessageFrame messageFrame=new MessageFrame(frame);
-                            this.messageFrameList.add(messageFrame);
+                            this.SEND(frame);
                             break;
                         case SUBSCRIBE:
-                            this.client.addClientToFollow( frame.header.get("id"));
+                            this.SUBSCRIBE(frame);
                             break;
                         case UNSUBSCRIBE:
-                                this.client.removeFollowingClient(frame.header.get("id"));
+                                this.UNSUBSCRIBE(frame);
                                 break;
                         default:                                                                                                                                                                
                                 break;
@@ -115,7 +108,7 @@ public class ConnectionHandler2 implements Runnable{
                     out.println(response);
                 }
                 
-                if (protocol.isEnd(msg))
+                if (protocol.isEnd(msg))//TODO what about protocol?
                 {
                     break;
                 }
@@ -171,7 +164,49 @@ public class ConnectionHandler2 implements Runnable{
         /**
          * @param frame to send
          */
-        private void send(StompFrame frame) {
+        public void send(StompFrame frame) {
         	out.println(frame.getString());
         }
+        public void CONNECT(StompFrame frame){
+        	String sessionId = frame.header.get("session");
+            this.connectFrame=new ConnectFrame(frame,frame.getCommend(),sessionId);
+            this.client=this.connectFrame.getClient();
+            StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, StompCommand.valueOf("CONNECTED"));
+            this.send(receiptFramConnectFrameToSend);
+        }
+        public void DISCONNECT(StompFrame frame){
+        	this.disconnectFrame=new DisconnectFrame(frame, frame.command,this.clientSocket);
+            StompFrame receiptFramDisconnectFrameToSend=new ReceiptFram(frame, StompCommand.valueOf("DISCONNECT"));
+            this.send(receiptFramDisconnectFrameToSend);
+        }
+        public void SEND(StompFrame frame){
+        	MessageFrame messageFrame=new MessageFrame(frame);
+            this.messageFrameList.add(messageFrame);
+            this.client.addNewMessage(messageFrame);
+            
+        }
+        public void SUBSCRIBE(StompFrame frame){
+        	Client newClient=null;
+        	String clientName=frame.header.get("destination:");
+        	Boolean found=false;
+        	for (int i=0;i<this.clients.size();i++){
+        		if (this.clients.get(i).getClientUserName().equals(clientName)){
+        			newClient=this.clients.get(i);
+        			found=true;
+        		}
+        	}
+        	if (found){
+        		this.client.addClientToFollow(frame.header.get("id:"), newClient);
+        	}
+        	else if (!found){
+        		//TODO return eror frame
+        	}
+        }
+        public void UNSUBSCRIBE(StompFrame frame){
+        	this.client.removeFollowingClient(frame.header.get("id:"));
+        }
+        public void sendNewMessage(){
+        	
+        }
+        
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 
 
 
+
 public class  StompFrame implements StompFrameInterface{
 	
 	protected StompCommand command;
@@ -138,5 +139,20 @@ public class  StompFrame implements StompFrameInterface{
 	public ArrayList<Topic> getTopics(){
 		return this.topics;
 	}
+	/**add headar and body to frame
+	 * @param String
+	 */
+	public void addHeaderAndBody(String raw) {
+
+        String[] headerLines = raw.split("\n");
+
+        for (int i = 1; i < headerLines.length; i++) {
+                String key = headerLines[i].split(":")[0];
+                this.header.put(key, headerLines[i].substring(key.length() + 1));
+        }
+
+        this.body = raw.substring(raw.length() + 2);
+
+}
 
 }
