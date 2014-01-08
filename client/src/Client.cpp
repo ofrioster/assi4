@@ -3,33 +3,28 @@
     #include "../include/ConnectionHandler.h"
     #include "../encoder/utf8.h"
     #include "../encoder/encoder.h"
-#include <boost/thread.hpp>
+	#include <boost/thread.hpp>
+    #include "../include/StompFrame.h"
+    #include "../include/SendFrame.h"
+    #include "../include/Client.h"
 
 
 	using namespace std;
 
-    /**
-    * This code assumes that the server replies the exact text the client sent it (as opposed to the practical session example)
-    */
-	class Network{
-
-	    int _id;
-	    boost::mutex * _mutex;
 
 
-	public:
-	    Network (boost::mutex* mutex) :_mutex(mutex) {}
+	Network::~Network() {
+		// TODO Auto-generated destructor stub
+	}
 
 
-		int run (std::string host, unsigned short  port ) {
+		int Network::run (std::string host, unsigned short  port ) {
 
         ConnectionHandler connectionHandler(host, port);
         if (!connectionHandler.connect()) {
             std::cerr << "Cannot connect to " << host << ":" << port << std::endl;
             return 1;
         }
-
-        Encoder encoder;
 
         //From here we will see the rest of the ehco client implementation:
         while (1) {
@@ -67,28 +62,6 @@
         return 0;
     }
 
-	};
 
-int main(int argc, char *argv[]){
-
-
-    if (argc < 3) {
-        std::cerr << "Usage: " << argv[0] << " host port" << std::endl << std::endl;
-        return -1;
-    }
-    std::string host = argv[1];
-    unsigned short  port = atoi(argv[2]);
-
-
-    boost::mutex mutex;
-    Network task1(&mutex);
-    //Task task2(2, &mutex);
-
-    boost::thread th1(&Network::run, &task1, host, port);
-    //boost::thread th2(&Task::run, &task2);
-    th1.join();
-    //th2.join();
-    return 0;
-}
 
 
