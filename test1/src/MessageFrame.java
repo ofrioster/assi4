@@ -16,7 +16,7 @@ public class MessageFrame extends StompFrame implements MessageFrameInterface{
 		this.command= StompCommand.valueOf("MESSAGE");
 		this.header=frame.getHeader();
 		this.body=frame.getBody();
-		this.client=frame.getClient();
+//		this.client=frame.getClient();
 		//this.client.setClientIsOnline(true);
 		this.messageId=frame.header.get("message-id");
 		this.destination=frame.header.get("destination");

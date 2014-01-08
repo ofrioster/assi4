@@ -20,7 +20,7 @@ public interface ClientInterfce {
 	public String getTweet(int index);
 	public ArrayList<String[]> getFriendsMessage();
 	public void addFriendsMessage(String[] newMessage);
-	public void removeFollowingClient(String followingClientName);
+	public String removeFollowingClient(String followingClientName);
 	public void addMessageToFollowers(String message);
 	public void addTopic(Topic newTopic);
 	public void removeTopic(Topic topicToRemove);
@@ -29,6 +29,10 @@ public interface ClientInterfce {
 	public void thisClientIsOnLine();
 	public void removeFollowingClientByID(String clientID);
 	public MessageFrame getNextMessage();
+	public Boolean isThisTheClient(String userName);
+	public Boolean isThisIsThePassword(String password);
+	public Boolean isClientOnLine();
+	public Boolean isClientFollowingClient(String id);
 	
 	
 

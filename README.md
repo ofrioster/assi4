@@ -7,6 +7,8 @@ or use the program (like the on on windows): cola git GUI
 
 good example:
 https://github.com/YaroslavGaponov/StompLib/blob/master/stomp/src/stomp/client/StompClient.java
+https://github.com/jjeffery/stomp
+
 
 what is:
 * hostIP

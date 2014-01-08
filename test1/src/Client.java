@@ -149,8 +149,12 @@ public class Client implements ClientInterfce{
 	/**
 	 * @param following Client Name
 	 */
-	public void removeFollowingClient(String followingClientName) {
+	public String removeFollowingClient(String followingClientName) {
+		String res=null;
 		Boolean found=false;
+		if (this.userName.equals(followingClientName)){
+			return "Trying to unfollow itself";
+		}
 		for (int i=0; i<this.following.size() && !found;i++){
 			if (this.following.get(i).getClientUserName().equals(followingClientName)){
 				this.following.get(i).removeFollower(this);
@@ -158,6 +162,16 @@ public class Client implements ClientInterfce{
 				found=true;
 			}
 		}
+		if (!found){
+			for (int i=0;i<this.clients.size();i++){
+				if (this.clients.get(i).isThisTheClient(followingClientName)){
+					return "Not following this user";
+				}
+			}
+			return "Wrong username";
+		}
+		
+		return res;
 		
 	}
 	/** (non-Javadoc)
@@ -330,5 +344,20 @@ public class Client implements ClientInterfce{
 	public void thisClientIsOnLine() {
 		this.clientIsOnline=true;
 		
+	}
+	public Boolean isThisTheClient(String userName){
+		return this.userName.equals(userName);
+	}
+	public Boolean isThisIsThePassword(String password){
+		return this.password.equals(password);
+	}
+	/** is this client is already connect?
+	 * @return Boolean of is this client is already connect
+	 */
+	public Boolean isClientOnLine(){
+		return this.clientIsOnline;
+	}
+	public Boolean isClientFollowingClient(String id){
+		return this.following.containsKey(id);
 	}
 }
