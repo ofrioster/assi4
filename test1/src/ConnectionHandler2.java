@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -26,6 +27,7 @@ public class ConnectionHandler2 implements Runnable{
         private StompTokenizer tokenizer;
         private ArrayList<Topic> topics;
         private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+        ByteBuffer inbuf;
         
         
         
@@ -42,7 +44,9 @@ public class ConnectionHandler2 implements Runnable{
             logger.log(Level.INFO, "The client is from: " + acceptedSocket.getInetAddress() + ":" + acceptedSocket.getPort());
 //            System.out.println("Accepted connection from client!");
 //            System.out.println("The client is from: " + acceptedSocket.getInetAddress() + ":" + acceptedSocket.getPort());
-            this.tokenizer=new StompTokenizer("\n",Charset.forName("UTF-8"),this.clients,this.topics);
+            this.tokenizer=new StompTokenizer("\0",Charset.forName("UTF-8"),this.clients,this.topics);
+            final int NUM_OF_BYTES = 1024;
+            this.inbuf = ByteBuffer.allocate(NUM_OF_BYTES); 
         }
         
         public void run()
@@ -77,16 +81,42 @@ public class ConnectionHandler2 implements Runnable{
             String msg;
 
 
-            while ((msg = in.readLine()) != null)
+            while (true)
             {
-  //              System.out.println("Received \"" + msg + "\" from client");
-                logger.log(Level.INFO, "Received \"" + msg + "\" from client");
+            	/*while (!tokenizer.hasMessage()) {
+            		System.out.println("Trying to read until we have a massege");
+            		 inbuf.clear();
+                     inbuf.put(in.readLine().getBytes());
+                     inbuf.flip();
+            		String temp=in.readLine();
+            		msg+=temp;
+            		inbuf.clear();
+                    inbuf.put(temp.getBytes());
+                    inbuf.flip();
+                    tokenizer.addBytes(inbuf);
+                    try {
+                        //Sleep because we want to give a chance to read several bytes from the channel
+                        System.out.println("Going to sleep , give a chance to read some bytes");
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+
+                        e.printStackTrace();
+                    }
+            	}*/
+           //     System.out.println("Received " + msg + " tokenzer: "+this.tokenizer.nextMessage());
+//                logger.log(Level.INFO, "Received \"" + msg + "\" from client");
                 // parsing raw data to StompFrame format
                 StompFrame frame=this.tokenizer.getFrame(in);
-                
-                if (this.client.hasNewMessage()){
+//                StompFrame frame=new StompFrame(tokenizer.nextMessage(), clients);
+//                System.out.println("here");
+                if (frame==null){
+                	this.error("problam with the message", frame);
+                }
+                if (this.client!=null && this.client.hasNewMessage()){
                 	this.sendNewMessage();
                 }
+                String r=frame.header.get("login");
+                StompCommand t=frame.command;//TODO delete
                 // run handlers
                 switch (frame.command) {
                         case CONNECT:
@@ -186,21 +216,37 @@ public class ConnectionHandler2 implements Runnable{
         	logger.log(Level.INFO, "CONNECT");
         	String userName=frame.header.get("login:");
         	Boolean clientIsLogIn=false;
-        	Boolean messageHasBeenSend=false;
+        	Boolean errorMessageHasBeenSend=false;
+        	Boolean newClient=true;
         	for (int i=0; i<this.clients.size(); i++){
         		if (this.clients.get(i).isThisTheClient(userName)){
+        			newClient=false;
         			clientIsLogIn=this.clients.get(i).isClientOnLine();
         			if (!this.clients.get(i).isThisIsThePassword(frame.header.get("passcode:"))){
         				this.error("Wrong password", frame);
-        				messageHasBeenSend=true;
+        				errorMessageHasBeenSend=true;
+        			}
+        			else{
+        				this.client=this.clients.get(i);
         			}
         		}
         	}
-        	if (clientIsLogIn && !messageHasBeenSend){
+        	if(newClient){
+        		try{
+        			this.client=new Client(frame, clients);
+        		//	this.client=this.connectFrame.getClient();
+        			StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, StompCommand.valueOf("CONNECTED"));
+                    this.send(receiptFramConnectFrameToSend);
+        		}
+        		catch (Exception e){
+        			this.error("cant add new client", frame);
+        		}
+        	}
+        	else if (clientIsLogIn && !errorMessageHasBeenSend){
         		this.error("User is already logged in", frame);
         	}
-        	if (!messageHasBeenSend){
-        		this.connectFrame=new ConnectFrame(frame,frame.getCommend());
+        	else if (!errorMessageHasBeenSend){
+        	//	this.connectFrame=new ConnectFrame(frame,frame.getCommend());
                 this.client=this.connectFrame.getClient();
                 StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, StompCommand.valueOf("CONNECTED"));
                 this.send(receiptFramConnectFrameToSend);
@@ -261,7 +307,7 @@ public class ConnectionHandler2 implements Runnable{
          */
         public void error(String whatIsTheProblam, StompFrame frame){
         	StompFrame res=new ErorFrame(clients, topics, whatIsTheProblam, frame);
-        	logger.log(Level.INFO, "EROR" + res.getString());
+        	logger.log(Level.INFO, "EROR1 " + res.getString());
         	this.send(res);
         }
         /**sent to client an error frame
@@ -269,7 +315,7 @@ public class ConnectionHandler2 implements Runnable{
          * @param String msg that receive
          */
         public void error(String whatIsTheProblam, String msg){
-        	logger.log(Level.INFO, "EROR" + msg);
+        	logger.log(Level.INFO, "EROR " + msg+" has been recieva");
         	StompFrame res=new ErorFrame(clients, topics, whatIsTheProblam, msg);
         	this.send(res);
         }

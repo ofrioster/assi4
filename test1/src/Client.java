@@ -13,6 +13,7 @@ public class Client implements ClientInterfce{
 	private String hostIP;
 	private String hostPort;
 	private String password;
+	private String acceptVersion;
 	private Boolean clientIsOnline;
 	private ArrayList<String> tweets;
 	private ArrayList<String[]> friendsMessage;
@@ -35,6 +36,7 @@ public class Client implements ClientInterfce{
 		this.clientIsOnline=false;
 		this.clients=clients;
 		this.messageCount=0;
+		this.clients.add(this);
 		
 	}
 	public Client(String userName,String hostIP,String password,ArrayList<Client> clients){
@@ -49,7 +51,19 @@ public class Client implements ClientInterfce{
 		this.clientIsOnline=false;
 		this.clients=clients;
 		this.messageCount=0;
-		
+		this.clients.add(this);
+	}
+	public Client(StompFrame frame,ArrayList<Client> clients){
+		this.userName=frame.header.get("login");
+		this.tweets= new ArrayList<String>();
+		this.friendsMessage=new ArrayList<String[]>();
+		this.hostIP=frame.header.get("host");
+		this.password=frame.header.get("passcode");
+		this.acceptVersion=frame.header.get("accept-version");
+		this.clientIsOnline=false;
+		this.clients=clients;
+		this.messageCount=0;
+		this.clients.add(this);
 	}
 
 

@@ -80,16 +80,58 @@ public class StompTokenizer implements StompTokenizerInterface{
 
 	@Override
 	public StompFrame getFrame(BufferedReader br) {
-		// used for reading
+		StompFrame frame = null;
+		String msg="";
+		String message="";
+		do{
+			try {
+				msg=br.readLine();
+//				System.out.println("read "+msg);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			message+=msg+"\n";
+//			System.out.println("message: "+message);
+		}
+		while(!msg.equals("\0"));
+
+        try{
+//        	System.out.println("try");
+        	frame = new StompFrame(this.clients,this.topics);
+        	String commandheaderSections = message.split("\n\n")[0];
+            String[] headerLines = commandheaderSections.split("\n");
+System.out.println(headerLines[0]);//TODO delete
+System.out.println(headerLines[1]);//TODO delete
+            frame.command = StompCommand.valueOf(headerLines[0]);
+
+            for (int i = 1; i < headerLines.length; i++) {
+                    String key = headerLines[i].split(":")[0];
+                    frame.header.put(key, headerLines[i].substring(key.length() + 1));
+            }
+
+            frame.body = message.substring(commandheaderSections.length() + 2);
+        }
+        catch(Exception e){
+        	frame=null;
+        }
         
+
+        return frame;
+		/*
+		// used for reading
+        System.out.println("bufferReader"+ br);
 		String raw;
 		try {
+			System.out.println("here0");
 			raw = br.readLine();
+			System.out.println("here");
 			return this.parse(raw);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
+		*/
 		
 	}
 	//TODO add "^@" in the end of the message
@@ -98,26 +140,27 @@ public class StompTokenizer implements StompTokenizerInterface{
      * @return frame object
      */
     public StompFrame parse(String raw) {
-    	Boolean msgIsGood=true;
-            StompFrame frame = new StompFrame(this.clients,this.topics);
+            StompFrame frame = null;
 
-            String commandheaderSections = raw.split("\n\n")[0];
-            String[] headerLines = commandheaderSections.split("\n");
+            try{
+            	frame = new StompFrame(this.clients,this.topics);
+            	String commandheaderSections = raw.split("\n\n")[0];
+                String[] headerLines = commandheaderSections.split("\n");
+System.out.println(headerLines[0]);//TODO delete
+System.out.println(headerLines[1]);//TODO delete
+                frame.command = StompCommand.valueOf(headerLines[0]);
 
-            frame.command = StompCommand.valueOf(headerLines[0]);
-          //TODO error case
-            /*if (!headerLines[headerLines.length-1].equals("\0")){
-            	msgIsGood=false;
-            	StompFrame res= new ErorFrame(this.clients);
-            	return res;
+                for (int i = 1; i < headerLines.length; i++) {
+                        String key = headerLines[i].split(":")[0];
+                        frame.header.put(key, headerLines[i].substring(key.length() + 1));
+                }
+
+                frame.body = raw.substring(commandheaderSections.length() + 2);
             }
-*/
-            for (int i = 1; i < headerLines.length; i++) {
-                    String key = headerLines[i].split(":")[0];
-                    frame.header.put(key, headerLines[i].substring(key.length() + 1));
+            catch(Exception e){
+            	frame=null;
             }
-
-            frame.body = raw.substring(commandheaderSections.length() + 2);
+            
 
             return frame;
     }

@@ -10,6 +10,11 @@ https://github.com/YaroslavGaponov/StompLib/blob/master/stomp/src/stomp/client/S
 https://github.com/jjeffery/stomp
 
 
-what is:
-* hostIP
-* hostPort
+
+כאשר שולחים הודעת STOMP:
+
+SEND
+
+צריך לכלול בdestination את הקידומת topic מהסיבה שקיימות קידומות נוספות כגון queue
+
+בכל מקרה אפילו שאין לנו אפשרות לקידומות נוספות אלו, צריך להשתמש בפרוטוקול הסטנדרטי.
