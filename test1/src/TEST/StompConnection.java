@@ -11,7 +11,7 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 
 public class StompConnection {
-
+/*
     public static final long RECEIVE_TIMEOUT = 10000;
 
     private Socket stompSocket;
@@ -250,5 +250,5 @@ public class StompConnection {
 
     public void setVersion(String version) {
         this.version = version;
-    }
+    }*/
 }

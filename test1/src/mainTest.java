@@ -11,7 +11,7 @@ public class mainTest {
 	private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	 public static void main(String[] args) throws IOException{
 		 logger.log(Level.INFO, "main has start");
-			 System.out.println("work");
+		//	 System.out.println("work");
 			 ArrayList<Client> clients=new ArrayList<Client>();
 			 ArrayList<Topic> topics=new ArrayList<Topic>();
 			// Get port
@@ -25,7 +25,8 @@ public class mainTest {
 		        }
 		        catch (InterruptedException e)
 		        {
-		            System.out.println("Server stopped");
+		       //     System.out.println("Server stopped");
+		            logger.log(Level.INFO, "Server stopped");
 		        }
 			 
 			 

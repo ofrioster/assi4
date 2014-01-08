@@ -90,7 +90,7 @@ public class exampleNIOEchoClient {
                 }
             }
             // write the line to the screen
-            System.out.println(tokenizer.nextMessage());
+            System.out.println("tokenizer.nextMessage()"+tokenizer.nextMessage());
  
             if (msg.equals("bye\n")){
                 System.out.println("Client exit...");

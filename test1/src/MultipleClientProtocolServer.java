@@ -1,6 +1,10 @@
 import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 
 
@@ -10,6 +14,7 @@ public class MultipleClientProtocolServer implements Runnable{
         private ServerProtocolFactory factory;
         private static ArrayList<Client> clients;
         private static ArrayList<Topic> topics;
+        private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
         
         
         public MultipleClientProtocolServer(int port, ServerProtocolFactory p,ArrayList<Client> clients,ArrayList<Topic> topics)
@@ -25,7 +30,8 @@ public class MultipleClientProtocolServer implements Runnable{
         {
             try {
                 serverSocket = new ServerSocket(listenPort);
-                System.out.println("Listening...");
+                logger.log(Level.INFO, "Listening...");
+            //    System.out.println("Listening...");
             }
             catch (IOException e) {
                 System.out.println("Cannot listen on port " + listenPort);
@@ -40,7 +46,8 @@ public class MultipleClientProtocolServer implements Runnable{
                 }
                 catch (IOException e)
                 {
-                    System.out.println("Failed to accept on port " + listenPort);
+                 //   System.out.println("Failed to accept on port " + listenPort);
+                    logger.log(Level.INFO, "Failed to accept on port " + listenPort);
                 }
             }
         }
@@ -66,6 +73,7 @@ public class MultipleClientProtocolServer implements Runnable{
             catch (InterruptedException e)
             {
                 System.out.println("Server stopped");
+                logger.log(Level.INFO, "Server stopped");
             }
             
             

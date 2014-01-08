@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 
 public class ConnectFrame extends StompFrame implements ConnectFrameInterface{
-	
+	String sessionId;
 	/** constructor, set client is offline
     *
     */
@@ -18,13 +18,13 @@ public class ConnectFrame extends StompFrame implements ConnectFrameInterface{
 	/** constructor, set client is offline
     *
     */
-	public ConnectFrame(StompFrame frame, StompCommand command,String sessionId){
+	public ConnectFrame(StompFrame frame, StompCommand command){
 		super(frame.getClients(),frame.getTopics());
 		this.command= command;
 		this.header=frame.getHeader();
 		this.body=frame.getBody();
 		this.client=frame.getClient();
-		this.sessionId=sessionId;
+		this.sessionId=frame.header.get("message-id");
 		this.client.setClientIsOnline(true);
 	}
 	/** 

@@ -6,14 +6,13 @@ import java.util.Map;
 
 
 
+
 public class  StompFrame implements StompFrameInterface{
 	
 	protected StompCommand command;
     protected Map<String, String> header = new HashMap<String, String>();
     protected String body;
-    protected String sessionId;
     protected Client client;
-    protected Socket socket;
     protected ArrayList<Client> clients;
     protected ArrayList<Topic> topics;
 
@@ -38,7 +37,6 @@ public class  StompFrame implements StompFrameInterface{
 	   this.command=command;
 	   this.body=body;
 	   this.client=client;
-	   this.sessionId=sessionId;
 	   this.clients=clients;
    }
 
@@ -85,11 +83,8 @@ public class  StompFrame implements StompFrameInterface{
      * @param raw frame as string
      * @return frame object
      */
-    public StompFrame(String raw, ArrayList<Client> clients,Socket socket) {
+    public StompFrame(String raw, ArrayList<Client> clients) {
     	this.clients=clients;
-    	this.socket=socket;
-     //       StompFrame frame = new StompFrame();
-
             String commandheaderSections = raw.split("\n\n")[0];
             String[] headerLines = commandheaderSections.split("\n");
 
@@ -102,7 +97,6 @@ public class  StompFrame implements StompFrameInterface{
 
             this.body = raw.substring(commandheaderSections.length() + 2);
 
-   //         return frame;
     }
     
     /** 
@@ -117,12 +111,7 @@ public class  StompFrame implements StompFrameInterface{
 	public String getBody(){
 		return this.body;
 	}
-	/** (non-Javadoc)
-	 * @return SessionId
-	 */
-	public String getSessionId(){
-		return this.sessionId;
-	}
+
 	public Map<String, String> getHeader(){
 		return this.header;
 	}
@@ -132,11 +121,23 @@ public class  StompFrame implements StompFrameInterface{
 	public ArrayList<Client> getClients(){
 		return this.clients;
 	}
-	public Socket getSocket(){
-		return this.socket;
-	}
 	public ArrayList<Topic> getTopics(){
 		return this.topics;
 	}
+	/**add headar and body to frame
+	 * @param String
+	 */
+	public void addHeaderAndBody(String raw) {
+
+        String[] headerLines = raw.split("\n");
+
+        for (int i = 1; i < headerLines.length; i++) {
+                String key = headerLines[i].split(":")[0];
+                this.header.put(key, headerLines[i].substring(key.length() + 1));
+        }
+
+        this.body = raw.substring(raw.length() + 2);
+
+}
 
 }
