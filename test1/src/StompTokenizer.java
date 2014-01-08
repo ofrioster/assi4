@@ -1,21 +1,28 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CharacterCodingException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.util.ArrayList;
+
 
 public class StompTokenizer implements StompTokenizerInterface{
 	private final String _messageSeparator;
     private final StringBuffer _stringBuf = new StringBuffer();
     private final CharsetDecoder _decoder;
     private final CharsetEncoder _encoder;
+    private ArrayList<Client> clients;
+    private ArrayList<Topic> topics;
     
-    public StompTokenizer(String separator, Charset charset) {
+    public StompTokenizer(String separator, Charset charset,ArrayList<Client> clients,ArrayList<Topic> topics) {
         this._messageSeparator = separator;
         this._decoder = charset.newDecoder();
         this._encoder = charset.newEncoder();
+        this.clients=clients;
+        this.topics=topics;
     }
     
     /**
@@ -73,8 +80,48 @@ public class StompTokenizer implements StompTokenizerInterface{
 
 	@Override
 	public StompFrame getFrame(BufferedReader br) {
-		// TODO Auto-generated method stub
+		// used for reading
+        
+		String raw;
+		try {
+			raw = br.readLine();
+			return this.parse(raw);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
+		
 	}
+	//TODO add "^@" in the end of the message
+	/** parse string to frame object
+     * @param raw frame as string
+     * @return frame object
+     */
+    public StompFrame parse(String raw) {
+    	Boolean msgIsGood=true;
+            StompFrame frame = new StompFrame(this.clients,this.topics);
+
+            String commandheaderSections = raw.split("\n\n")[0];
+            String[] headerLines = commandheaderSections.split("\n");
+
+            frame.command = StompCommand.valueOf(headerLines[0]);
+          //TODO error case
+            /*if (!headerLines[headerLines.length-1].equals("\0")){
+            	msgIsGood=false;
+            	StompFrame res= new ErorFrame(this.clients);
+            	return res;
+            }
+*/
+            for (int i = 1; i < headerLines.length; i++) {
+                    String key = headerLines[i].split(":")[0];
+                    frame.header.put(key, headerLines[i].substring(key.length() + 1));
+            }
+
+            frame.body = raw.substring(commandheaderSections.length() + 2);
+
+            return frame;
+    }
+
 
 }

@@ -6,7 +6,7 @@ import java.util.Map;
 
 
 
-public  class  StompFrame implements StompFrameInterface{
+public class  StompFrame implements StompFrameInterface{
 	
 	protected StompCommand command;
     protected Map<String, String> header = new HashMap<String, String>();
@@ -15,11 +15,14 @@ public  class  StompFrame implements StompFrameInterface{
     protected Client client;
     protected Socket socket;
     protected ArrayList<Client> clients;
+    protected ArrayList<Topic> topics;
 
     /** constructor
      *
      */
-    public StompFrame() {
+    public StompFrame(ArrayList<Client> clients,ArrayList<Topic> topics) {
+    	this.clients=clients;
+    	this.topics=topics;
     }
 
     /** constructor
@@ -43,7 +46,7 @@ public  class  StompFrame implements StompFrameInterface{
             return String.format("command: %s, header: %s, body: %s", this.command,
                             this.header.toString(), this.body);
     }
-
+//TODO check the end of message if \0
     /** getBytes convert frame object to array of bytes
      * @return array of bytes
      */
@@ -59,6 +62,23 @@ public  class  StompFrame implements StompFrameInterface{
             }
             frame += "\0";
             return frame.getBytes();
+    }
+  //TODO check the end of message if \0
+    /** getBytes convert frame object to array of bytes
+     * @return array of bytes
+     */
+    public String getString() {
+            String frame = this.command.toString() + '\n';
+            for (String key : this.header.keySet()) {
+                    frame += key + ":" + this.header.get(key) + '\n';
+            }
+            frame += '\n';
+
+            if (this.body != null) {
+                    frame += this.body;
+            }
+            frame += "\0";
+            return frame;
     }
 
     /** parse string to frame object
@@ -84,6 +104,7 @@ public  class  StompFrame implements StompFrameInterface{
 
    //         return frame;
     }
+    
     /** 
      * @return the commend
      */
@@ -113,6 +134,9 @@ public  class  StompFrame implements StompFrameInterface{
 	}
 	public Socket getSocket(){
 		return this.socket;
+	}
+	public ArrayList<Topic> getTopics(){
+		return this.topics;
 	}
 
 }

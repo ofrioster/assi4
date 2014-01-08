@@ -72,7 +72,7 @@ public class exampleNIOEchoClient {
             while (outbuf.remaining() > 0) {
                 sChannel.write(outbuf);
             }
- 
+
             // read a line from the server and print it
             while (!tokenizer.hasMessage()) {
                 System.out.println("Trying to read until we have a massege");
@@ -85,7 +85,7 @@ public class exampleNIOEchoClient {
                     System.out.println("Going to sleep , give a chance to read some bytes");
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
+
                     e.printStackTrace();
                 }
             }

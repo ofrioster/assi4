@@ -14,5 +14,7 @@ public interface StompFrameInterface {
 	public Client getClient();
 	public ArrayList<Client> getClients();
 	public Socket getSocket();
+	public String getString();
+	public ArrayList<Topic> getTopics();
 	
 }
