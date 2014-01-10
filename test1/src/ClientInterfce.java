@@ -35,6 +35,10 @@ public interface ClientInterfce {
 	public Boolean isClientFollowingClient(String id);
 	public int getNumberOfFollowers();
 	public int getNumberOfTweet();
+	public int getHowMenyTimesThisClientMention();
+	public void updateClientMention();
+	public int getHowMenyTimesThisClientMentionInHisTweets();
+	public void updateClientMentionInHisTweets();
 	
 	
 

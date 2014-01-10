@@ -23,6 +23,7 @@ public class MessageFrame extends StompFrame implements MessageFrameInterface{
 		this.subscription=frame.header.get("subscription");
 	//	this.client.addTweet(frame.body);
 		this.tweet=frame.body;
+		this.serchForMentionsClients();
 	}
 	public MessageFrame(ArrayList<Client> clients,ArrayList<Topic> topics, String msg){
 		super(clients,topics);
@@ -33,6 +34,7 @@ public class MessageFrame extends StompFrame implements MessageFrameInterface{
 		this.subscription=this.header.get("subscription");
 	//	this.client.addTweet(this.body);
 		this.tweet=this.body;
+		this.serchForMentionsClients();
 	}
 	public String getTweet(){
 		return this.tweet;
@@ -40,6 +42,30 @@ public class MessageFrame extends StompFrame implements MessageFrameInterface{
 	public String getMessageId(){
 		return this.messageId;
 	}
+	/**serch for mention clients and send them this message
+	 * @param frame
+	 */
+	public void serchForMentionsClients(){
+		String[] msg=this.tweet.split(" ");
+		for (int i=0;i<msg.length;i++){
+			if(msg[i].startsWith("@")){
+				String userName=msg[i].substring(1, msg[i].length()-1);
+				for (int k=0;k<this.clients.size();k++){
+					if (this.clients.get(k).isThisTheClient(userName)){
+						this.clients.get(k).addNewMessage(this);
+						if (this.clients.get(k).isThisTheClient(this.destination)){
+							this.clients.get(k).updateClientMentionInHisTweets();
+						}
+						else{
+							this.clients.get(k).updateClientMention();
+						}
+						
+					}
+				}
+			}
+		}
+	}
+
 	
 
 }

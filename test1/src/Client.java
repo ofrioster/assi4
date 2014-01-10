@@ -20,6 +20,8 @@ public class Client implements ClientInterfce{
 	private ArrayList<Client> clients;
 	private ArrayList<Topic> topics;
 	private int messageCount;
+	private int numberOfTimeClienMention;
+	private int numberOfTimeClienMentionInHisTweets;
 
 	
 	
@@ -236,8 +238,6 @@ public class Client implements ClientInterfce{
 		Boolean res= this.hostIP.equals(hostIP);
 		return res;
 	}
-
-
 	/** (non-Javadoc)
 	 * @return  Boolean confirm hostPort
 	 */
@@ -251,7 +251,7 @@ public class Client implements ClientInterfce{
 	public void setClientIsOnline(Boolean clientIsOnline){
 		this.clientIsOnline=clientIsOnline;
 	}
-	/** add new message that arrive from client
+	/** add new message that arrive from client and send it to all followers
 	 * @param frame
 	 */
 	public void addNewMessage(StompFrame frame){
@@ -359,6 +359,9 @@ public class Client implements ClientInterfce{
 		this.clientIsOnline=true;
 		
 	}
+	/** check if this is the client user name
+	 * @param user name
+	 */
 	public Boolean isThisTheClient(String userName){
 		return this.userName.equals(userName);
 	}
@@ -379,5 +382,29 @@ public class Client implements ClientInterfce{
 	}
 	public int getNumberOfTweet(){
 		return this.tweets.size();
+	}
+	/**  mentions in other followers tweets
+	 * 
+	 */
+	public int getHowMenyTimesThisClientMention(){
+		return this.numberOfTimeClienMention;
+	}
+	/** add 1 to mentions in other followers tweets
+	 * 
+	 */
+	public void updateClientMention(){
+		this.numberOfTimeClienMention++;
+	}
+	/**  mentions in other his tweets
+	 * 
+	 */
+	public int getHowMenyTimesThisClientMentionInHisTweets(){
+		return this.numberOfTimeClienMentionInHisTweets;
+	}
+	/** add 1 to mentions in other his tweets
+	 * 
+	 */
+	public void updateClientMentionInHisTweets(){
+		this.numberOfTimeClienMentionInHisTweets++;
 	}
 }

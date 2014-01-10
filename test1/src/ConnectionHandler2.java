@@ -115,8 +115,6 @@ public class ConnectionHandler2 implements Runnable{
                 if (this.client!=null && this.client.hasNewMessage()){
                 	this.sendNewMessage();
                 }
-                String r=frame.header.get("login");
-                StompCommand t=frame.command;//TODO delete
                 // run handlers
                 switch (frame.command) {
                         case CONNECT:

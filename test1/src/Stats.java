@@ -71,8 +71,22 @@ public class Stats {
 			}
 		}
 	}
-	public void updateNameOfTheUserWithTheMaximumMentionsInOtherFollowersTweets()
-	public void updateNameOfTheUserWithTheMaximumNumberOfMentionsInHerOwnTweets()
+	public void updateNameOfTheUserWithTheMaximumMentionsInOtherFollowersTweets(){
+		int maxMentions=0;
+		for (int i=0;i<this.clients.size();i++){
+			if(maxMentions<this.clients.get(i).getHowMenyTimesThisClientMention()){
+				this.nameOfTheUserWithTheMaximumMentionsInOtherFollowersTweets=this.clients.get(i).getClientUserName();
+			}
+		}
+	}
+	public void updateNameOfTheUserWithTheMaximumNumberOfMentionsInHerOwnTweets(){
+		int maxMentions=0;
+		for (int i=0;i<this.clients.size();i++){
+			if(maxMentions<this.clients.get(i).getHowMenyTimesThisClientMentionInHisTweets()){
+				this.nameOfTheUserWithTheMaximumNumberOfMentionsInHerOwnTweets=this.clients.get(i).getClientUserName();
+			}
+		}
+	}
 	public run(){
 		
 	}
