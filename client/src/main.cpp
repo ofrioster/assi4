@@ -8,10 +8,15 @@
     #include "../include/SendFrame.h"
     #include "../include/Client.h"
     #include "../include/Console.h"
+#include <queue>
+
 
 
 	using namespace std;
     boost::mutex * _mutex;
+    std::queue<STOMP::StompFrame*> stompFramesIn;                                // empty vector of ints
+    std::queue<STOMP::StompFrame*> stompFramesOut;                                // empty vector of ints
+
 
 int main(int argc, char *argv[]){
 
@@ -24,13 +29,13 @@ int main(int argc, char *argv[]){
 
 
     boost::mutex mutex;
-    Network task1(&mutex);
-    //Console task2(&mutex);
+    Network task1(&mutex,stompFramesIn,stompFramesOut);
+    Console task2(&mutex,stompFramesIn,stompFramesOut);
 
     boost::thread th1(&Network::run, &task1, host, port);
-    //boost::thread th2(&Console::run, &task2);
+    boost::thread th2(&Console::run, &task2);
     th1.join();
-    //th2.join();
+    th2.join();
 
 
     return 0;

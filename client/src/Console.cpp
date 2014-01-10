@@ -13,8 +13,10 @@
 	#include <boost/thread.hpp>
     #include "../include/StompFrame.h"
     #include "../include/SendFrame.h"
+    #include "../include/ConnectFrame.h"
     #include "../include/Client.h"
 #include "../include/Console.h"
+#include <queue>
 
 
 
@@ -32,9 +34,66 @@ int Console::run () {
         char buf[bufsize];
         std::cin.getline(buf, bufsize);
         std::string line(buf);
-        int len=line.length();
-        // connectionHandler.sendLine(line) appends '\n' to the message. Therefor we send len+1 bytes.
-        std::cout << "Sent " << len+1 << " bytes to server" << std::endl;
+//        int len=line.length();
+
+
+        std::string delimiter = " ";
+        size_t pos = 0;
+        pos = line.find(delimiter);
+        string command = line.substr(0, pos);
+		line.erase(0, pos + delimiter.length());
+        if (command == "login")
+        {
+            // ...
+        	STOMP::hdrmap h;
+        	string b;
+        	STOMP::ConnectFrame *tmpFrame = new STOMP::ConnectFrame(h, b);
+        	_stompFramesOut.push(tmpFrame);
+
+        }
+        else if (command == "follow")
+        {
+           // ...
+        }
+        else if (command == "unfollow")
+        {
+           // ...
+        }
+        else if (command == "tweet")
+        {
+           // ...
+        }
+        else if (command == "clients")
+        {
+           // ...
+        }
+        else if (command == "stats")
+        {
+           // ...
+        }
+        else if (command == "logout")
+        {
+           // ...
+        }
+        else if (command == "exit_client")
+        {
+           // ...
+        }
+        else if (command == "stop")
+        {
+           // ...
+        }
+        else
+        {
+           // ...
+            std::cout << "Something went wrong" << std::endl;
+
+        }
+
+
+
+
+
     }
 }
 

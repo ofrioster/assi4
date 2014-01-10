@@ -20,6 +20,9 @@ StompFrame::StompFrame(string cmd, hdrmap h, string b){
 StompFrame::~StompFrame() {
 	// TODO Auto-generated destructor stub
 }
-
+string StompFrame::toSend() {
+	// TODO Auto-generated destructor stub
+	return "StompFrame";
+}
 } /* namespace STOMP */
 

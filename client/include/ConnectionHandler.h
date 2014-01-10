@@ -46,6 +46,12 @@ public:
     // Returns false in case connection is closed before all the data is sent.
     bool sendFrameAscii(const std::string& frame, char delimiter);
 
+
+    //check if messege reciced
+    bool recived();
+
+
+
     // Close down the connection properly.
     void close();
 

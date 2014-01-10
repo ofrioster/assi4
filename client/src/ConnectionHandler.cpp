@@ -92,6 +92,10 @@
         if(!result) return false;
         return sendBytes(&delimiter,1);
     }
+    bool ConnectionHandler::recived() {
+    	//socket_.available();
+        return socket_.available();
+    }
 
     // Close down the connection properly.
     void ConnectionHandler::close() {

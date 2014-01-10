@@ -37,6 +37,7 @@ std::string m_body;
 public:
 	StompFrame(string cmd, hdrmap h, string b);
 	virtual ~StompFrame();
+	string toSend();
 };
 
 } /* namespace STOMP */
