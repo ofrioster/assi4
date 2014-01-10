@@ -10,6 +10,9 @@ https://github.com/YaroslavGaponov/StompLib/blob/master/stomp/src/stomp/client/S
 https://github.com/jjeffery/stomp
 
 
+* to make sure that there is no 2 ID subscribe the same person
+* put the clients in hashMap?
+
 
 כאשר שולחים הודעת STOMP:
 
