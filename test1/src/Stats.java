@@ -10,8 +10,8 @@ public class Stats {
 	private Long startTime;
 	private Vector<Long> tweets;
 	private int MaxNumberOfTweetsPer5Seconds;
-	private Double AvgNumberOfTweetsPer5Seconds;
-	private int AvgTimeToPassATweetToAllUsersFollowingAnAccount; //in seconds
+	private double AvgNumberOfTweetsPer5Seconds;
+	private double AvgTimeToPassATweetToAllUsersFollowingAnAccount; //in seconds
 	private String NameOfTheUserWithTheMaximumNumberOfFollowersAndTheNumberOfTheFollowers;
 	private String nameOfTheUserWithTheMaximumNumberOfTweetsAndTheNumberOfTweets;
 	private String nameOfTheUserWithTheMaximumMentionsInOtherFollowersTweets;
@@ -52,7 +52,13 @@ public class Stats {
 		}
 	}
 	public void updateAvgTimeToPassATweetToAllUsersFollowingAnAccount(){
-		a
+		int totalTweets=0;
+		long totalTime=0;
+		for (int i=0;i<this.clients.size();i++){
+			totalTweets+=this.clients.get(i).totalNumberOfTweets();
+			totalTime+=this.clients.get(i).totalSendTime();
+		}
+		this.AvgTimeToPassATweetToAllUsersFollowingAnAccount=totalTime/totalTweets;
 	}
 	public void updateNameOfTheUserWithTheMaximumNumberOfFollowersAndTheNumberOfTheFollowers(){
 		this.NameOfTheUserWithTheMaximumNumberOfFollowersAndTheNumberOfTheFollowers=null;
@@ -87,9 +93,7 @@ public class Stats {
 			}
 		}
 	}
-	public run(){
-		
-	}
+
 
 	@Override
 	public String toString() {
@@ -110,6 +114,16 @@ public class Stats {
 		builder.append(nameOfTheUserWithTheMaximumNumberOfMentionsInHerOwnTweets);
 		builder.append("]");
 		return builder.toString();
+	}
+	public void updateStats(Client client){
+		this.updateAvgNumberOfTweetsPer5Seconds();
+		this.updateAvgTimeToPassATweetToAllUsersFollowingAnAccount();
+		this.updateMaxNumberOfTweetsPer5Seconds();
+		this.updateNameOfTheUserWithTheMaximumMentionsInOtherFollowersTweets();
+		this.updateNameOfTheUserWithTheMaximumNumberOfMentionsInHerOwnTweets();
+		this.updateNameOfTheUserWithTheMaximumNumberOfTweetsAndTheNumberOfTweets();
+		this.updateNameOfTheUserWithTheMaximumNumberOfFollowersAndTheNumberOfTheFollowers();
+		client.statsSend(this.toString());
 	}
 	
 

@@ -15,8 +15,8 @@ public class Client implements ClientInterfce{
 	private String password;
 	private String acceptVersion;
 	private Boolean clientIsOnline;
-	private ArrayList<String> tweets;
-	private ArrayList<String[]> friendsMessage;
+	private ArrayList<Tweet> tweets;
+	private ArrayList<Tweet> friendsMessage;
 	private ArrayList<Client> clients;
 	private ArrayList<Topic> topics;
 	private int messageCount;
@@ -29,8 +29,8 @@ public class Client implements ClientInterfce{
 		this.userName=userName;
 //		this.followers= new ArrayList<Client>();
 	//	this.following= new ArrayList<Client>();
-		this.tweets= new ArrayList<String>();
-		this.friendsMessage=new ArrayList<String[]>();
+		this.tweets= new ArrayList<Tweet>();
+		this.friendsMessage=new ArrayList<Tweet>();
 		this.topics=new ArrayList<Topic>();
 		this.hostIP=hostIP;
 		this.hostPort=hostPort;
@@ -45,8 +45,8 @@ public class Client implements ClientInterfce{
 		this.userName=userName;
 //		this.followers= new ArrayList<Client>();
 //		this.following= new ArrayList<Client>();
-		this.tweets= new ArrayList<String>();
-		this.friendsMessage=new ArrayList<String[]>();
+		this.tweets= new ArrayList<Tweet>();
+		this.friendsMessage=new ArrayList<Tweet>();
 		this.hostIP=hostIP;
 //		this.hostPort=hostPort;
 		this.password=password;
@@ -57,8 +57,8 @@ public class Client implements ClientInterfce{
 	}
 	public Client(StompFrame frame,ArrayList<Client> clients){
 		this.userName=frame.header.get("login");
-		this.tweets= new ArrayList<String>();
-		this.friendsMessage=new ArrayList<String[]>();
+		this.tweets= new ArrayList<Tweet>();
+		this.friendsMessage=new ArrayList<Tweet>();
 		this.hostIP=frame.header.get("host");
 		this.password=frame.header.get("passcode");
 		this.acceptVersion=frame.header.get("accept-version");
@@ -252,42 +252,42 @@ public class Client implements ClientInterfce{
 		this.clientIsOnline=clientIsOnline;
 	}
 	/** add new message that arrive from client and send it to all followers
-	 * @param frame
+	 * @param frameframe.getBody()
 	 */
-	public void addNewMessage(StompFrame frame){
-		this.tweets.add(frame.getBody());
-		this.addMessageToFollowers(frame.getBody());
+	public void addNewMessage(MessageFrame frame){
+		Tweet tweet=new Tweet(frame.getMessageId(), frame.getBody(), this.followers.size(),this.userName);
+		this.tweets.add(tweet);
+		this.addMessageToFollowers(tweet);
 	}
 	/** (non-Javadoc)
 	 * @param tweet to add
 	 */
-	public void addTweet(String tweet){
+	public void addTweet(Tweet tweet){
+	//	Tweet tweetObject=new Tweet(tweetId, tweetId, this.followers.size(),this.userName);
 		this.tweets.add(tweet);
+		this.addMessageToFollowers(tweet);
 	}
 	/** (non-Javadoc)
 	 * @return the tweet in the index
 	 */
 	public String getTweet(int index){
-		return this.tweets.get(index);
+		return this.tweets.get(index).getTweet();
 	}
-	public ArrayList<String[]> getFriendsMessage(){
+	public ArrayList<Tweet> getFriendsMessage(){
 		return this.friendsMessage;
 	}
 	/** index 0=subscription, index 1=message-id
 	 * @param string array newMessage
 	 */
-	public synchronized void addFriendsMessage(String[] newMessage){
-		this.friendsMessage.add(newMessage);
+	public synchronized void addFriendsMessage(Tweet tweet){
+		this.friendsMessage.add(tweet);
 	}
 	/**index 0=subscription, index 1=message-id
 	 * @param message
 	 */
-	public void addMessageToFollowers(String message){
+	public void addMessageToFollowers(Tweet tweet){
 		for (int i=0; i<this.followers.size();i++){
-			String[] addToFriend=new String[2];
-			addToFriend[0]=""+this.followers.keySet();
-			addToFriend[1]=message;
-			this.followers.get(i).addFriendsMessage(addToFriend);
+			this.followers.get(i).addFriendsMessage(tweet);
 		}
 	}
 	/** (non-Javadoc)
@@ -322,16 +322,17 @@ public class Client implements ClientInterfce{
 		if(this.messageCount<(this.friendsMessage.size()-1)){
 			StringBuilder builder = new StringBuilder();
 			builder.append("destination:");
-			builder.append(this.following.get(this.friendsMessage.get(this.messageCount-1)[0]).getClientUserName());
+			builder.append(this.following.get(this.friendsMessage.get(this.messageCount-1).userNameTweet).getClientUserName());
 			builder.append('\n');
 			builder.append("subscription:");
-			builder.append(this.friendsMessage.get(this.messageCount-1)[0]);
+			builder.append(this.friendsMessage.get(this.messageCount-1).getTweetUserName());
 			builder.append('\n');
 			builder.append("message-id:");
 			builder.append(this.messageCount);
 			builder.append('\n');
 			builder.append('\n');
-			builder.append(this.friendsMessage.get(messageCount)[1]);
+			builder.append(this.friendsMessage.get(messageCount).getTweet());
+			this.friendsMessage.get(messageCount).oneMessageHasBennSend();
 			this.messageCount++;
 			return builder.toString();
 		}
@@ -407,4 +408,42 @@ public class Client implements ClientInterfce{
 	public void updateClientMentionInHisTweets(){
 		this.numberOfTimeClienMentionInHisTweets++;
 	}
+	/**
+	 * @return number of tweets that has been send
+	 */
+	public int totalNumberOfTweets(){
+		int res=0;
+		for (int i=0;i<this.tweets.size();i++){
+			if(this.tweets.get(i).isAllMessagesHasBeenSend()){
+				res++;
+			}
+			
+		}
+		return res;
+	}
+	/**
+	 * @return the total time of delivered tweets
+	 */
+	public long totalSendTime(){
+		long res=0;
+		for (int i=0;i<tweets.size();i++){
+			if(this.tweets.get(i).isAllMessagesHasBeenSend()){
+				res+=this.tweets.get(i).getTotalSendTime();
+			}
+		}
+		return res;
+	}
+	/** sent this message to this client and all his followers
+	 * @see ClientInterfce#statsSend(java.lang.String)
+	 */
+	public void statsSend(String msg){
+		Tweet tweet=new Tweet(msg, this.followers.size(), this.userName);
+		this.friendsMessage.add(tweet);
+		this.addTweet(tweet);
+		
+	}
+	
+
+
+
 }
