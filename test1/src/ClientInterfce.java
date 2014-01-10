@@ -33,6 +33,8 @@ public interface ClientInterfce {
 	public Boolean isThisIsThePassword(String password);
 	public Boolean isClientOnLine();
 	public Boolean isClientFollowingClient(String id);
+	public int getNumberOfFollowers();
+	public int getNumberOfTweet();
 	
 	
 

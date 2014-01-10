@@ -374,4 +374,10 @@ public class Client implements ClientInterfce{
 	public Boolean isClientFollowingClient(String id){
 		return this.following.containsKey(id);
 	}
+	public int getNumberOfFollowers(){
+		return this.followers.size();
+	}
+	public int getNumberOfTweet(){
+		return this.tweets.size();
+	}
 }
