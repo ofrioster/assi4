@@ -1,4 +1,4 @@
-package ServerStomp;
+package Stomp;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -9,10 +9,8 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
 
-import ServerClient.Client;
-import ServerClient.Topic;
-import ServerStomp.StompCommand;
-import ServerStomp.StompFrame;
+import Client.*;
+
 
 
 public class StompTokenizer implements StompTokenizerInterface{
@@ -21,14 +19,14 @@ public class StompTokenizer implements StompTokenizerInterface{
     private final CharsetDecoder _decoder;
     private final CharsetEncoder _encoder;
     private ArrayList<Client> clients;
-    private ArrayList<Topic> topics;
+//    private ArrayList<Topic> topics;
     
-    public StompTokenizer(String separator, Charset charset,ArrayList<Client> clients,ArrayList<Topic> topics) {
+    public StompTokenizer(String separator, Charset charset,ArrayList<Client> clients) {
         this._messageSeparator = separator;
         this._decoder = charset.newDecoder();
         this._encoder = charset.newEncoder();
         this.clients=clients;
-        this.topics=topics;
+//        this.topics=topics;
     }
     
     /**
@@ -108,7 +106,7 @@ public class StompTokenizer implements StompTokenizerInterface{
 
         try{
 //        	System.out.println("try");
-        	frame = new StompFrame(this.clients,this.topics);
+        	frame = new StompFrame(this.clients);
         	String commandheaderSections = message.split("\n\n")[0];
             String[] headerLines = commandheaderSections.split("\n");
 //System.out.println(headerLines[0]);//TODO delete
@@ -153,7 +151,7 @@ public class StompTokenizer implements StompTokenizerInterface{
             StompFrame frame = null;
 
             try{
-            	frame = new StompFrame(this.clients,this.topics);
+            	frame = new StompFrame(this.clients);
             	String commandheaderSections = raw.split("\n\n")[0];
                 String[] headerLines = commandheaderSections.split("\n");
 //System.out.println(headerLines[0]);//TODO delete
@@ -174,6 +172,51 @@ public class StompTokenizer implements StompTokenizerInterface{
 
             return frame;
     }
+    /** (non-Javadoc)
+	 * @param BufferedReader
+	 * @return the stomp frame that receive
+	 */
+	public StompFrame getFrame(String br) {
+		StompFrame frame = null;
+		String msg="";
+		String message="";
+		/*do{
+			try {
+				msg=br.readLine();
+//				System.out.println("read "+msg);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			message+=msg+"\n";
+//			System.out.println("message: "+message);
+		}
+		while(!msg.equals("\0"));*/
+
+        try{
+//        	System.out.println("try");
+        	frame = new StompFrame(this.clients);
+        	String commandheaderSections = message.split("\n\n")[0];
+            String[] headerLines = commandheaderSections.split("\n");
+//System.out.println(headerLines[0]);//TODO delete
+//System.out.println(headerLines[1]);//TODO delete
+            frame.command = StompCommand.valueOf(headerLines[0]);
+
+            for (int i = 1; i < headerLines.length; i++) {
+                    String key = headerLines[i].split(":")[0];
+                    frame.header.put(key, headerLines[i].substring(key.length() + 1));
+            }
+
+            frame.body = message.substring(commandheaderSections.length() + 2);
+        }
+        catch(Exception e){
+        	frame=null;
+        }
+        
+
+        return frame;
+		
+	}
 
 
 }

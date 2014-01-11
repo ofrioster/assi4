@@ -163,5 +163,11 @@ public class  StompFrame implements StompFrameInterface{
 	public void commandAdd(String command){
 		this.command=StompCommand.valueOf(command);
 	}
+	/** 
+     * @return the commend as String
+     */
+    public String getStringCommend(){
+    	return this.command.toString();
+    }
 
 }

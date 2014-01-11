@@ -43,6 +43,7 @@ package rector;
 		private volatile boolean _shouldRun = true;
 
 		private ReactorData<T> _data;
+		private static ArrayList<Client> clients;
 
 		/**
 		 * Creates a new Reactor
@@ -207,7 +208,7 @@ package rector;
 		 * number of threads in the thread pool are read from the command line.
 		 */
 		public static void main(String args[]) {
-			 ArrayList<Client> clients=new ArrayList<Client>();
+			 clients=new ArrayList<Client>();
 			 Stats stats=new Stats(clients);
 			if (args.length != 2) {
 				System.err.println("Usage: java Reactor <port> <pool_size>");
@@ -241,7 +242,7 @@ package rector;
 			final Charset charset = Charset.forName("UTF-8");
 			TokenizerFactory<StringMessage> tokenizerMaker = new TokenizerFactory<StringMessage>() {
 				public MessageTokenizer<StringMessage> create() {
-					return new FixedSeparatorMessageTokenizer("\n", charset);
+					return new FixedSeparatorMessageTokenizer("\n", charset,clients);
 				}
 			};
 

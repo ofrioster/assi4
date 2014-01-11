@@ -23,12 +23,14 @@ public class ProtocolTask<T> implements Runnable {
 	private final MessageTokenizer<T> _tokenizer;
 	private final ConnectionHandler<T> _handler;
 	private ArrayList<Client> clients;
+//	private String allMessages;
 
 	public ProtocolTask(final ServerProtocol<T> protocol, final MessageTokenizer<T> tokenizer, final ConnectionHandler<T> h,ArrayList<Client> clients) {
 		this._protocol = protocol;
 		this._tokenizer = tokenizer;
 		this._handler = h;
 		this.clients=clients;
+//		this.allMessages="";
 	}
 
 	// we synchronize on ourselves, in case we are executed by several threads
@@ -37,7 +39,14 @@ public class ProtocolTask<T> implements Runnable {
       // go over all complete messages and process them.
       while (_tokenizer.hasMessage()) {
          T msg = _tokenizer.nextMessage();
+    	  String temp=_tokenizer.getLastMessageSend();
+//    	  T response = this._protocol.processMessage(temp2);
          T response = this._protocol.processMessage(msg);
+//         System.out.println("msg: "+msg);
+//         System.out.println("temp: "+temp);
+//         this.allMessages+=temp;
+//         System.out.println("allMessages: "+allMessages);
+//         System.out.println("response: "+response);
          if (response != null) {
             try {
                ByteBuffer bytes = _tokenizer.getBytesForMessage(response);
@@ -90,8 +99,7 @@ public class ProtocolTask<T> implements Runnable {
         catch(Exception e){
         	frame=null;
         }
-        
-
         return frame;
 	}
+	
 }

@@ -1,7 +1,7 @@
-package ServerStomp;
+package Stomp;
 import java.io.BufferedReader;
 
-import ServerStomp.StompFrame;
+
 
 
 public interface StompTokenizerInterface {
