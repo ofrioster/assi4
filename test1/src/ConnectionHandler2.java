@@ -28,6 +28,7 @@ public class ConnectionHandler2 implements Runnable{
         private ArrayList<Topic> topics;
         private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
         ByteBuffer inbuf;
+        private boolean isClientConnected;
         
         
         
@@ -81,7 +82,7 @@ public class ConnectionHandler2 implements Runnable{
             String msg;
 
 
-            while (true)
+            while (this.isClientConnected)
             {
             	/*while (!tokenizer.hasMessage()) {
             		System.out.println("Trying to read until we have a massege");
@@ -106,17 +107,37 @@ public class ConnectionHandler2 implements Runnable{
            //     System.out.println("Received " + msg + " tokenzer: "+this.tokenizer.nextMessage());
 //                logger.log(Level.INFO, "Received \"" + msg + "\" from client");
                 // parsing raw data to StompFrame format
+            /*	ByteBuffer t = ByteBuffer.allocateDirect(200);;
+            	String msg2=in.readLine();
+            	t.put(msg2.getBytes());
+            	this.tokenizer.addBytes(t);
+            	if(this.tokenizer.hasMessage()){
+            		*/
+            	/*while (!in.ready()){
+            		 if (this.client!=null && this.client.hasNewMessage()){
+                     	while (this.client.hasNewMessage()){
+                     		this.sendNewMessage();
+                     	}
+                     }
+            	}*/
                 StompFrame frame=this.tokenizer.getFrame(in);
+//                StompFrame frame=this.tokenizer.getFrame();
 //                StompFrame frame=new StompFrame(tokenizer.nextMessage(), clients);
 //                System.out.println("here");
+                boolean allGood=true;
                 if (frame==null){
                 	this.error("problam with the message", frame);
+                	allGood=false;
                 }
                 if (this.client!=null && this.client.hasNewMessage()){
-                	this.sendNewMessage();
+                	while (this.client.hasNewMessage()){
+                		this.sendNewMessage();
+                	}
                 }
                 // run handlers
-                switch (frame.command) {
+                if (allGood){
+                	System.out.println("here");
+                	switch (frame.command) {
                         case CONNECT:
 
                                 this.CONNECT(frame);
@@ -138,9 +159,9 @@ public class ConnectionHandler2 implements Runnable{
                                 break;
                 }
                 
+                }
                 
-                
-                
+            	
             }
         }
         
@@ -151,6 +172,7 @@ public class ConnectionHandler2 implements Runnable{
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(),"UTF-8"));
             out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream(),"UTF-8"), true);
   //          System.out.println("I/O initialized");
+            this.isClientConnected=true;
             logger.log(Level.INFO, "I/O initialized");
         }
         
@@ -158,6 +180,9 @@ public class ConnectionHandler2 implements Runnable{
         public void close()
         {
             try {
+//            	in.close();
+//            	out.close();
+            	
                 if (in != null)
                 {
                     in.close();
@@ -168,6 +193,8 @@ public class ConnectionHandler2 implements Runnable{
                 }
                 
                 clientSocket.close();
+                this.isClientConnected=false;
+                System.out.println ("this socket is close");
             }
             catch (IOException e)
             {
@@ -197,11 +224,12 @@ public class ConnectionHandler2 implements Runnable{
         public void send(StompFrame frame) {
         	///***old***//
             String msg=frame.getString();
-            String response = protocol.processMessage(msg);
+            out.println(msg);
+        /*    String response = protocol.processMessage(msg);
             if (response != null)
             {
                 out.println(response);
-            }
+            }*/
             //TODO is needed?
             /*
             if (protocol.isEnd(msg))
@@ -252,7 +280,7 @@ public class ConnectionHandler2 implements Runnable{
         }
         public void DISCONNECT(StompFrame frame){
         	logger.log(Level.INFO, "DISCONNECT");
-        	this.disconnectFrame=new DisconnectFrame(frame, frame.command);
+       // 	this.disconnectFrame=new DisconnectFrame(frame, frame.command);
             StompFrame receiptFramDisconnectFrameToSend=new ReceiptFram(frame, StompCommand.valueOf("DISCONNECT"));
             this.send(receiptFramDisconnectFrameToSend);
             this.close();
