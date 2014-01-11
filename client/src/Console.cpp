@@ -51,32 +51,35 @@ int Console::run (ConnectionHandler& connectionHandler) {
         {
             // ...
         	STOMP::hdrmap h;
-        	string b;
-
-        	STOMP::ConnectFrame *tmpFrame =  new STOMP::ConnectFrame(h, b);
-        	tmpFrame->addheader("accept-version","1.2");
+        	h.insert(std::make_pair("accept-version","1.2"));
 
             pos = line.find(delimiter);
             string arg = line.substr(0, pos);
     		line.erase(0, pos + delimiter.length());
-        	tmpFrame->addheader("host",arg);
+        	h.insert(std::make_pair("host",arg));
+
 
             pos = line.find(delimiter);
             arg = line.substr(0, pos);
     		line.erase(0, pos + delimiter.length());
-        	tmpFrame->addheader("login",arg);
+        	h.insert(std::make_pair("login",arg));
+
 
             pos = line.find(delimiter);
             arg = line.substr(0, pos);
     		line.erase(0, pos + delimiter.length());
-        	tmpFrame->addheader("passcode",arg);
-        	_stompFramesOut->push(tmpFrame);
+        	h.insert(std::make_pair("passcode",arg));
 
+
+        	STOMP::ConnectFrame *tmpFrame =  new STOMP::ConnectFrame(h,"");
+        	//tmpFrame->toSend();
+        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
 
         }
         else if (command == "follow")
         {
-           // ...
+
+
         }
         else if (command == "unfollow")
         {

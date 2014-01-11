@@ -9,11 +9,10 @@
 
 namespace STOMP {
 
-
-
-SendFrame::SendFrame(hdrmap h, string b) : StompFrame("SEND",  h,  b) {
-	// TODO Auto-generated constructor stub
-
+SendFrame::SendFrame() : StompFrame("SEND"){}
+SendFrame::SendFrame(string destination, string body):StompFrame("SEND"){
+addheader("destination",destination);
+m_body=body;
 }
 
 SendFrame::~SendFrame() {

@@ -35,6 +35,7 @@ std::string m_body;
 
 
 public:
+	StompFrame();
 	StompFrame(string cmd);
 	StompFrame(string cmd, hdrmap h, string b);
 	virtual ~StompFrame();
