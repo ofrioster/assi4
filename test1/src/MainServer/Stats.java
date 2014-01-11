@@ -21,6 +21,10 @@ public class Stats {
 	private String nameOfTheUserWithTheMaximumNumberOfMentionsInHerOwnTweets;// (used more mentions than anyone else)
 
 
+	/** constructor of this object
+	 * start count the time
+	 * @param clients
+	 */
 	public Stats(ArrayList<Client> clients){
 		this.tweets=new Vector<Long>();
 		this.startTime=System.currentTimeMillis();
@@ -98,7 +102,8 @@ public class Stats {
 	}
 
 
-	@Override
+	/** toString of the data
+	 */
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Stats [MaxNumberOfTweetsPer5Seconds=");
@@ -118,6 +123,9 @@ public class Stats {
 		builder.append("]");
 		return builder.toString();
 	}
+	/** send to the given client stats message
+	 * @param client
+	 */
 	public void updateStats(Client client){
 		this.updateAvgNumberOfTweetsPer5Seconds();
 		this.updateAvgTimeToPassATweetToAllUsersFollowingAnAccount();

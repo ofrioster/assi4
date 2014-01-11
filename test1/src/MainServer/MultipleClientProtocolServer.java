@@ -19,15 +19,17 @@ public class MultipleClientProtocolServer implements Runnable{
         private static ArrayList<Client> clients;
         private static ArrayList<Topic> topics;
         private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+        private static Stats stats;
         
         
-        public MultipleClientProtocolServer(int port, ServerProtocolFactory p,ArrayList<Client> clients,ArrayList<Topic> topics)
+        public MultipleClientProtocolServer(int port, ServerProtocolFactory p,ArrayList<Client> clients,ArrayList<Topic> topics,Stats stats)
         {
             serverSocket = null;
             listenPort = port;
             factory = p;
             this.clients=clients;
             this.topics=topics;
+            this.stats=stats;
         }
         
         public void run()
@@ -45,7 +47,7 @@ public class MultipleClientProtocolServer implements Runnable{
             {
                 try {
                     //ConnectionHandler newConnection = new ConnectionHandler(serverSocket.accept(), factory.create());
-                    ConnectionHandler2 newConnection = new ConnectionHandler2(serverSocket.accept(), factory.create(),this.clients,this.topics);
+                    ConnectionHandler2 newConnection = new ConnectionHandler2(serverSocket.accept(), factory.create(),this.clients,this.topics,this.stats);
                 new Thread(newConnection).start();
                 }
                 catch (IOException e)
@@ -68,7 +70,7 @@ public class MultipleClientProtocolServer implements Runnable{
             // Get port
             int port = Integer.decode(args[0]).intValue();
             
-            MultipleClientProtocolServer server = new MultipleClientProtocolServer(port, new EchoProtocolFactory(), clients, topics);
+            MultipleClientProtocolServer server = new MultipleClientProtocolServer(port, new EchoProtocolFactory(), clients, topics,stats);
             Thread serverThread = new Thread(server);
           serverThread.start();
             try {

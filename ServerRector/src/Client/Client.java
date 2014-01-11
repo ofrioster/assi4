@@ -3,7 +3,10 @@ package Client;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import Stomp.*;
+
+import Stomp.MessageFrame;
+import Stomp.Stats;
+import Stomp.StompFrame;
 
 
 public class Client implements ClientInterfce{
@@ -21,14 +24,15 @@ public class Client implements ClientInterfce{
 	private ArrayList<Tweet> tweets;
 	private ArrayList<Tweet> friendsMessage;
 	private ArrayList<Client> clients;
-//	private ArrayList<Topic> topics;
+	//private ArrayList<Topic> topics;
 	private int messageCount;
 	private int numberOfTimeClienMention;
 	private int numberOfTimeClienMentionInHisTweets;
+	private Stats stats;
 
 	
 	
-	public Client(String userName,String hostIP, String hostPort,String password,ArrayList<Client> clients){
+	public Client(String userName,String hostIP, String hostPort,String password,ArrayList<Client> clients,Stats stats){
 		this.userName=userName;
 //		this.followers= new ArrayList<Client>();
 	//	this.following= new ArrayList<Client>();
@@ -42,9 +46,10 @@ public class Client implements ClientInterfce{
 		this.clients=clients;
 		this.messageCount=0;
 		this.clients.add(this);
+		this.stats=stats;
 		
 	}
-	public Client(String userName,String hostIP,String password,ArrayList<Client> clients){
+	public Client(String userName,String hostIP,String password,ArrayList<Client> clients,Stats stats){
 		this.userName=userName;
 //		this.followers= new ArrayList<Client>();
 //		this.following= new ArrayList<Client>();
@@ -57,8 +62,9 @@ public class Client implements ClientInterfce{
 		this.clients=clients;
 		this.messageCount=0;
 		this.clients.add(this);
+		this.stats=stats;
 	}
-	public Client(StompFrame frame,ArrayList<Client> clients){
+	public Client(StompFrame frame,ArrayList<Client> clients,Stats stats){
 		this.userName=frame.getHeader("login");
 		this.tweets= new ArrayList<Tweet>();
 		this.friendsMessage=new ArrayList<Tweet>();
@@ -69,6 +75,7 @@ public class Client implements ClientInterfce{
 		this.clients=clients;
 		this.messageCount=0;
 		this.clients.add(this);
+		this.stats=stats;
 	}
 
 
@@ -269,6 +276,7 @@ public class Client implements ClientInterfce{
 	//	Tweet tweetObject=new Tweet(tweetId, tweetId, this.followers.size(),this.userName);
 		this.tweets.add(tweet);
 		this.addMessageToFollowers(tweet);
+		this.stats.addTweet();
 	}
 	/** (non-Javadoc)
 	 * @return the tweet in the index
@@ -296,7 +304,7 @@ public class Client implements ClientInterfce{
 	/** (non-Javadoc)
 	 * @param topic to add
 	 */
-/*	public void addTopic(Topic newTopic) {
+	/*public void addTopic(Topic newTopic) {
 		this.topics.add(newTopic);
 		
 	}*/
@@ -304,7 +312,7 @@ public class Client implements ClientInterfce{
 	/** (non-Javadoc)
 	 * @param topic to remove
 	 */
-/*	public void removeTopic(Topic topicToRemove) {
+	/*public void removeTopic(Topic topicToRemove) {
 		for (int i=0;i<this.topics.size();i++){
 			if (this.topics.get(i).equals(topicToRemove)){
 				this.topics.remove(i);

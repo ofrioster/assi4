@@ -18,10 +18,11 @@ public class mainTest {
 		//	 System.out.println("work");
 			 ArrayList<Client> clients=new ArrayList<Client>();
 			 ArrayList<Topic> topics=new ArrayList<Topic>();
+			 Stats stats=new Stats(clients);
 			// Get port
 		        int port = Integer.decode(args[0]).intValue();
 		        
-		        MultipleClientProtocolServer server = new MultipleClientProtocolServer(port, new EchoProtocolFactory(),clients,topics);
+		        MultipleClientProtocolServer server = new MultipleClientProtocolServer(port, new EchoProtocolFactory(),clients,topics,stats);
 		        Thread serverThread = new Thread(server);
 		        serverThread.start();
 		        try {

@@ -1,5 +1,6 @@
 package ServerStomp;
 
+import MainServer.Stats;
 import ServerClient.Client;
 
 public interface ConnectFrameInterface {

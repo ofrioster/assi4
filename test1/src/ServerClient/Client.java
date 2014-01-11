@@ -6,6 +6,7 @@ import java.util.Map;
 
 import ServerStomp.MessageFrame;
 import ServerStomp.StompFrame;
+import MainServer.*;
 
 
 public class Client implements ClientInterfce{
@@ -27,10 +28,11 @@ public class Client implements ClientInterfce{
 	private int messageCount;
 	private int numberOfTimeClienMention;
 	private int numberOfTimeClienMentionInHisTweets;
+	private Stats stats;
 
 	
 	
-	public Client(String userName,String hostIP, String hostPort,String password,ArrayList<Client> clients){
+	public Client(String userName,String hostIP, String hostPort,String password,ArrayList<Client> clients,Stats stats){
 		this.userName=userName;
 //		this.followers= new ArrayList<Client>();
 	//	this.following= new ArrayList<Client>();
@@ -44,9 +46,10 @@ public class Client implements ClientInterfce{
 		this.clients=clients;
 		this.messageCount=0;
 		this.clients.add(this);
+		this.stats=stats;
 		
 	}
-	public Client(String userName,String hostIP,String password,ArrayList<Client> clients){
+	public Client(String userName,String hostIP,String password,ArrayList<Client> clients,Stats stats){
 		this.userName=userName;
 //		this.followers= new ArrayList<Client>();
 //		this.following= new ArrayList<Client>();
@@ -59,8 +62,9 @@ public class Client implements ClientInterfce{
 		this.clients=clients;
 		this.messageCount=0;
 		this.clients.add(this);
+		this.stats=stats;
 	}
-	public Client(StompFrame frame,ArrayList<Client> clients){
+	public Client(StompFrame frame,ArrayList<Client> clients,Stats stats){
 		this.userName=frame.getHeader("login");
 		this.tweets= new ArrayList<Tweet>();
 		this.friendsMessage=new ArrayList<Tweet>();
@@ -71,6 +75,7 @@ public class Client implements ClientInterfce{
 		this.clients=clients;
 		this.messageCount=0;
 		this.clients.add(this);
+		this.stats=stats;
 	}
 
 
@@ -271,6 +276,7 @@ public class Client implements ClientInterfce{
 	//	Tweet tweetObject=new Tweet(tweetId, tweetId, this.followers.size(),this.userName);
 		this.tweets.add(tweet);
 		this.addMessageToFollowers(tweet);
+		this.stats.addTweet();
 	}
 	/** (non-Javadoc)
 	 * @return the tweet in the index

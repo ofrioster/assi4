@@ -32,10 +32,11 @@ public class ConnectionHandler2 implements Runnable{
         private ArrayList<Topic> topics;
         private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
         ByteBuffer inbuf;
+        private Stats stats;
         
         
         
-        public ConnectionHandler2(Socket acceptedSocket, ServerProtocol p,ArrayList<Client> clients,ArrayList<Topic> topics)
+        public ConnectionHandler2(Socket acceptedSocket, ServerProtocol p,ArrayList<Client> clients,ArrayList<Topic> topics,Stats stats)
         {
             in = null;
             out = null;
@@ -44,6 +45,7 @@ public class ConnectionHandler2 implements Runnable{
             this.clients=clients;
             this.topics=topics;
             this.messageFrameList=new ArrayList<MessageFrame>();
+            this.stats=stats;
             logger.log(Level.INFO, "Accepted connection from client!");
             logger.log(Level.INFO, "The client is from: " + acceptedSocket.getInetAddress() + ":" + acceptedSocket.getPort());
 //            System.out.println("Accepted connection from client!");
@@ -254,7 +256,7 @@ public class ConnectionHandler2 implements Runnable{
         	}
         	if(newClient){
         		try{
-        			this.client=new Client(frame, clients);
+        			this.client=new Client(frame, clients,this.stats);
         		//	this.client=this.connectFrame.getClient();
         			StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, "CONNECTED");
                     this.send(receiptFramConnectFrameToSend);
@@ -282,7 +284,7 @@ public class ConnectionHandler2 implements Runnable{
         }
         public void SEND(StompFrame frame){
         	logger.log(Level.INFO, "send message");
-        	MessageFrame messageFrame=new MessageFrame(frame);
+        	MessageFrame messageFrame=new MessageFrame(frame,this.stats);
             this.messageFrameList.add(messageFrame);
             this.client.addNewMessage(messageFrame);
             

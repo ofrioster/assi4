@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import MainServer.Stats;
 import ServerClient.Client;
 import ServerClient.Topic;
 
@@ -19,6 +20,7 @@ public class  StompFrame implements StompFrameInterface{
     protected Client client;
     protected ArrayList<Client> clients;
     protected ArrayList<Topic> topics;
+  //  protected Stats stats;
 
     /** constructor
      *
@@ -26,6 +28,7 @@ public class  StompFrame implements StompFrameInterface{
     public StompFrame(ArrayList<Client> clients,ArrayList<Topic> topics) {
     	this.clients=clients;
     	this.topics=topics;
+//    	this.stats=stats;
     }
 
     /** constructor
