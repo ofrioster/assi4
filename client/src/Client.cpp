@@ -17,11 +17,18 @@
 	Network::~Network() {
 		// TODO Auto-generated destructor stub
 	}
+	Network::Network(boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn ,boost::reference_wrapper<ConnectionHandler> connectionHandler)
+	{
+		_mutex=mutex;
+		_stompFramesIn=stompFramesIn;
+		//_connectionHandler=connectionHandler.get();
+	}
 
 
 		int Network::run (std::string host, unsigned short  port ) {
 
-		    ConnectionHandler connectionHandler(host, port);
+			//_connectionHandler = ConnectionHandler(host, port);
+			ConnectionHandler connectionHandler(host, port);
         if (!connectionHandler.connect()) {
             std::cerr << "Cannot connect to " << host << ":" << port << std::endl;
             return 1;
@@ -32,8 +39,9 @@
 
         	//_stompFramesOut.
 
-        	if (!_stompFramesOut.empty()){
-        		string tmp = _stompFramesOut.front()->toSend();
+        	if (!_stompFramesOut->empty()){
+        		string tmp = _stompFramesOut->front()->toSend();
+        		_stompFramesOut->pop();
                 if (!connectionHandler.sendFrameAscii(tmp,'\0')) {
                     std::cout << "Disconnected. Exiting...\n" << std::endl;
                     break;

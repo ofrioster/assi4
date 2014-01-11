@@ -35,9 +35,12 @@ std::string m_body;
 
 
 public:
+	StompFrame(string cmd);
 	StompFrame(string cmd, hdrmap h, string b);
 	virtual ~StompFrame();
 	string toSend();
+	void addheader(string headerName,string headerValue);
+	string readheader(string headerName);
 };
 
 } /* namespace STOMP */

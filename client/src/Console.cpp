@@ -22,6 +22,12 @@
 
 	using namespace std;
 
+	Console::Console (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn ,ConnectionHandler * connectionHandler)
+	{
+		_mutex=mutex;
+		_stompFramesIn=stompFramesIn;
+		_connectionHandler=connectionHandler;
+	}
 
 	Console::~Console() {
 		// TODO Auto-generated destructor stub
@@ -47,8 +53,26 @@ int Console::run () {
             // ...
         	STOMP::hdrmap h;
         	string b;
-        	STOMP::ConnectFrame *tmpFrame = new STOMP::ConnectFrame(h, b);
-        	_stompFramesOut.push(tmpFrame);
+
+        	STOMP::ConnectFrame *tmpFrame =  new STOMP::ConnectFrame(h, b);
+        	tmpFrame->addheader("accept-version","1.2");
+
+            pos = line.find(delimiter);
+            string arg = line.substr(0, pos);
+    		line.erase(0, pos + delimiter.length());
+        	tmpFrame->addheader("host",arg);
+
+            pos = line.find(delimiter);
+            arg = line.substr(0, pos);
+    		line.erase(0, pos + delimiter.length());
+        	tmpFrame->addheader("login",arg);
+
+            pos = line.find(delimiter);
+            arg = line.substr(0, pos);
+    		line.erase(0, pos + delimiter.length());
+        	tmpFrame->addheader("passcode",arg);
+        	_stompFramesOut->push(tmpFrame);
+
 
         }
         else if (command == "follow")

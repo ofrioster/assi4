@@ -13,6 +13,7 @@ namespace STOMP {
 
 class ConnectFrame: public STOMP::StompFrame {
 public:
+	ConnectFrame();
 	ConnectFrame(hdrmap h, string b);
 	virtual ~ConnectFrame();
 };

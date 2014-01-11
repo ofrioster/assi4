@@ -15,7 +15,8 @@
 	using namespace std;
     boost::mutex * _mutex;
     std::queue<STOMP::StompFrame*> stompFramesIn;                                // empty vector of ints
-    std::queue<STOMP::StompFrame*> stompFramesOut;                                // empty vector of ints
+    //std::queue<STOMP::StompFrame*> stompFramesOut;                                // empty vector of ints
+    ConnectionHandler connectionHandler;
 
 
 int main(int argc, char *argv[]){
@@ -29,8 +30,8 @@ int main(int argc, char *argv[]){
 
 
     boost::mutex mutex;
-    Network task1(&mutex,stompFramesIn,stompFramesOut);
-    Console task2(&mutex,stompFramesIn,stompFramesOut);
+    Network task1(&mutex,&stompFramesIn, boost::ref(connectionHandler));
+    Console task2(&mutex,&stompFramesIn, boost::ref(connectionHandler));
 
     boost::thread th1(&Network::run, &task1, host, port);
     boost::thread th2(&Console::run, &task2);

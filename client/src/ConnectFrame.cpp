@@ -9,12 +9,9 @@
 
 namespace STOMP {
 
-ConnectFrame::ConnectFrame(hdrmap h, string b) :
-StompFrame("CONNECT",  h,  b)
-{
-	// TODO Auto-generated constructor stub
 
-}
+ConnectFrame::ConnectFrame() : StompFrame("CONNECT"){}
+ConnectFrame::ConnectFrame(hdrmap h, string b) : StompFrame("CONNECT",  h,  b){}
 
 ConnectFrame::~ConnectFrame() {
 	// TODO Auto-generated destructor stub
