@@ -82,7 +82,11 @@ public class StompTokenizer implements StompTokenizerInterface{
  
     
 
-	@Override
+	
+	/** (non-Javadoc)
+	 * @param BufferedReader
+	 * @return the stomp frame that receive
+	 */
 	public StompFrame getFrame(BufferedReader br) {
 		StompFrame frame = null;
 		String msg="";
@@ -105,8 +109,8 @@ public class StompTokenizer implements StompTokenizerInterface{
         	frame = new StompFrame(this.clients,this.topics);
         	String commandheaderSections = message.split("\n\n")[0];
             String[] headerLines = commandheaderSections.split("\n");
-System.out.println(headerLines[0]);//TODO delete
-System.out.println(headerLines[1]);//TODO delete
+//System.out.println(headerLines[0]);//TODO delete
+//System.out.println(headerLines[1]);//TODO delete
             frame.command = StompCommand.valueOf(headerLines[0]);
 
             for (int i = 1; i < headerLines.length; i++) {
@@ -150,8 +154,8 @@ System.out.println(headerLines[1]);//TODO delete
             	frame = new StompFrame(this.clients,this.topics);
             	String commandheaderSections = raw.split("\n\n")[0];
                 String[] headerLines = commandheaderSections.split("\n");
-System.out.println(headerLines[0]);//TODO delete
-System.out.println(headerLines[1]);//TODO delete
+//System.out.println(headerLines[0]);//TODO delete
+//System.out.println(headerLines[1]);//TODO delete
                 frame.command = StompCommand.valueOf(headerLines[0]);
 
                 for (int i = 1; i < headerLines.length; i++) {

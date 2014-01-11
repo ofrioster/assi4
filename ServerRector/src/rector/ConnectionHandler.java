@@ -6,8 +6,12 @@ import java.nio.channels.ClosedChannelException;
 import java.nio.ByteBuffer;
 import java.io.IOException;
 import java.net.SocketAddress;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Logger;
+
+import Client.*;
+import Stomp.*;
 
 import protocol.*;
 import tokenizer.*;
@@ -33,6 +37,8 @@ public class ConnectionHandler<T> {
 	private static final Logger logger = Logger.getLogger("edu.spl.reactor");
 
 	private ProtocolTask<T> _task = null;
+	private static Stats stats;
+	private static ArrayList<Client> clients;
 
 	/**
 	 * Creates a new ConnectionHandler object
@@ -42,22 +48,24 @@ public class ConnectionHandler<T> {
 	 * @param data
 	 *            a reference to a ReactorData object
 	 */
-	private ConnectionHandler(SocketChannel sChannel, ReactorData<T> data, SelectionKey key) {
+	private ConnectionHandler(SocketChannel sChannel, ReactorData<T> data, SelectionKey key,Stats stats,ArrayList<Client> clients) {
 		_sChannel = sChannel;
 		_data = data;
 		_protocol = _data.getProtocolMaker().create();
 		_tokenizer = _data.getTokenizerMaker().create();
 		_skey = key;
+		this.clients=clients;
+		this.stats=stats;
 	}
 
 	// make sure 'this' does not escape b4 the object is fully constructed!
 	private void initialize() {
 		_skey.attach(this);
-		_task = new ProtocolTask<T>(_protocol, _tokenizer, this);
+		_task = new ProtocolTask<T>(_protocol, _tokenizer, this,this.clients);
 	}
 
 	public static <T> ConnectionHandler<T> create(SocketChannel sChannel, ReactorData<T> data, SelectionKey key) {
-		ConnectionHandler<T> h = new ConnectionHandler<T>(sChannel, data, key);
+		ConnectionHandler<T> h = new ConnectionHandler<T>(sChannel, data, key,stats,clients);
 		h.initialize();
 		return h;
 	}

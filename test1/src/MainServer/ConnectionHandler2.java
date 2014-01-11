@@ -31,7 +31,7 @@ public class ConnectionHandler2 implements Runnable{
         private StompTokenizer tokenizer;
         private ArrayList<Topic> topics;
         private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-        ByteBuffer inbuf;
+        private ByteBuffer inbuf;
         private Stats stats;
         
         
