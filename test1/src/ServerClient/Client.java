@@ -1,7 +1,11 @@
+package ServerClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import ServerStomp.MessageFrame;
+import ServerStomp.StompFrame;
 
 
 public class Client implements ClientInterfce{
@@ -57,12 +61,12 @@ public class Client implements ClientInterfce{
 		this.clients.add(this);
 	}
 	public Client(StompFrame frame,ArrayList<Client> clients){
-		this.userName=frame.header.get("login");
+		this.userName=frame.getHeader("login");
 		this.tweets= new ArrayList<Tweet>();
 		this.friendsMessage=new ArrayList<Tweet>();
-		this.hostIP=frame.header.get("host");
-		this.password=frame.header.get("passcode");
-		this.acceptVersion=frame.header.get("accept-version");
+		this.hostIP=frame.getHeader("host");
+		this.password=frame.getHeader("passcode");
+		this.acceptVersion=frame.getHeader("accept-version");
 		this.clientIsOnline=false;
 		this.clients=clients;
 		this.messageCount=0;

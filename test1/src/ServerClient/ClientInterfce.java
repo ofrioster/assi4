@@ -1,5 +1,8 @@
+package ServerClient;
 
 import java.util.ArrayList;
+
+import ServerStomp.MessageFrame;
 
 
 public interface ClientInterfce {

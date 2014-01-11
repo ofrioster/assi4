@@ -1,5 +1,7 @@
+package Client;
 
 import java.util.ArrayList;
+import Stomp.*;
 
 
 public interface ClientInterfce {
@@ -23,8 +25,8 @@ public interface ClientInterfce {
 	public void addFriendsMessage(Tweet tweet);
 	public String removeFollowingClient(String followingClientName);
 	public void addMessageToFollowers(Tweet tweet);
-	public void addTopic(Topic newTopic);
-	public void removeTopic(Topic topicToRemove);
+//	public void addTopic(Topic newTopic);
+//	public void removeTopic(Topic topicToRemove);
 	public Boolean hasNewMessage();
 	public void thisClientIsOffLine();
 	public void thisClientIsOnLine();

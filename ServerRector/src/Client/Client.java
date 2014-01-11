@@ -1,7 +1,9 @@
+package Client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import Stomp.*;
 
 
 public class Client implements ClientInterfce{
@@ -19,7 +21,7 @@ public class Client implements ClientInterfce{
 	private ArrayList<Tweet> tweets;
 	private ArrayList<Tweet> friendsMessage;
 	private ArrayList<Client> clients;
-	private ArrayList<Topic> topics;
+//	private ArrayList<Topic> topics;
 	private int messageCount;
 	private int numberOfTimeClienMention;
 	private int numberOfTimeClienMentionInHisTweets;
@@ -32,7 +34,7 @@ public class Client implements ClientInterfce{
 	//	this.following= new ArrayList<Client>();
 		this.tweets= new ArrayList<Tweet>();
 		this.friendsMessage=new ArrayList<Tweet>();
-		this.topics=new ArrayList<Topic>();
+//		this.topics=new ArrayList<Topic>();
 		this.hostIP=hostIP;
 		this.hostPort=hostPort;
 		this.password=password;
@@ -57,12 +59,12 @@ public class Client implements ClientInterfce{
 		this.clients.add(this);
 	}
 	public Client(StompFrame frame,ArrayList<Client> clients){
-		this.userName=frame.header.get("login");
+		this.userName=frame.getHeader("login");
 		this.tweets= new ArrayList<Tweet>();
 		this.friendsMessage=new ArrayList<Tweet>();
-		this.hostIP=frame.header.get("host");
-		this.password=frame.header.get("passcode");
-		this.acceptVersion=frame.header.get("accept-version");
+		this.hostIP=frame.getHeader("host");
+		this.password=frame.getHeader("passcode");
+		this.acceptVersion=frame.getHeader("accept-version");
 		this.clientIsOnline=false;
 		this.clients=clients;
 		this.messageCount=0;
@@ -294,22 +296,22 @@ public class Client implements ClientInterfce{
 	/** (non-Javadoc)
 	 * @param topic to add
 	 */
-	public void addTopic(Topic newTopic) {
+/*	public void addTopic(Topic newTopic) {
 		this.topics.add(newTopic);
 		
-	}
+	}*/
 
 	/** (non-Javadoc)
 	 * @param topic to remove
 	 */
-	public void removeTopic(Topic topicToRemove) {
+/*	public void removeTopic(Topic topicToRemove) {
 		for (int i=0;i<this.topics.size();i++){
 			if (this.topics.get(i).equals(topicToRemove)){
 				this.topics.remove(i);
 			}
 		}
 		
-	}
+	}*/
 	/**
 	 * @return Boolean if this client have a new message that has not been send
 	 */
@@ -342,7 +344,7 @@ public class Client implements ClientInterfce{
 	}
 	public synchronized MessageFrame getNextMessage(){
 		String msg=this.getNewMessage();
-		MessageFrame res=new MessageFrame(this.clients,this.topics,msg);
+		MessageFrame res=new MessageFrame(this.clients,msg);
 		return res;
 	}
 
