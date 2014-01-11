@@ -10,14 +10,18 @@ package rector;
 	import java.nio.channels.Selector;
 	import java.nio.channels.ServerSocketChannel;
 	import java.nio.charset.Charset;
+	import java.util.ArrayList;
 	import java.util.Iterator;
 	import java.util.concurrent.ExecutorService;
 	import java.util.concurrent.Executors;
 	import java.util.concurrent.TimeUnit;
 	import java.util.logging.Logger;
 
+
+
 	import protocol.*;
 	import tokenizer.*;
+	import Client.*;
 //	import tokenizer.http.HttpMessage;
 //	import tokenizer.http.HttpMessageTokenizer;
 
@@ -92,6 +96,7 @@ package rector;
 		 * </UL>
 		 */
 		public void run() {
+			
 			// Create & start the ThreadPool
 			ExecutorService executor = Executors.newFixedThreadPool(_poolSize);
 			Selector selector = null;
@@ -202,6 +207,8 @@ package rector;
 		 * number of threads in the thread pool are read from the command line.
 		 */
 		public static void main(String args[]) {
+			 ArrayList<Client> clients=new ArrayList<Client>();
+			 Stats stats=new Stats(clients);
 			if (args.length != 2) {
 				System.err.println("Usage: java Reactor <port> <pool_size>");
 				System.exit(1);

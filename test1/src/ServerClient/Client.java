@@ -352,7 +352,7 @@ public class Client implements ClientInterfce{
 	}
 	public synchronized MessageFrame getNextMessage(){
 		String msg=this.getNewMessage();
-		MessageFrame res=new MessageFrame(this.clients,this.topics,msg);
+		MessageFrame res=new MessageFrame(this.clients,this.topics,msg,this.stats);
 		return res;
 	}
 
