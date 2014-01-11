@@ -1,22 +1,13 @@
 /*
  * console.cpp
+
+
  *
  *  Created on: Jan 8, 2014
  *      Author: arnon
  */
-#include <stdlib.h>
-    #include <stdlib.h>
-    #include <boost/locale.hpp>
-    #include "../include/ConnectionHandler.h"
-    #include "../encoder/utf8.h"
-    #include "../encoder/encoder.h"
-	#include <boost/thread.hpp>
-    #include "../include/StompFrame.h"
-    #include "../include/SendFrame.h"
-    #include "../include/ConnectFrame.h"
-    #include "../include/Client.h"
+
 #include "../include/Console.h"
-#include <queue>
 
 
 
@@ -26,6 +17,7 @@
 	{
 		_mutex=mutex;
 		_stompFramesIn=stompFramesIn;
+
 	}
 
 	Console::~Console() {
@@ -33,7 +25,7 @@
 	}
 
 
-int Console::run (ConnectionHandler& connectionHandler) {
+int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> folowing) {
     while (1) {
         const short bufsize = 1024;
         char buf[bufsize];
@@ -56,6 +48,7 @@ int Console::run (ConnectionHandler& connectionHandler) {
             pos = line.find(delimiter);
             string arg = line.substr(0, pos);
     		line.erase(0, pos + delimiter.length());
+
         	h.insert(std::make_pair("host",arg));
 
 
@@ -72,22 +65,41 @@ int Console::run (ConnectionHandler& connectionHandler) {
 
 
         	STOMP::ConnectFrame *tmpFrame =  new STOMP::ConnectFrame(h,"");
-        	//tmpFrame->toSend();
         	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
 
         }
         else if (command == "follow")
         {
+            pos = line.find(delimiter);
+            string arg = arg = line.substr(0, pos);
+    		line.erase(0, pos + delimiter.length());
+        	folowing.insert(std::make_pair(arg,_counter));
 
+
+        	STOMP::SubscribeFrame *tmpFrame =  new STOMP::SubscribeFrame("/topic/"+arg, _counter);
+        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+
+    		_counter++;
 
         }
         else if (command == "unfollow")
         {
-           // ...
+
+            pos = line.find(delimiter);
+            string arg = arg = line.substr(0, pos);
+    		line.erase(0, pos + delimiter.length());
+
+			if (folowing.find(arg)!= folowing.end()){
+	        	STOMP::UnsubscribeFrame *tmpFrame =  new STOMP::UnsubscribeFrame(folowing.find(arg)->second);
+	        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+			}
+
         }
         else if (command == "tweet")
         {
-           // ...
+
+
+
         }
         else if (command == "clients")
         {

@@ -7,8 +7,23 @@
 
 #ifndef CLIENT_H_
 #define CLIENT_H_
-
+#include <stdlib.h>
+    #include <stdlib.h>
+    #include <boost/locale.hpp>
+    #include "../include/ConnectionHandler.h"
+    #include "../encoder/utf8.h"
+    #include "../encoder/encoder.h"
+	#include <boost/thread.hpp>
+    #include "../include/Client.h"
 #include <queue>
+
+    #include "../include/StompFrame.h"
+    #include "../include/SendFrame.h"
+    #include "../include/ConnectFrame.h"
+    #include "../include/DisconnectFrame.h"
+    #include "../include/SubscribeFrame.h"
+    #include "../include/UnsubscribeFrame.h"
+
 
 	class Network{
 
@@ -20,7 +35,7 @@
 	public:
 	   // Network (boost::mutex* mutex,std::queue<STOMP::StompFrame*> stompFramesIn , std::queue<STOMP::StompFrame*> stompFramesOut) :_mutex(mutex) ,_stompFramesIn(stompFramesIn),_stompFramesOut(stompFramesOut) {}
 	    Network (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn);
-	    int run(ConnectionHandler& connectionHandler);
+	    int run(ConnectionHandler& connectionHandler, std::map<string, int> folowing);
 		virtual ~Network();
 
 

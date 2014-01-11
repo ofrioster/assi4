@@ -1,3 +1,9 @@
+#ifndef ENCODER_H_
+#define ENCODER_H_
+
+
+
+
 #include <string>
 #include <boost/locale.hpp>
 #include "utf8.h"
@@ -30,3 +36,7 @@ public:
   void writeUtf16File(const char* filename, const utf16string& s);
   void writeUtf8File(const char* filename, const std::string& s);
  };
+
+
+#endif /* DISCONNECTFRAME_H_ */
+
