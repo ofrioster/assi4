@@ -17,6 +17,7 @@ import ServerStomp.*;
 
 
 
+
 public class ConnectionHandler2 implements Runnable{
         
         private BufferedReader in;
@@ -31,7 +32,7 @@ public class ConnectionHandler2 implements Runnable{
         private StompTokenizer tokenizer;
         private ArrayList<Topic> topics;
         private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-        ByteBuffer inbuf;
+        private ByteBuffer inbuf;
         private Stats stats;
         
         
@@ -269,7 +270,7 @@ public class ConnectionHandler2 implements Runnable{
         		this.error("User is already logged in", frame);
         	}
         	else if (!errorMessageHasBeenSend){
-        	//	this.connectFrame=new ConnectFrame(frame,frame.getCommend());
+        		this.connectFrame=new ConnectFrame(frame,frame.getCommend());
                 this.client=this.connectFrame.getClient();
                 StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, "CONNECTED");
                 this.send(receiptFramConnectFrameToSend);

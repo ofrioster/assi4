@@ -20,6 +20,9 @@ public interface StompFrameInterface {
 //	public ArrayList<Topic> getTopics();
 	public void addHeaderAndBody(String raw);
 	public String getHeader(String msg);
+	public void headerPut(String subject,String msg);
+	public void bodyAdd(String msg);
+	public String getStringCommend();
 	
 	
 }

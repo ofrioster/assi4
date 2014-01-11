@@ -16,7 +16,12 @@ public class ErorFrame extends StompFrame implements ErorFrameInterface{
 		super(clients,topics);
 		this.command=StompCommand.valueOf("ERROR");
 		this.header.put("message", "malformed STOMP frame received");
-		this.header.put("The message", frame.getString());
+		try {
+			this.header.put("The message", frame.getString());
+		}
+		catch (Exception e) {
+			this.header.put("The message", "worng message");
+		}
 		this.body=whatIsTheProblem;
 		
 		

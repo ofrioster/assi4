@@ -9,11 +9,12 @@ public class MessageFrame extends StompFrame implements MessageFrameInterface{
 	private String subscription;
 	private String messageId;
 	private String tweet;
+	private Stats stats;
 	
 	/** constructor, set client is offline
     *
     */
-	public MessageFrame(StompFrame frame){
+	public MessageFrame(StompFrame frame,Stats stats){
 		super(frame.getClients());
 		this.command= StompCommand.valueOf("MESSAGE");
 		this.header=frame.getHeader();
@@ -25,9 +26,15 @@ public class MessageFrame extends StompFrame implements MessageFrameInterface{
 		this.subscription=frame.header.get("subscription");
 	//	this.client.addTweet(frame.body);
 		this.tweet=frame.body;
-		this.serchForMentionsClients();
+		this.stats=stats;
+		if (this.header.get("destination").equals("server")){
+			this.stats.updateStats(this.client);
+		}
+		else{
+			this.serchForMentionsClients();
+		}
 	}
-	public MessageFrame(ArrayList<Client> clients, String msg){
+	public MessageFrame(ArrayList<Client> clients, String msg,Stats stats){
 		super(clients);
 		this.command=StompCommand.valueOf("MESSAGE");
 		this.addHeaderAndBody(msg);
@@ -36,7 +43,13 @@ public class MessageFrame extends StompFrame implements MessageFrameInterface{
 		this.subscription=this.header.get("subscription");
 	//	this.client.addTweet(this.body);
 		this.tweet=this.body;
-		this.serchForMentionsClients();
+		this.stats=stats;
+		if (this.header.get("destination").equals("server")){
+			this.stats.updateStats(this.client);
+		}
+		else{
+			this.serchForMentionsClients();
+		}
 	}
 	public String getTweet(){
 		return this.tweet;

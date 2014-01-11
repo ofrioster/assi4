@@ -144,5 +144,30 @@ public class  StompFrame implements StompFrameInterface{
 	public String getHeader(String msg){
 		return this.header.get(msg);
 	}
+	/** add to this client header
+	 * @param String the subject
+	 * @param the String for this subject 
+	 */
+	public synchronized void headerPut(String subject,String msg){
+		this.header.put(subject, msg);
+	}
+	/**
+	 * @param msg
+	 */
+	public synchronized void bodyAdd(String msg){
+		this.body=msg;
+	}
+	/**add command as String
+	 * @param String command
+	 */
+	public void commandAdd(String command){
+		this.command=StompCommand.valueOf(command);
+	}
+	/** 
+     * @return the commend as String
+     */
+    public String getStringCommend(){
+    	return this.command.toString();
+    }
 
 }
