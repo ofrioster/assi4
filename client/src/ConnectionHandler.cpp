@@ -10,6 +10,7 @@
 
     ConnectionHandler::ConnectionHandler(string host, unsigned short port): host_(host), port_(port), io_service_(), socket_(io_service_){}
 
+
     ConnectionHandler::~ConnectionHandler() {
         close();
     }

@@ -25,26 +25,25 @@
 
 		int Network::run (ConnectionHandler& connectionHandler) {
 
-			//_connectionHandler = ConnectionHandler(host, port);
 //			ConnectionHandler connectionHandler(host, port);
-//        if (!connectionHandler.connect()) {
-//            std::cerr << "Cannot connect to " << host << ":" << port << std::endl;
-//            return 1;
-//        }
+        if (!connectionHandler.connect()) {
+            std::cerr << "Cannot connect to " << "host" << ":" << "port" << std::endl;
+            return 1;
+        }
 
         //From here we will see the rest of the ehco client implementation:
         while (1) {
 
         	//_stompFramesOut.
 
-        	if (!_stompFramesOut->empty()){
-        		string tmp = _stompFramesOut->front()->toSend();
-        		_stompFramesOut->pop();
-                if (!connectionHandler.sendFrameAscii(tmp,'\0')) {
-                    std::cout << "Disconnected. Exiting...\n" << std::endl;
-                    break;
-                }
-        	}
+//        	if (!_stompFramesOut->empty()){
+//        		string tmp = _stompFramesOut->front()->toSend();
+//        		_stompFramesOut->pop();
+//                if (!connectionHandler.sendFrameAscii(tmp,'\0')) {
+//                    std::cout << "Disconnected. Exiting...\n" << std::endl;
+//                    break;
+//                }
+//        	}
 
 
 
@@ -71,7 +70,7 @@
             // We can use one of two options to read data from the server:
             // 1. Read a fixed number of characters.
             // 2. Read a line (up to the newline character using getLine).
-            if (connectionHandler.recived()){
+            //if (connectionHandler.recived()){
             std::string answer;
             if (!connectionHandler.getFrameAscii(answer,'\0')) {
                 std::cout << "Disconnected. Exiting...\n" << std::endl;
@@ -84,7 +83,7 @@
                 std::cout << "Exiting...\n" << std::endl;
                 break;
             }
-            }
+            //}
         }
         return 0;
     }

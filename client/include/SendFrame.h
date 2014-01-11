@@ -13,7 +13,8 @@ namespace STOMP {
 
 class SendFrame : public STOMP::StompFrame {
 public:
-	SendFrame(hdrmap h, string b);
+	SendFrame();
+	SendFrame(string destination, string body);
 	virtual ~SendFrame();
 };
 

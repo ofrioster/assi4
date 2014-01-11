@@ -15,6 +15,7 @@ class ConnectFrame: public STOMP::StompFrame {
 public:
 	ConnectFrame();
 	ConnectFrame(hdrmap h, string b);
+	//ConnectFrame(std::string& host, std::string& login,std::string& passcode);
 	virtual ~ConnectFrame();
 };
 

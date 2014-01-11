@@ -37,6 +37,10 @@ string StompFrame::toSend() {
 	       //cout << ii->first << ": " << ii->second << endl;
 	       //cout << (*ii).first << ": " << (*ii).second << endl;
 	   }
+	   ret.append("\n");
+	   ret.append(m_body);
+	   ret.append("\n");
+	   ret.append("\0");
 	return ret;
 }
 
