@@ -120,7 +120,26 @@ public class ConnectionHandler2 implements Runnable{
                 	this.sendNewMessage();
                 }
                 // run handlers
-                switch (frame.command) {
+                if(frame.getStringCommend().equals("CONNECT")){
+                	this.CONNECT(frame);
+                }
+                else if(frame.getStringCommend().equals("DISCONNECT")){
+                	this.DISCONNECT(frame);
+                }
+                else if(frame.getStringCommend().equals("SEND")){
+                	this.SEND(frame);
+                }
+                else if(frame.getStringCommend().equals("SUBSCRIBE")){
+                	this.SUBSCRIBE(frame);
+                }
+                else if(frame.getStringCommend().equals("UNSUBSCRIBE")){
+                	 this.UNSUBSCRIBE(frame);
+                }
+                else{
+                	this.error("Did not contain a destination header, which is required for message propagation.", frame);
+                	
+                }
+            /*    switch (frame.command) {
                         case CONNECT:
 
                                 this.CONNECT(frame);
@@ -140,7 +159,7 @@ public class ConnectionHandler2 implements Runnable{
                         default:   
                         	this.error("Did not contain a destination header, which is required for message propagation.", frame);
                                 break;
-                }
+                }*/
                 
                 
                 

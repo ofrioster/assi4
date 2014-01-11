@@ -109,6 +109,12 @@ public class  StompFrame implements StompFrameInterface{
     public StompCommand getCommend(){
     	return this.command;
     }
+    /** 
+     * @return the commend as String
+     */
+    public String getStringCommend(){
+    	return this.command.toString();
+    }
 	/** (non-Javadoc)
 	 * @return body
 	 */
