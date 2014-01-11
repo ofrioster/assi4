@@ -23,7 +23,7 @@
 	}
 
 
-		int Network::run (ConnectionHandler& connectionHandler) {
+		int Network::run (ConnectionHandler& connectionHandler, std::map<string, int> folowing) {
 
 //			ConnectionHandler connectionHandler(host, port);
         if (!connectionHandler.connect()) {
@@ -71,11 +71,70 @@
             // 1. Read a fixed number of characters.
             // 2. Read a line (up to the newline character using getLine).
             //if (connectionHandler.recived()){
+
             std::string answer;
             if (!connectionHandler.getFrameAscii(answer,'\0')) {
                 std::cout << "Disconnected. Exiting...\n" << std::endl;
                 break;
             }
+            std::string line;
+            std::string delimiter = "\n";
+            size_t pos = 0;
+            pos = line.find(delimiter);
+            string command = line.substr(0, pos);
+    		line.erase(0, pos + delimiter.length());
+    		if (command == "MESSAGE"){
+    			STOMP::hdrmap headers;
+    			for (int var = 0; var < 3; ++var) {
+                    pos = line.find(":");
+                    string headerName = line.substr(0, pos);
+            		line.erase(0, pos + 1);
+
+                    pos = line.find("\n");
+                    string headerValue = line.substr(0, pos);
+            		line.erase(0, pos + 1);
+            		headers.insert(std::make_pair(headerName , headerValue));
+				}
+
+
+       		 cout << headers.find("destination")->second << " Sent a Messege" << endl;
+    		 cout << line << endl;
+
+    		}else if (command == "RECEIPT"){
+    			STOMP::hdrmap headers;
+
+                pos = line.find(":");
+                string headerName = line.substr(0, pos);
+        		line.erase(0, pos + 1);
+
+                pos = line.find("\n");
+                string headerValue = line.substr(0, pos);
+        		line.erase(0, pos + 1);
+        		headers.insert(std::make_pair(headerName , headerValue));
+
+
+    		}else if (command == "ERROR"){
+    			STOMP::hdrmap headers;
+
+                pos = line.find(":");
+                string headerName = line.substr(0, pos);
+        		line.erase(0, pos + 1);
+
+                pos = line.find("\n");
+                string headerValue = line.substr(0, pos);
+        		line.erase(0, pos + 1);
+        		headers.insert(std::make_pair(headerName , headerValue));
+
+
+
+    		}else if (command == ""){
+
+    		}else if (command == ""){
+
+    		}else if (command == ""){
+
+    		}
+
 
 
             std::cout << "Reply: " << answer << " " << std::endl << std::endl;

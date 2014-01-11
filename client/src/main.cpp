@@ -25,17 +25,18 @@ int main(int argc, char *argv[]){
         std::cerr << "Usage: " << argv[0] << " host port" << std::endl << std::endl;
         return -1;
     }
+
     std::string host = argv[1];
     unsigned short  port = atoi(argv[2]);
 	ConnectionHandler connectionHandler(host,port);
     //connectionHandler = connectionHandler(host,port);
-
+	std::map<string, int> folowing;
     boost::mutex mutex;
     Network task1(&mutex,&stompFramesIn);
     Console task2(&mutex,&stompFramesIn);
 
-    boost::thread th1(&Network::run, &task1, boost::ref(connectionHandler));
-    boost::thread th2(&Console::run, &task2, boost::ref(connectionHandler));
+    boost::thread th1(&Network::run, &task1, boost::ref(connectionHandler),boost::ref(folowing));
+    boost::thread th2(&Console::run, &task2, boost::ref(connectionHandler),boost::ref(folowing));
     th1.join();
     th2.join();
 
