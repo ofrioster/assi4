@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 
 
@@ -16,12 +17,12 @@ public interface ClientInterfce {
 	public Boolean confirmHostIP(String hostIP);
 	public Boolean confirmHostPort(String hostPort);
 	public void setClientIsOnline(Boolean clientIsOnline);
-	public void addTweet(String tweet);
+	public void addTweet(Tweet tweet);
 	public String getTweet(int index);
-	public ArrayList<String[]> getFriendsMessage();
-	public void addFriendsMessage(String[] newMessage);
+	public ArrayList<Tweet> getFriendsMessage();
+	public void addFriendsMessage(Tweet tweet);
 	public String removeFollowingClient(String followingClientName);
-	public void addMessageToFollowers(String message);
+	public void addMessageToFollowers(Tweet tweet);
 	public void addTopic(Topic newTopic);
 	public void removeTopic(Topic topicToRemove);
 	public Boolean hasNewMessage();
@@ -33,6 +34,15 @@ public interface ClientInterfce {
 	public Boolean isThisIsThePassword(String password);
 	public Boolean isClientOnLine();
 	public Boolean isClientFollowingClient(String id);
+	public int getNumberOfFollowers();
+	public int getNumberOfTweet();
+	public int getHowMenyTimesThisClientMention();
+	public void updateClientMention();
+	public int getHowMenyTimesThisClientMentionInHisTweets();
+	public void updateClientMentionInHisTweets();
+	public long totalSendTime();
+	public int totalNumberOfTweets();
+	public void statsSend(String msg);
 	
 	
 
