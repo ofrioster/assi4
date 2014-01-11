@@ -16,6 +16,9 @@ private:
     tcp::socket socket_;
 
 public:
+
+
+
     ConnectionHandler(std::string host, unsigned short port);
     virtual ~ConnectionHandler();
 

@@ -17,13 +17,12 @@ class Console {
     boost::mutex * _mutex;
     std::queue<STOMP::StompFrame*>* _stompFramesIn;                                // empty vector of ints
     std::queue<STOMP::StompFrame*>* _stompFramesOut;                                // empty vector of ints
-    ConnectionHandler * _connectionHandler;
 
 public:
 	//Console  (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn , std::queue<STOMP::StompFrame*>* stompFramesOut) :_mutex(mutex) ,_stompFramesIn(stompFramesIn),_stompFramesOut(stompFramesOut) {}
-	Console (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn , boost::reference_wrapper<ConnectionHandler> connectionHandler);
+	Console (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn );
 	virtual ~Console();
-	int run ();
+	int run (ConnectionHandler& connectionHandler);
 
 
 };

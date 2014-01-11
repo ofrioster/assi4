@@ -12,12 +12,10 @@
 	using namespace std;
 
 
-    ConnectionHandler connectionHandler();
-
 	Network::~Network() {
 		// TODO Auto-generated destructor stub
 	}
-	Network::Network(boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn ,boost::reference_wrapper<ConnectionHandler> connectionHandler)
+	Network::Network(boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn)
 	{
 		_mutex=mutex;
 		_stompFramesIn=stompFramesIn;
@@ -25,14 +23,14 @@
 	}
 
 
-		int Network::run (std::string host, unsigned short  port ) {
+		int Network::run (ConnectionHandler& connectionHandler) {
 
 			//_connectionHandler = ConnectionHandler(host, port);
-			ConnectionHandler connectionHandler(host, port);
-        if (!connectionHandler.connect()) {
-            std::cerr << "Cannot connect to " << host << ":" << port << std::endl;
-            return 1;
-        }
+//			ConnectionHandler connectionHandler(host, port);
+//        if (!connectionHandler.connect()) {
+//            std::cerr << "Cannot connect to " << host << ":" << port << std::endl;
+//            return 1;
+//        }
 
         //From here we will see the rest of the ehco client implementation:
         while (1) {

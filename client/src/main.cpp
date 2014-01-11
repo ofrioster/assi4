@@ -16,7 +16,7 @@
     boost::mutex * _mutex;
     std::queue<STOMP::StompFrame*> stompFramesIn;                                // empty vector of ints
     //std::queue<STOMP::StompFrame*> stompFramesOut;                                // empty vector of ints
-    ConnectionHandler connectionHandler;
+    //ConnectionHandler& connectionHandler("123",123);
 
 
 int main(int argc, char *argv[]){
@@ -27,14 +27,15 @@ int main(int argc, char *argv[]){
     }
     std::string host = argv[1];
     unsigned short  port = atoi(argv[2]);
-
+	ConnectionHandler connectionHandler(host,port);
+    //connectionHandler = connectionHandler(host,port);
 
     boost::mutex mutex;
-    Network task1(&mutex,&stompFramesIn, boost::ref(connectionHandler));
-    Console task2(&mutex,&stompFramesIn, boost::ref(connectionHandler));
+    Network task1(&mutex,&stompFramesIn);
+    Console task2(&mutex,&stompFramesIn);
 
-    boost::thread th1(&Network::run, &task1, host, port);
-    boost::thread th2(&Console::run, &task2);
+    boost::thread th1(&Network::run, &task1, boost::ref(connectionHandler));
+    boost::thread th2(&Console::run, &task2, boost::ref(connectionHandler));
     th1.join();
     th2.join();
 

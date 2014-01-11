@@ -22,11 +22,10 @@
 
 	using namespace std;
 
-	Console::Console (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn ,ConnectionHandler * connectionHandler)
+	Console::Console (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn )
 	{
 		_mutex=mutex;
 		_stompFramesIn=stompFramesIn;
-		_connectionHandler=connectionHandler;
 	}
 
 	Console::~Console() {
@@ -34,7 +33,7 @@
 	}
 
 
-int Console::run () {
+int Console::run (ConnectionHandler& connectionHandler) {
     while (1) {
         const short bufsize = 1024;
         char buf[bufsize];
