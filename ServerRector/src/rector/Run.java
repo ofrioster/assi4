@@ -44,6 +44,7 @@ package rector;
 
 		private ReactorData<T> _data;
 		private static ArrayList<Client> clients;
+		private static Stats stats;
 
 		/**
 		 * Creates a new Reactor
@@ -209,7 +210,7 @@ package rector;
 		 */
 		public static void main(String args[]) {
 			 clients=new ArrayList<Client>();
-			 Stats stats=new Stats(clients);
+			 stats=new Stats(clients);
 			if (args.length != 2) {
 				System.err.println("Usage: java Reactor <port> <pool_size>");
 				System.exit(1);
@@ -242,7 +243,7 @@ package rector;
 			final Charset charset = Charset.forName("UTF-8");
 			TokenizerFactory<StringMessage> tokenizerMaker = new TokenizerFactory<StringMessage>() {
 				public MessageTokenizer<StringMessage> create() {
-					return new FixedSeparatorMessageTokenizer("\n", charset,clients);
+					return new FixedSeparatorMessageTokenizer("\n", charset,clients,stats);
 				}
 			};
 

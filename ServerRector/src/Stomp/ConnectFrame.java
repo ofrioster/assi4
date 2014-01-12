@@ -1,9 +1,8 @@
 package Stomp;
 import java.util.ArrayList;
 
-import MainServer.Stats;
-import ServerClient.Client;
-import ServerClient.Topic;
+import Client.*;;
+
 
 
 public class ConnectFrame extends StompFrame implements ConnectFrameInterface{
@@ -12,8 +11,8 @@ public class ConnectFrame extends StompFrame implements ConnectFrameInterface{
 	/** constructor, set client is offline
     *
     */
-	public ConnectFrame(ArrayList<Client> clients,StompCommand command,String body,String sessionId, String userName,String password, String serverIP,ArrayList<Topic> topics,Stats stats){
-		super(clients,topics);
+	public ConnectFrame(ArrayList<Client> clients,StompCommand command,String body,String sessionId, String userName,String password, String serverIP,Stats stats){
+		super(clients);
 		this.command= command;
 		this.header.put("session", sessionId);
 		this.body=body;
@@ -26,7 +25,7 @@ public class ConnectFrame extends StompFrame implements ConnectFrameInterface{
     *
     */
 	public ConnectFrame(StompFrame frame, StompCommand command){
-		super(frame.getClients(),frame.getTopics());
+		super(frame.getClients());
 		this.command= command;
 		this.header=frame.getHeader();
 		this.body=frame.getBody();

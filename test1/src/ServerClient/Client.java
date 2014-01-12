@@ -425,8 +425,7 @@ public class Client implements ClientInterfce {
 			builder.append(this.following.get(messageCount).getClient().getClientUserName());
 			builder.append('\n');
 			builder.append("subscription:");
-			builder.append(this.friendsMessage.get(this.messageCount)
-					.getTweetUserName());// TODO delete -1 in all
+			builder.append(this.friendsMessage.get(this.messageCount).getTweetUserName());
 			builder.append('\n');
 			builder.append("message-id:");
 			builder.append(this.messageCount);
