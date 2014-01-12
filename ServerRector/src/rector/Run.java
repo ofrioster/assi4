@@ -243,7 +243,7 @@ package rector;
 			final Charset charset = Charset.forName("UTF-8");
 			TokenizerFactory<StringMessage> tokenizerMaker = new TokenizerFactory<StringMessage>() {
 				public MessageTokenizer<StringMessage> create() {
-					return new FixedSeparatorMessageTokenizer("\n", charset,clients,stats);
+					return new FixedSeparatorMessageTokenizer("\0", charset,clients,stats);
 				}
 			};
 

@@ -196,7 +196,7 @@ public class StompTokenizer implements StompTokenizerInterface{
         try{
 //        	System.out.println("try");
         	frame = new StompFrame(this.clients);
-        	String commandheaderSections = message.split("\n\n")[0];
+        	String commandheaderSections = br.split("\n\n")[0];
             String[] headerLines = commandheaderSections.split("\n");
 //System.out.println(headerLines[0]);//TODO delete
 //System.out.println(headerLines[1]);//TODO delete
@@ -207,7 +207,7 @@ public class StompTokenizer implements StompTokenizerInterface{
                     frame.header.put(key, headerLines[i].substring(key.length() + 1));
             }
 
-            frame.body = message.substring(commandheaderSections.length() + 2);
+            frame.body = br.substring(commandheaderSections.length() + 2);
         }
         catch(Exception e){
         	frame=null;
