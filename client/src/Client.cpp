@@ -119,7 +119,7 @@
   	    	  //cout<<"As an integer: "<<atoi(a_char);
         		int id = atoi(a_char);
 
-        		if (id == 10){
+        		if (id == 10){//TODO match with send messege
         			return 0;
         		}
         		}
