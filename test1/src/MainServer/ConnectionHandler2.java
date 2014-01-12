@@ -222,19 +222,25 @@ public class ConnectionHandler2 implements Runnable{
          */
         public void send(StompFrame frame) {
         	///***old***//
-            String msg=frame.getString();
-            String response = protocol.processMessage(msg);
-            if (response != null)
-            {
-                out.println(response);
-            }
-            //TODO is needed?
-            /*
-            if (protocol.isEnd(msg))
-            {
-                break;
-            }
-*/
+        	try{
+        		String msg=frame.getString();
+                out.println(msg);
+        	}
+        	 catch ( Exception e){
+        		 out.println("\0");//ToDO my need to be delete
+        	 }
+         /*    String response = protocol.processMessage(msg);
+             if (response != null)
+             {
+                 out.println(response);
+             }*/
+             //TODO is needed?
+             /*
+             if (protocol.isEnd(msg))
+             {
+                 break;
+             }
+ */
         }
         public void CONNECT(StompFrame frame){
         	logger.log(Level.INFO, "CONNECT");
@@ -257,7 +263,8 @@ public class ConnectionHandler2 implements Runnable{
         	}
         	if(newClient){
         		try{
-        			this.client=new Client(frame, clients,this.stats);
+        			this.client=new Client(frame, clients,this.stats,this);
+        			this.clients.add(client);
         		//	this.client=this.connectFrame.getClient();
         			StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, "CONNECTED");
                     this.send(receiptFramConnectFrameToSend);
@@ -275,6 +282,7 @@ public class ConnectionHandler2 implements Runnable{
                 StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, "CONNECTED");
                 this.send(receiptFramConnectFrameToSend);
         	}
+        	this.client.setClientIsOnline(true);
         }
         public void DISCONNECT(StompFrame frame){
         	logger.log(Level.INFO, "DISCONNECT");
@@ -288,12 +296,13 @@ public class ConnectionHandler2 implements Runnable{
         	MessageFrame messageFrame=new MessageFrame(frame,this.stats);
             this.messageFrameList.add(messageFrame);
             this.client.addNewMessage(messageFrame);
+            this.send(null);
             
         }
         public void SUBSCRIBE(StompFrame frame){
-        	logger.log(Level.INFO, "SUBSCRIBE user:"+frame.getHeader("id:"));
+        	logger.log(Level.INFO, "SUBSCRIBE user:"+frame.getHeader("destination"));
         	Client newClient=null;
-        	String clientName=frame.getHeader("destination:");
+        	String clientName=frame.getHeader("destination");
         	Boolean found=false;
         	for (int i=0;i<this.clients.size();i++){
         		if (this.clients.get(i).getClientUserName().equals(clientName)){
@@ -304,6 +313,8 @@ public class ConnectionHandler2 implements Runnable{
         			}
         			else{
         				this.client.addClientToFollow(frame.getHeader("id:"), newClient);
+        				this.send(null);
+        				return;
         			}
         		}
         	}

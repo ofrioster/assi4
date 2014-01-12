@@ -1,6 +1,7 @@
 package ServerStomp;
 import java.util.ArrayList;
 
+import MainServer.ConnectionHandler2;
 import MainServer.Stats;
 import ServerClient.Client;
 import ServerClient.Topic;
@@ -12,13 +13,13 @@ public class ConnectFrame extends StompFrame implements ConnectFrameInterface{
 	/** constructor, set client is offline
     *
     */
-	public ConnectFrame(ArrayList<Client> clients,StompCommand command,String body,String sessionId, String userName,String password, String serverIP,ArrayList<Topic> topics,Stats stats){
+	public ConnectFrame(ArrayList<Client> clients,StompCommand command,String body,String sessionId, String userName,String password, String serverIP,ArrayList<Topic> topics,Stats stats,ConnectionHandler2 connectionHandler2){
 		super(clients,topics);
 		this.command= command;
 		this.header.put("session", sessionId);
 		this.body=body;
 		this.stats=stats;
-		this.client=this.serchForClient(userName, password, serverIP);
+		this.client=this.serchForClient(userName, password, serverIP,connectionHandler2);
 		this.sessionId=sessionId;
 		this.client.setClientIsOnline(true);
 	}
@@ -38,8 +39,8 @@ public class ConnectFrame extends StompFrame implements ConnectFrameInterface{
 	 * @param client data
 	 * @return the client if exist if not return new client
 	 */
-	public Client serchForClient(String userName, String password,String serverIP) {
-		Client res=new Client(userName, serverIP, password,this.clients,this.stats);
+	public Client serchForClient(String userName, String password,String serverIP,ConnectionHandler2 connectionHandler2) {
+		Client res=new Client(userName, serverIP, password,this.clients,this.stats,connectionHandler2);
 		for (int i=0; i<clients.size();i++){
 			if (clients.get(i).getClientUserName().equals(userName)){
 				if(clients.get(i).getClientPassword().equals(password)){

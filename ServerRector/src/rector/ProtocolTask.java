@@ -53,6 +53,9 @@ public class ProtocolTask<T> implements Runnable {
                this._handler.addOutData(bytes);
             } catch (CharacterCodingException e) { e.printStackTrace(); }
          }
+         else{
+        	 this._handler.addOutData(null);
+         }
       }
 	}
 

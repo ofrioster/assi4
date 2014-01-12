@@ -27,7 +27,8 @@ public class EchoProtocol implements AsyncServerProtocol<StringMessage> {
 			this._shouldClose = true;
 			return new StringMessage("Ok, bye bye");
 		}
-		return new StringMessage("Your message \"" + msg + "\" has been received");
+//		return new StringMessage("Your message \"" + msg + "\" has been received");
+		return msg;
 	}
 
 	/**

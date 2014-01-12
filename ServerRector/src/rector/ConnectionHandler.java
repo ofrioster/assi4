@@ -155,6 +155,12 @@ public class ConnectionHandler<T> {
 		if (buf.remaining() != 0) {
 			try {
 				_sChannel.write(buf);
+				ByteBuffer aa = ByteBuffer.wrap("abc".getBytes()); 
+//				System.out.println(bb.capacity());
+				_sChannel.write(aa);
+				ByteBuffer bb = ByteBuffer.wrap("null".getBytes()); 
+				System.out.println(bb.capacity());
+				_sChannel.write(bb);
 			} catch (IOException e) {
 				// this should never happen.
 				e.printStackTrace();

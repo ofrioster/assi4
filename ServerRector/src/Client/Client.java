@@ -12,8 +12,10 @@ public class Client implements ClientInterfce{
 	
 	private String userName;
 //	private ArrayList<Client> followers;
-	private Map<String, Client> following = new HashMap<String, Client>();
-	private Map<String, Client> followers = new HashMap<String, Client>();
+//	private Map<String, Client> following = new HashMap<String, Client>();
+//	private Map<String, Client> followers = new HashMap<String, Client>();
+	private ArrayList<Follower> followers;
+	private ArrayList<Follower> following;
 //	private ArrayList<Client> following; 
 	private String hostIP;
 	private String hostPort;
@@ -46,6 +48,8 @@ public class Client implements ClientInterfce{
 		this.messageCount=0;
 		this.clients.add(this);
 		this.stats=stats;
+		this.followers = new ArrayList<Follower>();
+		this.following = new ArrayList<Follower>();
 		
 	}
 	public Client(String userName,String hostIP,String password,ArrayList<Client> clients,Stats stats){
@@ -62,6 +66,8 @@ public class Client implements ClientInterfce{
 		this.messageCount=0;
 		this.clients.add(this);
 		this.stats=stats;
+		this.followers = new ArrayList<Follower>();
+		this.following = new ArrayList<Follower>();
 	}
 	public Client(StompFrame frame,ArrayList<Client> clients,Stats stats){
 		this.userName=frame.getHeader("login");
@@ -75,6 +81,8 @@ public class Client implements ClientInterfce{
 		this.messageCount=0;
 		this.clients.add(this);
 		this.stats=stats;
+		this.followers = new ArrayList<Follower>();
+		this.following = new ArrayList<Follower>();
 	}
 
 
@@ -99,7 +107,8 @@ public class Client implements ClientInterfce{
 	 * @param Client newfollower
 	 */
 	public void addFollower(String id,Client newfollower) {
-		this.followers.put(id,newfollower);
+		Follower res = new Follower(id, newfollower);
+		this.followers.add(res);
 		
 	}
 
@@ -109,11 +118,11 @@ public class Client implements ClientInterfce{
 	 * @param follower To Remove
 	 */
 	public void removeFollower(Client followerToRemove) {
-		for (String key : this.followers.keySet()) {
-			if (this.followers.get(key).equals(followerToRemove)){
-				
+		for (int i = 0; i < this.followers.size(); i++) {
+			if (this.followers.get(i).getClient().equals(followerToRemove)) {
+				this.followers.remove(i);
 			}
-		}	
+		}
 	}
 
 
@@ -121,23 +130,27 @@ public class Client implements ClientInterfce{
 	 * @param Client to follow
 	 */
 	public void addClientToFollow(String id,Client clienTofollow) {
-		this.following.put(id,clienTofollow);
-		clienTofollow.addFollower(id,this);
+		Follower follower = new Follower(id, clienTofollow);
+		this.following.add(follower);
+		clienTofollow.addFollower(id, this);
 		
 	}
 	/** (non-Javadoc)
 	 * @param Client name to follow
 	 */
 	public void addClientToFollow(String id,String clienNameTofollow) {
-		Boolean found=false;
-		for (int i=0; i<this.clients.size() && !found;i++){
-			if (this.clients.get(i).getClientUserName().equals(clienNameTofollow)){
-				this.following.put(id,this.clients.get(i));
-				found=true;
-				this.clients.get(i).addFollower(id,this);
+		Boolean found = false;
+		for (int i = 0; i < this.clients.size() && !found; i++) {
+			if (this.clients.get(i).getClientUserName()
+					.equals(clienNameTofollow)) {
+				Follower follower = new Follower(id, this.clients.get(i));
+				this.following.add(follower);
+				// this.following.put(id,this.clients.get(i));
+				found = true;
+				this.clients.get(i).addFollower(id, this);
 			}
 		}
-		
+
 	}
 
 
@@ -159,43 +172,37 @@ public class Client implements ClientInterfce{
 	 * @param following Client by his ID
 	 */
 	public void removeFollowingClientByID(String clientID) {
-		Client followinClient=this.following.get(clientID);
-		followinClient.removeFollower(this);
-		this.clients.remove(clientID);
-	/*	for (int i=0; i<this.following.size() && !found;i++){
-			if (this.following.get(i).equals(followingClient)){
+		for (int i = 0; i < this.following.size(); i++) {
+			if (this.following.get(i).getID().equals(clientID)) {
 				this.following.remove(i);
-				found=true;
-				followingClient.removeFollower(this);
 			}
-		}*/
+		}
 		
 	}
 	/**
 	 * @param following Client Name
 	 */
 	public String removeFollowingClient(String followingClientName) {
-		String res=null;
-		Boolean found=false;
-		if (this.userName.equals(followingClientName)){
+		String res = null;
+		Boolean found = false;
+		if (this.userName.equals(followingClientName)) {
 			return "Trying to unfollow itself";
 		}
-		for (int i=0; i<this.following.size() && !found;i++){
-			if (this.following.get(i).getClientUserName().equals(followingClientName)){
-				this.following.get(i).removeFollower(this);
+		for (int i = 0; i < this.following.size() && !found; i++) {
+			if (this.following.get(i).getClient().getClientUserName().equals(followingClientName)) {
 				this.following.remove(i);
-				found=true;
+				found = true;
 			}
 		}
-		if (!found){
-			for (int i=0;i<this.clients.size();i++){
-				if (this.clients.get(i).isThisTheClient(followingClientName)){
+		if (!found) {
+			for (int i = 0; i < this.clients.size(); i++) {
+				if (this.clients.get(i).isThisTheClient(followingClientName)) {
 					return "Not following this user";
 				}
 			}
 			return "Wrong username";
 		}
-		
+
 		return res;
 		
 	}
@@ -296,8 +303,8 @@ public class Client implements ClientInterfce{
 	 * @param message
 	 */
 	public void addMessageToFollowers(Tweet tweet){
-		for (int i=0; i<this.followers.size();i++){
-			this.followers.get(i).addFriendsMessage(tweet);
+		for (int i = 0; i < this.followers.size(); i++) {
+			this.followers.get(i).getClient().addFriendsMessage(tweet);
 		}
 	}
 	/** (non-Javadoc)
@@ -329,13 +336,14 @@ public class Client implements ClientInterfce{
 	 * @return the new message as String
 	 */
 	public synchronized String getNewMessage(){
-		if(this.messageCount<(this.friendsMessage.size()-1)){
+		if (this.messageCount < this.friendsMessage.size()) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("destination:");
-			builder.append(this.following.get(this.friendsMessage.get(this.messageCount-1).userNameTweet).getClientUserName());
+			// builder.append(this.following.get(this.friendsMessage.get(this.messageCount).userNameTweet).getClientUserName());
+			builder.append(this.following.get(messageCount).getClient().getClientUserName());
 			builder.append('\n');
 			builder.append("subscription:");
-			builder.append(this.friendsMessage.get(this.messageCount-1).getTweetUserName());
+			builder.append(this.friendsMessage.get(this.messageCount).getTweetUserName());
 			builder.append('\n');
 			builder.append("message-id:");
 			builder.append(this.messageCount);
@@ -351,7 +359,7 @@ public class Client implements ClientInterfce{
 	}
 	public synchronized MessageFrame getNextMessage(){
 		String msg=this.getNewMessage();
-		MessageFrame res=new MessageFrame(this.clients,msg);
+		MessageFrame res=new MessageFrame(this.clients,msg,this.stats);
 		return res;
 	}
 
@@ -386,7 +394,12 @@ public class Client implements ClientInterfce{
 		return this.clientIsOnline;
 	}
 	public Boolean isClientFollowingClient(String id){
-		return this.following.containsKey(id);
+		for (int i=0;i<this.following.size();i++){
+			if (this.following.get(i).getID().equals(id)){
+				return true;
+			}
+		}
+		return false;
 	}
 	public int getNumberOfFollowers(){
 		return this.followers.size();
