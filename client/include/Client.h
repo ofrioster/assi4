@@ -23,6 +23,8 @@
     #include "../include/DisconnectFrame.h"
     #include "../include/SubscribeFrame.h"
     #include "../include/UnsubscribeFrame.h"
+#include <fstream>
+
 
 
 	class Network{
@@ -35,7 +37,7 @@
 	public:
 	   // Network (boost::mutex* mutex,std::queue<STOMP::StompFrame*> stompFramesIn , std::queue<STOMP::StompFrame*> stompFramesOut) :_mutex(mutex) ,_stompFramesIn(stompFramesIn),_stompFramesOut(stompFramesOut) {}
 	    Network (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn);
-	    int run(ConnectionHandler& connectionHandler, std::map<string, int> folowing);
+	    int run(ConnectionHandler& connectionHandler, std::map<string, int> folowing,std::ofstream& outfile);
 		virtual ~Network();
 
 

@@ -24,6 +24,8 @@
     #include "../include/DisconnectFrame.h"
     #include "../include/SubscribeFrame.h"
     #include "../include/UnsubscribeFrame.h"
+#include <fstream>
+
 
 
 class Console {
@@ -38,7 +40,7 @@ public:
 	//Console  (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn , std::queue<STOMP::StompFrame*>* stompFramesOut) :_mutex(mutex) ,_stompFramesIn(stompFramesIn),_stompFramesOut(stompFramesOut) {}
 	Console (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn );
 	virtual ~Console();
-	int run (ConnectionHandler& connectionHandler, std::map<string, int> folowing);
+	int run (ConnectionHandler& connectionHandler, std::map<string, int> folowing,std::ofstream& outfile);
 };
 
 #endif /* CONSOLE_H_ */

@@ -25,7 +25,7 @@
 	}
 
 
-int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> folowing) {
+int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> folowing ,std::ofstream& outfile) {
     while (1) {
         const short bufsize = 1024;
         char buf[bufsize];
@@ -66,6 +66,34 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
 
         	STOMP::ConnectFrame *tmpFrame =  new STOMP::ConnectFrame(h,"");
         	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+//
+//        	"<html> \
+//        	<head>	\
+//        	<title>KarlMarxs tweeter site</title>	\
+//        	<style type=\"text/css\"> \
+//        	.username{	\
+//        		font-weight:bold; \
+//        	}\
+//        	.tweet{\
+//        		font-weight:normal;\
+//        		margin-left: 50px;\
+//        	}\
+//        	.time{\
+//        		color: gray;\
+//        		margin-left: 35px;\
+//        	}\
+//        	.entry{\
+//        		margin-top: 10px;\
+//        		background-color: #AACCFF;
+//        	}
+//        	</style>
+//        	</head>
+//        	<body>
+//        	<h1>KarlMarx</h1>
+//
+
+
+
 
         }
         else if (command == "follow")

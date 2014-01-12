@@ -23,7 +23,7 @@
 	}
 
 
-		int Network::run (ConnectionHandler& connectionHandler, std::map<string, int> folowing) {
+		int Network::run (ConnectionHandler& connectionHandler, std::map<string, int> folowing,std::ofstream& outfile) {
 
 //			ConnectionHandler connectionHandler(host, port);
         if (!connectionHandler.connect()) {
