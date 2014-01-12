@@ -11,7 +11,7 @@ import ServerClient.Client;
 import ServerClient.Topic;
 
 
-public class mainTest {
+public class main {
 	private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	 public static void main(String[] args) throws IOException{
 		 logger.log(Level.INFO, "main has start");

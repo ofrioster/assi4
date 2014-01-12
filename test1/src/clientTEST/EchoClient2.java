@@ -63,7 +63,7 @@ public class EchoClient2 {
         		msg=disconnect();
         	}
             out.println(msg);
-//            System.out.println("this msg: "+msg);
+            System.out.println("this msg: "+msg);
             while(!(inMsg=in.readLine()).equals("\0")){
             	System.out.println(inMsg);
 //            	System.out.println("get msg");

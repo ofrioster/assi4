@@ -29,10 +29,11 @@ public class Client implements ClientInterfce{
 	private int numberOfTimeClienMention;
 	private int numberOfTimeClienMentionInHisTweets;
 	private Stats stats;
+	private ConnectionHandler2 connectionHandler2;
 
 	
 	
-	public Client(String userName,String hostIP, String hostPort,String password,ArrayList<Client> clients,Stats stats){
+	public Client(String userName,String hostIP, String hostPort,String password,ArrayList<Client> clients,Stats stats,ConnectionHandler2 connectionHandler2){
 		this.userName=userName;
 //		this.followers= new ArrayList<Client>();
 	//	this.following= new ArrayList<Client>();
@@ -47,9 +48,10 @@ public class Client implements ClientInterfce{
 		this.messageCount=0;
 		this.clients.add(this);
 		this.stats=stats;
+		this.connectionHandler2=connectionHandler2;
 		
 	}
-	public Client(String userName,String hostIP,String password,ArrayList<Client> clients,Stats stats){
+	public Client(String userName,String hostIP,String password,ArrayList<Client> clients,Stats stats,ConnectionHandler2 connectionHandler2){
 		this.userName=userName;
 //		this.followers= new ArrayList<Client>();
 //		this.following= new ArrayList<Client>();
@@ -63,8 +65,9 @@ public class Client implements ClientInterfce{
 		this.messageCount=0;
 		this.clients.add(this);
 		this.stats=stats;
+		this.connectionHandler2=connectionHandler2;
 	}
-	public Client(StompFrame frame,ArrayList<Client> clients,Stats stats){
+	public Client(StompFrame frame,ArrayList<Client> clients,Stats stats,ConnectionHandler2 connectionHandler2){
 		this.userName=frame.getHeader("login");
 		this.tweets= new ArrayList<Tweet>();
 		this.friendsMessage=new ArrayList<Tweet>();
@@ -76,6 +79,7 @@ public class Client implements ClientInterfce{
 		this.messageCount=0;
 		this.clients.add(this);
 		this.stats=stats;
+		this.connectionHandler2=connectionHandler2;
 	}
 
 
@@ -292,14 +296,22 @@ public class Client implements ClientInterfce{
 	 */
 	public synchronized void addFriendsMessage(Tweet tweet){
 		this.friendsMessage.add(tweet);
+		if (this.clientIsOnline){
+			while(this.hasNewMessage()){
+				this.connectionHandler2.sendNewMessage();
+			}
+		}
 	}
 	/**index 0=subscription, index 1=message-id
 	 * @param message
 	 */
 	public void addMessageToFollowers(Tweet tweet){
-		for (int i=0; i<this.followers.size();i++){
-			this.followers.get(i).addFriendsMessage(tweet);
-		}
+		/*	for (int i=0; i<this.followers.size();i++){
+		this.followers.get(i).addFriendsMessage(tweet);
+	}*/
+	for (String key : this.followers.keySet()) {
+		this.followers.get(key).addFriendsMessage(tweet);
+	}
 	}
 	/** (non-Javadoc)
 	 * @param topic to add

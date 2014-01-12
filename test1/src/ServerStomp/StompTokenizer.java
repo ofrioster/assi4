@@ -90,21 +90,41 @@ public class StompTokenizer implements StompTokenizerInterface{
 	 * @return the stomp frame that receive
 	 */
 	public StompFrame getFrame(BufferedReader br) {
+		System.out.println("getFrame");
 		StompFrame frame = null;
 		String msg="";
 		String message="";
-		do{
+		boolean doneReading=false;
+//		do{
 			try {
-				msg=br.readLine();
-//				System.out.println("read "+msg);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			message+=msg+"\n";
+//				while (!br.ready()){}
+//				System.out.println("br ready");
+				while (((msg = br.readLine()) != null) &&!msg.equals("\0") &&!doneReading){
+				try {
+//				System.out.println("read line"+msg);
+//				if(br.ready()){
+//					msg=br.readLine();
+//						System.out.println("read "+msg);
+//				}
+//				msg=br.readLine();
+					System.out.println("read "+msg);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("some problem");
+//				e.printStackTrace();
+				}
+				message+=msg+"\n";
+				if (msg.equals("\0")){
+//					System.out.println("msg: "+msg);
+					doneReading=true;
+				}
 //			System.out.println("message: "+message);
-		}
-		while(!msg.equals("\0"));
+}
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+			}
+//		while(!msg.equals("\0"));
 
         try{
 //        	System.out.println("try");
@@ -117,16 +137,18 @@ public class StompTokenizer implements StompTokenizerInterface{
 
             for (int i = 1; i < headerLines.length; i++) {
                     String key = headerLines[i].split(":")[0];
+//                    System.out.println("key: "+key);
                     frame.header.put(key, headerLines[i].substring(key.length() + 1));
             }
-
+//            System.out.println("add msg to body");
             frame.body = message.substring(commandheaderSections.length() + 2);
+//            System.out.println("finish add msg to body");
         }
         catch(Exception e){
         	frame=null;
         }
-        
-
+			
+        System.out.println("finish getFrame");
         return frame;
 		/*
 		// used for reading
