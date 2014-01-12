@@ -79,25 +79,39 @@ public class EchoClient {
         userIn.close();
         clientSocket.close();
     }
-    
+    /**1
+     * @return
+     */
     public static String connect(){
     	String res="CONNECT"+"\n"+"accept-version:1.2"+"\n"+"host:GT3"+"\n"+"login:ofri1"+"\n"+"passcode:123"+"\n"+"\n"+"\0";
     	return res;
     }
+    /**2
+     * @return
+     */
     public static String SEND(){
-    	String res="SEND"+"\n"+"destination:ofri2"+"\n"+"\n"+"whats my name?"+"\0";
+    	String res="SEND"+"\n"+"destination:ofri2"+"\n"+"\n"+"whats my name?"+"\n"+"\0";
     	return res;
     }
+    /**3
+     * @return
+     */
     public static String SUBSCRIBE(){
-    	String res="SUBSCRIBE"+"\n"+"destination:ofri2"+"\n"+"id:101"+"\n"+"\n"+"\0";
+    	String res="SUBSCRIBE"+"\n"+"destination:ofri2"+"\n"+"id:102"+"\n"+"\n"+"\0";
     	return res;
     }
+    /**4
+     * @return
+     */
     public static String UNSUBSCRIBE(){
-    	String res="UNSUBSCRIBE"+"\n"+"id:101"+"\n"+"\n"+"\0";
+    	String res="UNSUBSCRIBE"+"\n"+"id:102"+"\n"+"\n"+"\0";
     	return res;
     }
+    /**5
+     * @return
+     */
     public static String disconnect(){
-    	String res="DISCONNECT"+"\n"+"receipt:01"+"\n"+"\n"+"\0";
+    	String res="DISCONNECT"+"\n"+"receipt:02"+"\n"+"\n"+"\0";
     	return res;
     }
 }

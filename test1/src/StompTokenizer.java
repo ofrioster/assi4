@@ -84,16 +84,17 @@ public class StompTokenizer implements StompTokenizerInterface{
 		StompFrame frame = null;
 		String msg="";
 		String message="";
+		boolean doneReading=false;
 //		do{
 			try {
 //				while (!br.ready()){}
 //				System.out.println("br ready");
-				while (((msg = br.readLine()) != null) &&!msg.equals("\0")){
+				while (((msg = br.readLine()) != null) &&!msg.equals("\0") &&!doneReading){
 				try {
 //				System.out.println("read line"+msg);
 //				if(br.ready()){
 //					msg=br.readLine();
-						System.out.println("read "+msg);
+//						System.out.println("read "+msg);
 //				}
 //				msg=br.readLine();
 					System.out.println("read "+msg);
@@ -103,6 +104,10 @@ public class StompTokenizer implements StompTokenizerInterface{
 //				e.printStackTrace();
 				}
 				message+=msg+"\n";
+				if (msg.equals("\0")){
+//					System.out.println("msg: "+msg);
+					doneReading=true;
+				}
 //			System.out.println("message: "+message);
 }
 			} catch (IOException e1) {
@@ -122,10 +127,12 @@ public class StompTokenizer implements StompTokenizerInterface{
 
             for (int i = 1; i < headerLines.length; i++) {
                     String key = headerLines[i].split(":")[0];
+//                    System.out.println("key: "+key);
                     frame.header.put(key, headerLines[i].substring(key.length() + 1));
             }
-
+//            System.out.println("add msg to body");
             frame.body = message.substring(commandheaderSections.length() + 2);
+//            System.out.println("finish add msg to body");
         }
         catch(Exception e){
         	frame=null;

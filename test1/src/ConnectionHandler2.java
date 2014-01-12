@@ -260,6 +260,7 @@ public class ConnectionHandler2 implements Runnable{
         	if(newClient){
         		try{
         			this.client=new Client(frame, clients);
+        			this.clients.add(client);
         		//	this.client=this.connectFrame.getClient();
         			StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, StompCommand.valueOf("CONNECTED"));
                     this.send(receiptFramConnectFrameToSend);
@@ -293,14 +294,15 @@ public class ConnectionHandler2 implements Runnable{
             
         }
         public void SUBSCRIBE(StompFrame frame){
-        	logger.log(Level.INFO, "SUBSCRIBE user:"+frame.header.get("id:"));
+        	logger.log(Level.INFO, "SUBSCRIBE user:"+frame.header.get("destination"));
         	Client newClient=null;
-        	String clientName=frame.header.get("destination:");
+        	String clientName=frame.header.get("destination");
         	Boolean found=false;
         	for (int i=0;i<this.clients.size();i++){
         		if (this.clients.get(i).getClientUserName().equals(clientName)){
         			newClient=this.clients.get(i);
         			found=true;
+        			System.out.println("user name: "+this.clients.get(i).getClientUserName()+" serch for: "+clientName);
         			if (this.clients.get(i).isClientFollowingClient(frame.header.get("id:"))){
         				this.error("Already following username:", frame);
         			}

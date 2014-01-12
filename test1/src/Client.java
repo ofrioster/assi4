@@ -287,8 +287,11 @@ public class Client implements ClientInterfce{
 	 * @param message
 	 */
 	public void addMessageToFollowers(Tweet tweet){
-		for (int i=0; i<this.followers.size();i++){
+	/*	for (int i=0; i<this.followers.size();i++){
 			this.followers.get(i).addFriendsMessage(tweet);
+		}*/
+		for (String key : this.followers.keySet()) {
+			this.followers.get(key).addFriendsMessage(tweet);
 		}
 	}
 	/** (non-Javadoc)
