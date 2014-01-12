@@ -227,7 +227,7 @@ public class ConnectionHandler2 implements Runnable{
                 out.println(msg);
         	}
         	 catch ( Exception e){
-        		 out.println("\0");
+        		 out.println("\0");//ToDO my need to be delete
         	 }
          /*    String response = protocol.processMessage(msg);
              if (response != null)
@@ -282,6 +282,7 @@ public class ConnectionHandler2 implements Runnable{
                 StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, "CONNECTED");
                 this.send(receiptFramConnectFrameToSend);
         	}
+        	this.client.setClientIsOnline(true);
         }
         public void DISCONNECT(StompFrame frame){
         	logger.log(Level.INFO, "DISCONNECT");
@@ -312,6 +313,7 @@ public class ConnectionHandler2 implements Runnable{
         			}
         			else{
         				this.client.addClientToFollow(frame.getHeader("id:"), newClient);
+        				this.send(null);
         			}
         		}
         	}

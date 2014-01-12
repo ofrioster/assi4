@@ -8,14 +8,15 @@ import ServerStomp.MessageFrame;
 import ServerStomp.StompFrame;
 import MainServer.*;
 
+public class Client implements ClientInterfce {
 
-public class Client implements ClientInterfce{
-	
 	private String userName;
-//	private ArrayList<Client> followers;
-	private Map<String, Client> following = new HashMap<String, Client>();
-	private Map<String, Client> followers = new HashMap<String, Client>();
-//	private ArrayList<Client> following; 
+	// private ArrayList<Client> followers;
+	// private Map<String, Client> following = new HashMap<String, Client>();
+	private ArrayList<Follower> following;
+	// private Map<String, Client> followers = new HashMap<String, Client>();
+	private ArrayList<Follower> followers;
+	// private ArrayList<Client> following;
 	private String hostIP;
 	private String hostPort;
 	private String password;
@@ -31,324 +32,402 @@ public class Client implements ClientInterfce{
 	private Stats stats;
 	private ConnectionHandler2 connectionHandler2;
 
-	
-	
-	public Client(String userName,String hostIP, String hostPort,String password,ArrayList<Client> clients,Stats stats,ConnectionHandler2 connectionHandler2){
-		this.userName=userName;
-//		this.followers= new ArrayList<Client>();
-	//	this.following= new ArrayList<Client>();
-		this.tweets= new ArrayList<Tweet>();
-		this.friendsMessage=new ArrayList<Tweet>();
-		this.topics=new ArrayList<Topic>();
-		this.hostIP=hostIP;
-		this.hostPort=hostPort;
-		this.password=password;
-		this.clientIsOnline=false;
-		this.clients=clients;
-		this.messageCount=0;
+	public Client(String userName, String hostIP, String hostPort,
+			String password, ArrayList<Client> clients, Stats stats,
+			ConnectionHandler2 connectionHandler2) {
+		this.userName = userName;
+		// this.followers= new ArrayList<Client>();
+		// this.following= new ArrayList<Client>();
+		this.tweets = new ArrayList<Tweet>();
+		this.friendsMessage = new ArrayList<Tweet>();
+		this.topics = new ArrayList<Topic>();
+		this.hostIP = hostIP;
+		this.hostPort = hostPort;
+		this.password = password;
+		this.clientIsOnline = false;
+		this.clients = clients;
+		this.messageCount = 0;
 		this.clients.add(this);
-		this.stats=stats;
-		this.connectionHandler2=connectionHandler2;
-		
-	}
-	public Client(String userName,String hostIP,String password,ArrayList<Client> clients,Stats stats,ConnectionHandler2 connectionHandler2){
-		this.userName=userName;
-//		this.followers= new ArrayList<Client>();
-//		this.following= new ArrayList<Client>();
-		this.tweets= new ArrayList<Tweet>();
-		this.friendsMessage=new ArrayList<Tweet>();
-		this.hostIP=hostIP;
-//		this.hostPort=hostPort;
-		this.password=password;
-		this.clientIsOnline=false;
-		this.clients=clients;
-		this.messageCount=0;
-		this.clients.add(this);
-		this.stats=stats;
-		this.connectionHandler2=connectionHandler2;
-	}
-	public Client(StompFrame frame,ArrayList<Client> clients,Stats stats,ConnectionHandler2 connectionHandler2){
-		this.userName=frame.getHeader("login");
-		this.tweets= new ArrayList<Tweet>();
-		this.friendsMessage=new ArrayList<Tweet>();
-		this.hostIP=frame.getHeader("host");
-		this.password=frame.getHeader("passcode");
-		this.acceptVersion=frame.getHeader("accept-version");
-		this.clientIsOnline=false;
-		this.clients=clients;
-		this.messageCount=0;
-		this.clients.add(this);
-		this.stats=stats;
-		this.connectionHandler2=connectionHandler2;
+		this.stats = stats;
+		this.connectionHandler2 = connectionHandler2;
+		this.followers = new ArrayList<Follower>();
+		this.following = new ArrayList<Follower>();
+
 	}
 
+	public Client(String userName, String hostIP, String password,
+			ArrayList<Client> clients, Stats stats,
+			ConnectionHandler2 connectionHandler2) {
+		this.userName = userName;
+		// this.followers= new ArrayList<Client>();
+		// this.following= new ArrayList<Client>();
+		this.tweets = new ArrayList<Tweet>();
+		this.friendsMessage = new ArrayList<Tweet>();
+		this.hostIP = hostIP;
+		// this.hostPort=hostPort;
+		this.password = password;
+		this.clientIsOnline = false;
+		this.clients = clients;
+		this.messageCount = 0;
+		this.clients.add(this);
+		this.stats = stats;
+		this.connectionHandler2 = connectionHandler2;
+		this.followers = new ArrayList<Follower>();
+		this.following = new ArrayList<Follower>();
+	}
 
-	/** (non-Javadoc)
+	public Client(StompFrame frame, ArrayList<Client> clients, Stats stats,
+			ConnectionHandler2 connectionHandler2) {
+		this.userName = frame.getHeader("login");
+		this.tweets = new ArrayList<Tweet>();
+		this.friendsMessage = new ArrayList<Tweet>();
+		this.hostIP = frame.getHeader("host");
+		this.password = frame.getHeader("passcode");
+		this.acceptVersion = frame.getHeader("accept-version");
+		this.clientIsOnline = false;
+		this.clients = clients;
+		this.messageCount = 0;
+		this.clients.add(this);
+		this.stats = stats;
+		this.connectionHandler2 = connectionHandler2;
+		this.followers = new ArrayList<Follower>();
+		this.following = new ArrayList<Follower>();
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * 
 	 * @return ClientUserName
 	 */
 	public String getClientUserName() {
 		return this.userName;
 	}
 
-
-	/** (non-Javadoc)
+	/**
+	 * (non-Javadoc)
+	 * 
 	 * @return ClientPassword()
 	 */
 	public String getClientPassword() {
 		return this.password;
 	}
 
-
-
-	/** (non-Javadoc)
-	 * @param Client newfollower
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @param Client
+	 *            newfollower
 	 */
-	public void addFollower(String id,Client newfollower) {
-		this.followers.put(id,newfollower);
-		
+	public void addFollower(String id, Client newfollower) {
+		Follower res = new Follower(id, newfollower);
+		this.followers.add(res);
+
 	}
 
-
-
-	/** (non-Javadoc)
-	 * @param follower To Remove
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @param follower
+	 *            To Remove
 	 */
 	public void removeFollower(Client followerToRemove) {
-		for (String key : this.followers.keySet()) {
-			if (this.followers.get(key).equals(followerToRemove)){
-				
-			}
-		}	
-	}
-
-
-	/** (non-Javadoc)
-	 * @param Client to follow
-	 */
-	public void addClientToFollow(String id,Client clienTofollow) {
-		this.following.put(id,clienTofollow);
-		clienTofollow.addFollower(id,this);
-		
-	}
-	/** (non-Javadoc)
-	 * @param Client name to follow
-	 */
-	public void addClientToFollow(String id,String clienNameTofollow) {
-		Boolean found=false;
-		for (int i=0; i<this.clients.size() && !found;i++){
-			if (this.clients.get(i).getClientUserName().equals(clienNameTofollow)){
-				this.following.put(id,this.clients.get(i));
-				found=true;
-				this.clients.get(i).addFollower(id,this);
+		for (int i = 0; i < this.followers.size(); i++) {
+			if (this.followers.get(i).getClient().equals(followerToRemove)) {
+				this.followers.remove(i);
 			}
 		}
-		
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @param Client
+	 *            to follow
+	 */
+	public void addClientToFollow(String id, Client clienTofollow) {
+		Follower follower = new Follower(id, clienTofollow);
+		this.following.add(follower);
+		clienTofollow.addFollower(id, this);
+
+	}
 
 	/**
-	 * @param following Client
+	 * (non-Javadoc)
+	 * 
+	 * @param Client
+	 *            name to follow
+	 */
+	public void addClientToFollow(String id, String clienNameTofollow) {
+		Boolean found = false;
+		for (int i = 0; i < this.clients.size() && !found; i++) {
+			if (this.clients.get(i).getClientUserName()
+					.equals(clienNameTofollow)) {
+				Follower follower = new Follower(id, this.clients.get(i));
+				this.following.add(follower);
+				// this.following.put(id,this.clients.get(i));
+				found = true;
+				this.clients.get(i).addFollower(id, this);
+			}
+		}
+
+	}
+
+	/**
+	 * @param following
+	 *            Client
 	 */
 	public void removeFollowingClient(Client followingClient) {
-		Boolean found=false;
-		for (int i=0; i<this.following.size() && !found;i++){
-			if (this.following.get(i).equals(followingClient)){
+		Boolean found = false;
+		for (int i = 0; i < this.following.size() && !found; i++) {
+			if (this.following.get(i).equals(followingClient)) {
 				this.following.remove(i);
-				found=true;
+				found = true;
 				followingClient.removeFollower(this);
 			}
 		}
-		
+
 	}
+
 	/**
-	 * @param following Client by his ID
+	 * @param following
+	 *            Client by his ID
 	 */
 	public void removeFollowingClientByID(String clientID) {
-		Client followinClient=this.following.get(clientID);
-		followinClient.removeFollower(this);
-		this.clients.remove(clientID);
-	/*	for (int i=0; i<this.following.size() && !found;i++){
-			if (this.following.get(i).equals(followingClient)){
+		for (int i = 0; i < this.following.size(); i++) {
+			if (this.following.get(i).getID().equals(clientID)) {
 				this.following.remove(i);
-				found=true;
-				followingClient.removeFollower(this);
 			}
-		}*/
-		
+		}
+//		Client followinClient = this.following.get(clientID);
+//		followinClient.removeFollower(this);
+//		this.clients.remove(clientID);
+		/*
+		 * for (int i=0; i<this.following.size() && !found;i++){ if
+		 * (this.following.get(i).equals(followingClient)){
+		 * this.following.remove(i); found=true;
+		 * followingClient.removeFollower(this); } }
+		 */
+
 	}
+
 	/**
-	 * @param following Client Name
+	 * @param following
+	 *            Client Name
 	 */
 	public String removeFollowingClient(String followingClientName) {
-		String res=null;
-		Boolean found=false;
-		if (this.userName.equals(followingClientName)){
+		String res = null;
+		Boolean found = false;
+		if (this.userName.equals(followingClientName)) {
 			return "Trying to unfollow itself";
 		}
-		for (int i=0; i<this.following.size() && !found;i++){
-			if (this.following.get(i).getClientUserName().equals(followingClientName)){
-				this.following.get(i).removeFollower(this);
+		for (int i = 0; i < this.following.size() && !found; i++) {
+			if (this.following.get(i).getClient().getClientUserName().equals(followingClientName)) {
 				this.following.remove(i);
-				found=true;
+				found = true;
 			}
 		}
-		if (!found){
-			for (int i=0;i<this.clients.size();i++){
-				if (this.clients.get(i).isThisTheClient(followingClientName)){
+		if (!found) {
+			for (int i = 0; i < this.clients.size(); i++) {
+				if (this.clients.get(i).isThisTheClient(followingClientName)) {
 					return "Not following this user";
 				}
 			}
 			return "Wrong username";
 		}
-		
+
 		return res;
-		
+
 	}
-	/** (non-Javadoc)
+
+	/**
+	 * (non-Javadoc)
+	 * 
 	 * @param newHostIP
 	 */
 	public void setHostIP(String hostIP) {
-		this.hostIP=hostIP;
-		
+		this.hostIP = hostIP;
+
 	}
 
-
-	/** (non-Javadoc)
+	/**
+	 * (non-Javadoc)
+	 * 
 	 * @param newHostPort
-	 * @param hostPort 
+	 * @param hostPort
 	 */
 	public void setHostPort(String hostPort) {
-		this.hostPort=hostPort;
-		
+		this.hostPort = hostPort;
+
 	}
 
-
-
-	/** (non-Javadoc)
+	/**
+	 * (non-Javadoc)
+	 * 
 	 * @param new Password
 	 */
 	public void setPassword(String password) {
-		this.password=password;
+		this.password = password;
 		/*
-		public Socket getSocket(){
-			return this.socket;
-		}*/
+		 * public Socket getSocket(){ return this.socket; }
+		 */
 	}
 
-
-	/** (non-Javadoc)
-	 * @return  Boolean confirm Password
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @return Boolean confirm Password
 	 */
 	public Boolean confirmPassword(String Password) {
-		Boolean res= this.password.equals(Password);
+		Boolean res = this.password.equals(Password);
 		return res;
 	}
 
-
-	/** (non-Javadoc)
-	 * @return  Boolean confirm hostIP
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @return Boolean confirm hostIP
 	 */
 	public Boolean confirmHostIP(String hostIP) {
-		Boolean res= this.hostIP.equals(hostIP);
+		Boolean res = this.hostIP.equals(hostIP);
 		return res;
 	}
-	/** (non-Javadoc)
-	 * @return  Boolean confirm hostPort
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @return Boolean confirm hostPort
 	 */
 	public Boolean confirmHostPort(String hostPort) {
-		Boolean res= this.hostPort.equals(hostPort);
+		Boolean res = this.hostPort.equals(hostPort);
 		return res;
 	}
-	/** (non-Javadoc)
+
+	/**
+	 * (non-Javadoc)
+	 * 
 	 * @param boolean if the client is on line
 	 */
-	public void setClientIsOnline(Boolean clientIsOnline){
-		this.clientIsOnline=clientIsOnline;
+	public void setClientIsOnline(Boolean clientIsOnline) {
+		this.clientIsOnline = clientIsOnline;
 	}
-	/** add new message that arrive from client and send it to all followers
-	 * @param frameframe.getBody()
+
+	/**
+	 * add new message that arrive from client and send it to all followers
+	 * 
+	 * @param frameframe
+	 *            .getBody()
 	 */
-	public void addNewMessage(MessageFrame frame){
-		Tweet tweet=new Tweet(frame.getMessageId(), frame.getBody(), this.followers.size(),this.userName);
+	public void addNewMessage(MessageFrame frame) {
+		Tweet tweet = new Tweet(frame.getMessageId(), frame.getBody(),
+				this.followers.size(), this.userName);
 		this.tweets.add(tweet);
 		this.addMessageToFollowers(tweet);
 	}
-	/** (non-Javadoc)
-	 * @param tweet to add
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @param tweet
+	 *            to add
 	 */
-	public void addTweet(Tweet tweet){
-	//	Tweet tweetObject=new Tweet(tweetId, tweetId, this.followers.size(),this.userName);
+	public void addTweet(Tweet tweet) {
+		// Tweet tweetObject=new Tweet(tweetId, tweetId,
+		// this.followers.size(),this.userName);
 		this.tweets.add(tweet);
 		this.addMessageToFollowers(tweet);
 		this.stats.addTweet();
 	}
-	/** (non-Javadoc)
+
+	/**
+	 * (non-Javadoc)
+	 * 
 	 * @return the tweet in the index
 	 */
-	public String getTweet(int index){
+	public String getTweet(int index) {
 		return this.tweets.get(index).getTweet();
 	}
-	public ArrayList<Tweet> getFriendsMessage(){
+
+	public ArrayList<Tweet> getFriendsMessage() {
 		return this.friendsMessage;
 	}
-	/** index 0=subscription, index 1=message-id
-	 * @param string array newMessage
+
+	/**
+	 * index 0=subscription, index 1=message-id
+	 * 
+	 * @param string
+	 *            array newMessage
 	 */
-	public synchronized void addFriendsMessage(Tweet tweet){
+	public synchronized void addFriendsMessage(Tweet tweet) {
 		this.friendsMessage.add(tweet);
-		if (this.clientIsOnline){
-			while(this.hasNewMessage()){
+		if (this.clientIsOnline) {
+			while (this.hasNewMessage()) {
 				this.connectionHandler2.sendNewMessage();
 			}
 		}
 	}
-	/**index 0=subscription, index 1=message-id
+
+	/**
+	 * index 0=subscription, index 1=message-id
+	 * 
 	 * @param message
 	 */
-	public void addMessageToFollowers(Tweet tweet){
-		/*	for (int i=0; i<this.followers.size();i++){
-		this.followers.get(i).addFriendsMessage(tweet);
-	}*/
-	for (String key : this.followers.keySet()) {
-		this.followers.get(key).addFriendsMessage(tweet);
+	public void addMessageToFollowers(Tweet tweet) {
+		for (int i = 0; i < this.followers.size(); i++) {
+			this.followers.get(i).getClient().addFriendsMessage(tweet);
+		}
+		/*
+		 * for (String key : this.followers.keySet()) {
+		 * this.followers.get(key).addFriendsMessage(tweet); }
+		 */
 	}
-	}
-	/** (non-Javadoc)
-	 * @param topic to add
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @param topic
+	 *            to add
 	 */
 	public void addTopic(Topic newTopic) {
 		this.topics.add(newTopic);
-		
+
 	}
 
-	/** (non-Javadoc)
-	 * @param topic to remove
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @param topic
+	 *            to remove
 	 */
 	public void removeTopic(Topic topicToRemove) {
-		for (int i=0;i<this.topics.size();i++){
-			if (this.topics.get(i).equals(topicToRemove)){
+		for (int i = 0; i < this.topics.size(); i++) {
+			if (this.topics.get(i).equals(topicToRemove)) {
 				this.topics.remove(i);
 			}
 		}
-		
+
 	}
+
 	/**
 	 * @return Boolean if this client have a new message that has not been send
 	 */
-	public synchronized Boolean hasNewMessage(){
-		return (this.messageCount<(this.friendsMessage.size()-1));
+	public synchronized Boolean hasNewMessage() {
+		return (this.messageCount < (this.friendsMessage.size()));
 	}
+
 	/**
 	 * @return the new message as String
 	 */
-	public synchronized String getNewMessage(){
-		if(this.messageCount<(this.friendsMessage.size()-1)){
+	public synchronized String getNewMessage() {
+		if (this.messageCount < this.friendsMessage.size()) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("destination:");
-			builder.append(this.following.get(this.friendsMessage.get(this.messageCount-1).userNameTweet).getClientUserName());
+			// builder.append(this.following.get(this.friendsMessage.get(this.messageCount).userNameTweet).getClientUserName());
+			builder.append(this.followers.get(messageCount).getClient()
+					.getClientUserName());
 			builder.append('\n');
 			builder.append("subscription:");
-			builder.append(this.friendsMessage.get(this.messageCount-1).getTweetUserName());
+			builder.append(this.friendsMessage.get(this.messageCount)
+					.getTweetUserName());// TODO delete -1 in all
 			builder.append('\n');
 			builder.append("message-id:");
 			builder.append(this.messageCount);
@@ -359,114 +438,154 @@ public class Client implements ClientInterfce{
 			this.messageCount++;
 			return builder.toString();
 		}
-		
+
 		return null;
 	}
-	public synchronized MessageFrame getNextMessage(){
-		String msg=this.getNewMessage();
-		MessageFrame res=new MessageFrame(this.clients,this.topics,msg,this.stats);
+
+	/*
+	 * public String getFollowingUserName(int index){//TODO add to interface
+	 * String name=this.friendsMessage.get(index).userNameTweet;
+	 * System.out.println("following siza: "+this.following.size()); for (String
+	 * key : this.followers.keySet()) {
+	 * if(this.following.get(key).equals(name)){ return
+	 * this.following.get(key).getClientUserName(); } } return null;
+	 * 
+	 * }
+	 */
+	public synchronized MessageFrame getNextMessage() {
+		String msg = this.getNewMessage();
+		MessageFrame res = new MessageFrame(this.clients, this.topics, msg,
+				this.stats);
 		return res;
 	}
 
-
-	/** change variable that this client is off line
+	/**
+	 * change variable that this client is off line
 	 * 
 	 */
 	public void thisClientIsOffLine() {
-		this.clientIsOnline=false;
-		
+		this.clientIsOnline = false;
+
 	}
-	/** change variable that this client is on line
+
+	/**
+	 * change variable that this client is on line
 	 * 
 	 */
 	public void thisClientIsOnLine() {
-		this.clientIsOnline=true;
-		
+		this.clientIsOnline = true;
+
 	}
-	/** check if this is the client user name
-	 * @param user name
+
+	/**
+	 * check if this is the client user name
+	 * 
+	 * @param user
+	 *            name
 	 */
-	public Boolean isThisTheClient(String userName){
+	public Boolean isThisTheClient(String userName) {
 		return this.userName.equals(userName);
 	}
-	public Boolean isThisIsThePassword(String password){
+
+	public Boolean isThisIsThePassword(String password) {
 		return this.password.equals(password);
 	}
-	/** is this client is already connect?
+
+	/**
+	 * is this client is already connect?
+	 * 
 	 * @return Boolean of is this client is already connect
 	 */
-	public Boolean isClientOnLine(){
+	public Boolean isClientOnLine() {
 		return this.clientIsOnline;
 	}
-	public Boolean isClientFollowingClient(String id){
-		return this.following.containsKey(id);
+
+	public Boolean isClientFollowingClient(String id) {
+		for (int i=0;i<this.following.size();i++){
+			if (this.following.get(i).getID().equals(id)){
+				return true;
+			}
+		}
+		return false;
 	}
-	public int getNumberOfFollowers(){
+
+	public int getNumberOfFollowers() {
 		return this.followers.size();
 	}
-	public int getNumberOfTweet(){
+
+	public int getNumberOfTweet() {
 		return this.tweets.size();
 	}
-	/**  mentions in other followers tweets
+
+	/**
+	 * mentions in other followers tweets
 	 * 
 	 */
-	public int getHowMenyTimesThisClientMention(){
+	public int getHowMenyTimesThisClientMention() {
 		return this.numberOfTimeClienMention;
 	}
-	/** add 1 to mentions in other followers tweets
+
+	/**
+	 * add 1 to mentions in other followers tweets
 	 * 
 	 */
-	public void updateClientMention(){
+	public void updateClientMention() {
 		this.numberOfTimeClienMention++;
 	}
-	/**  mentions in other his tweets
+
+	/**
+	 * mentions in other his tweets
 	 * 
 	 */
-	public int getHowMenyTimesThisClientMentionInHisTweets(){
+	public int getHowMenyTimesThisClientMentionInHisTweets() {
 		return this.numberOfTimeClienMentionInHisTweets;
 	}
-	/** add 1 to mentions in other his tweets
+
+	/**
+	 * add 1 to mentions in other his tweets
 	 * 
 	 */
-	public void updateClientMentionInHisTweets(){
+	public void updateClientMentionInHisTweets() {
 		this.numberOfTimeClienMentionInHisTweets++;
 	}
+
 	/**
 	 * @return number of tweets that has been send
 	 */
-	public int totalNumberOfTweets(){
-		int res=0;
-		for (int i=0;i<this.tweets.size();i++){
-			if(this.tweets.get(i).isAllMessagesHasBeenSend()){
+	public int totalNumberOfTweets() {
+		int res = 0;
+		for (int i = 0; i < this.tweets.size(); i++) {
+			if (this.tweets.get(i).isAllMessagesHasBeenSend()) {
 				res++;
 			}
-			
+
 		}
 		return res;
 	}
+
 	/**
 	 * @return the total time of delivered tweets
 	 */
-	public long totalSendTime(){
-		long res=0;
-		for (int i=0;i<tweets.size();i++){
-			if(this.tweets.get(i).isAllMessagesHasBeenSend()){
-				res+=this.tweets.get(i).getTotalSendTime();
+	public long totalSendTime() {
+		long res = 0;
+		for (int i = 0; i < tweets.size(); i++) {
+			if (this.tweets.get(i).isAllMessagesHasBeenSend()) {
+				res += this.tweets.get(i).getTotalSendTime();
 			}
 		}
 		return res;
 	}
-	/** sent this message to this client and all his followers
+
+	/**
+	 * sent this message to this client and all his followers
+	 * 
 	 * @see ClientInterfce#statsSend(java.lang.String)
 	 */
-	public void statsSend(String msg){
-		Tweet tweet=new Tweet(msg, this.followers.size(), this.userName);
+	public void statsSend(String msg) {
+		Tweet tweet = new Tweet(msg, this.followers.size(), this.userName);
 		this.friendsMessage.add(tweet);
 		this.addTweet(tweet);
-		
+
 	}
-	
-
-
 
 }
