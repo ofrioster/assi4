@@ -39,67 +39,11 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
         pos = line.find(delimiter);
         string command = line.substr(0, pos);
 		line.erase(0, pos + delimiter.length());
-        if (command == "login")
-        {
-            // ...
-        	STOMP::hdrmap h;
-        	h.insert(std::make_pair("accept-version","1.2"));
 
+		if (command == "follow")
+        {
             pos = line.find(delimiter);
             string arg = line.substr(0, pos);
-    		line.erase(0, pos + delimiter.length());
-
-        	h.insert(std::make_pair("host",arg));
-
-
-            pos = line.find(delimiter);
-            arg = line.substr(0, pos);
-    		line.erase(0, pos + delimiter.length());
-        	h.insert(std::make_pair("login",arg));
-
-
-            pos = line.find(delimiter);
-            arg = line.substr(0, pos);
-    		line.erase(0, pos + delimiter.length());
-        	h.insert(std::make_pair("passcode",arg));
-
-
-        	STOMP::ConnectFrame *tmpFrame =  new STOMP::ConnectFrame(h,"");
-        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
-//
-//        	"<html> \
-//        	<head>	\
-//        	<title>KarlMarxs tweeter site</title>	\
-//        	<style type=\"text/css\"> \
-//        	.username{	\
-//        		font-weight:bold; \
-//        	}\
-//        	.tweet{\
-//        		font-weight:normal;\
-//        		margin-left: 50px;\
-//        	}\
-//        	.time{\
-//        		color: gray;\
-//        		margin-left: 35px;\
-//        	}\
-//        	.entry{\
-//        		margin-top: 10px;\
-//        		background-color: #AACCFF;
-//        	}
-//        	</style>
-//        	</head>
-//        	<body>
-//        	<h1>KarlMarx</h1>
-//
-
-
-
-
-        }
-        else if (command == "follow")
-        {
-            pos = line.find(delimiter);
-            string arg = arg = line.substr(0, pos);
     		line.erase(0, pos + delimiter.length());
         	folowing.insert(std::make_pair(arg,_counter));
 
@@ -139,11 +83,14 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
         }
         else if (command == "logout")
         {
-           // ...
+
+	        	STOMP::DisconnectFrame *tmpFrame =  new STOMP::DisconnectFrame(10);//TODO Change to dynamic
+	        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+	        	return 0;
         }
         else if (command == "exit_client")
         {
-           // ...
+        	return 1;
         }
         else if (command == "stop")
         {

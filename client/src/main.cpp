@@ -20,26 +20,93 @@
 
 int main(int argc, char *argv[]){
 
-    if (argc < 3) {
-        std::cerr << "Usage: " << argv[0] << " host port" << std::endl << std::endl;
-        return -1;
-    }
 
-    std::string host = argv[1];
-    unsigned short  port = atoi(argv[2]);
-	ConnectionHandler connectionHandler(host,port);
-	  std::ofstream outfile;
+    std::string host;
+    unsigned short  port;
+
+
+	while(1){
+
+        const short bufsize = 1024;
+        char buf[bufsize];
+        std::cin.getline(buf, bufsize);
+        std::string line(buf);
+
+		STOMP::hdrmap h;
+	    //std::string delimiter = " ";
+	    size_t pos = 0;
+	    pos = line.find(' ');
+	    string command = line.substr(0, pos);
+		line.erase(0, pos + 1);
+
+
+	    if (command == "login")
+	    {
+	        // ...
+	    	h.insert(std::make_pair("accept-version","1.2"));
+
+	        pos = line.find(' ');
+	        string arg = line.substr(0, pos);
+			line.erase(0, pos + 1);
+
+	    	h.insert(std::make_pair("host",arg));
+	    	host = arg;
+
+	        pos = line.find(' ');
+	        arg = line.substr(0, pos);
+	        line.erase(0, pos + 1);
+	    	  char a_char[10];
+	    	  //strcpy(array, s.c_str());
+	    	  strcpy (a_char,arg.c_str());
+	    	  //cout<<"As an integer: "<<atoi(a_char);
+	    	  port = atoi(a_char);
+
+		        pos = line.find(' ');
+		        arg = line.substr(0, pos);
+		        line.erase(0, pos + 1);
+		    	h.insert(std::make_pair("login",arg));
+
+	        pos = line.find(' ');
+	        arg = line.substr(0, pos);
+			line.erase(0, pos + 1);
+	    	h.insert(std::make_pair("passcode",arg));
+
+
+
+	    ConnectionHandler connectionHandler(host,port);
+		std::ofstream outfile;
+	    if (!connectionHandler.connect()) {
+	        std::cerr << "Cannot connect to " << "host" << ":" << "port" << std::endl;
+	        return 1;
+	    }
+		STOMP::ConnectFrame *tmpFrame =  new STOMP::ConnectFrame(h,"");
+		connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+
 
     //connectionHandler = connectionHandler(host,port);
 	std::map<string, int> folowing;
     boost::mutex mutex;
-    Network task1(&mutex,&stompFramesIn);
-    Console task2(&mutex,&stompFramesIn);
 
-    boost::thread th1(&Network::run, &task1, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(outfile));
-    boost::thread th2(&Console::run, &task2, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(outfile));
+    Console task1(&mutex,&stompFramesIn);
+    Network task2(&mutex,&stompFramesIn);
+
+
+    boost::thread th1(&Console::run, &task1, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(outfile));
+    boost::thread th2(&Network::run, &task2, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(outfile));
+
+
     th1.join();
+    cout<< "th1 quit"<<endl;
+    connectionHandler.close();
     th2.join();
+    cout<< "th2 quit"<<endl;
 
+	    }else{
+	        cout<< "wrong command"<<endl;
+
+
+
+	    }
+	}
     return 0;
 }

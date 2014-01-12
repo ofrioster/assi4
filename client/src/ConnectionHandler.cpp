@@ -71,22 +71,37 @@
     bool ConnectionHandler::sendLine(std::string& line) {
         return sendFrameAscii(line, '\n');
     }
+//
+//    bool ConnectionHandler::getFrameAscii(std::string& frame, char delimiter) {
+//        char ch;
+//        // Stop when we encounter the delimiter character.
+//        // Notice that the delimiter is appended to the frame string.
+//        try {
+//            do{
+//                getBytes(&ch, 1);
+//                frame.append(1, ch);
+//            }while (delimiter != ch);
+//        } catch (std::exception& e) {
+//            std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+//            return false;
+//        }
+//        return true;
+//    }
 
     bool ConnectionHandler::getFrameAscii(std::string& frame, char delimiter) {
         char ch;
-        // Stop when we encounter the delimiter character.
-        // Notice that the delimiter is appended to the frame string.
-        try {
-            do{
-                getBytes(&ch, 1);
-                frame.append(1, ch);
-            }while (delimiter != ch);
-        } catch (std::exception& e) {
-            std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
-            return false;
-        }
+        // Stop when we encounter the null character.
+        // Notice that the null character is not appended to the frame string.
+        do{
+    	if(!getBytes(&ch, 1))
+    	{
+    	     return false;
+    	}
+    	frame.append(1, ch);
+        }while (delimiter != ch);
         return true;
     }
+
 
     bool ConnectionHandler::sendFrameAscii(const std::string& frame, char delimiter) {
         bool result=sendBytes(frame.c_str(),frame.length());

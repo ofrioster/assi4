@@ -24,12 +24,15 @@
 
 
 		int Network::run (ConnectionHandler& connectionHandler, std::map<string, int> folowing,std::ofstream& outfile) {
+//	        try
+//	        {
+	            // Sleep and check for interrupt.
+	            // To check for interrupt without sleep,
+	            // use boost::this_thread::interruption_point()
+	            // which also throws boost::thread_interrupted
+
 
 //			ConnectionHandler connectionHandler(host, port);
-        if (!connectionHandler.connect()) {
-            std::cerr << "Cannot connect to " << "host" << ":" << "port" << std::endl;
-            return 1;
-        }
 
         //From here we will see the rest of the ehco client implementation:
         while (1) {
@@ -75,7 +78,7 @@
             std::string answer;
             if (!connectionHandler.getFrameAscii(answer,'\0')) {
                 std::cout << "Disconnected. Exiting...\n" << std::endl;
-                break;
+                return 2;
             }
             std::string line;
             std::string delimiter = "\n";
@@ -106,11 +109,24 @@
                 pos = line.find(":");
                 string headerName = line.substr(0, pos);
         		line.erase(0, pos + 1);
-
+        		if (headerName == "receipt-id"){
                 pos = line.find("\n");
                 string headerValue = line.substr(0, pos);
         		line.erase(0, pos + 1);
-        		headers.insert(std::make_pair(headerName , headerValue));
+        		char a_char[10];
+  	    	  //strcpy(array, s.c_str());
+        		strcpy (a_char,headerValue.c_str());
+  	    	  //cout<<"As an integer: "<<atoi(a_char);
+        		int id = atoi(a_char);
+
+        		if (id == 10){
+        			return 0;
+        		}
+        		}
+        		cout<<"problem with recipt"<<endl;
+        		//headers.insert(std::make_pair(headerName , headerValue));
+
+
 
 
     		}else if (command == "ERROR"){
@@ -144,6 +160,14 @@
             }
             //}
         }
+
+
+//        }
+//        catch(boost::thread_interrupted&)
+//        {
+//            cout << "Thread is stopped" << endl;
+//            return 1;
+//        }
         return 0;
     }
 
