@@ -314,6 +314,7 @@ public class ConnectionHandler2 implements Runnable{
         			else{
         				this.client.addClientToFollow(frame.getHeader("id:"), newClient);
         				this.send(null);
+        				return;
         			}
         		}
         	}

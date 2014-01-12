@@ -422,8 +422,7 @@ public class Client implements ClientInterfce {
 			StringBuilder builder = new StringBuilder();
 			builder.append("destination:");
 			// builder.append(this.following.get(this.friendsMessage.get(this.messageCount).userNameTweet).getClientUserName());
-			builder.append(this.followers.get(messageCount).getClient()
-					.getClientUserName());
+			builder.append(this.following.get(messageCount).getClient().getClientUserName());
 			builder.append('\n');
 			builder.append("subscription:");
 			builder.append(this.friendsMessage.get(this.messageCount)
@@ -454,8 +453,7 @@ public class Client implements ClientInterfce {
 	 */
 	public synchronized MessageFrame getNextMessage() {
 		String msg = this.getNewMessage();
-		MessageFrame res = new MessageFrame(this.clients, this.topics, msg,
-				this.stats);
+		MessageFrame res = new MessageFrame(this.clients, this.topics, msg,	this.stats);
 		return res;
 	}
 

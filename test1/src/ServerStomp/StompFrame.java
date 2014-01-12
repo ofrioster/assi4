@@ -143,14 +143,16 @@ public class  StompFrame implements StompFrameInterface{
 	 */
 	public void addHeaderAndBody(String raw) {
 
-        String[] headerLines = raw.split("\n");
+		String commandheaderSections = raw.split("\n\n")[0];
+        String[] headerLines = commandheaderSections.split("\n");
 
-        for (int i = 1; i < headerLines.length; i++) {
+        for (int i = 0; i < headerLines.length; i++) {
                 String key = headerLines[i].split(":")[0];
+                
                 this.header.put(key, headerLines[i].substring(key.length() + 1));
         }
 
-        this.body = raw.substring(raw.length() + 2);
+        this.body = raw.substring(commandheaderSections.length() + 2);
 
 	}
 	public String getHeader(String msg){
