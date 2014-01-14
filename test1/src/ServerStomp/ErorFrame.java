@@ -18,9 +18,25 @@ public class ErorFrame extends StompFrame implements ErorFrameInterface{
 	}
 	public ErorFrame(ArrayList<Client> clients,ArrayList<Topic> topics,String whatIsTheProblem,StompFrame frame){
 		super(clients,topics);
-		this.command=StompCommand.valueOf("ERROR");
-		this.header.put("message", "malformed STOMP frame received");
-		this.header.put("The message", frame.getString());
+		try{
+			this.command=StompCommand.valueOf("ERROR");
+		}
+		catch (Exception e){
+			
+		}
+		try{
+			this.header.put("message", "malformed STOMP frame received");
+		}
+		catch (Exception e){
+			
+		}
+		try{
+			this.header.put("The message", frame.getString());
+		}
+		catch (Exception e){
+			
+		}
+
 		this.body=whatIsTheProblem;
 		
 		
