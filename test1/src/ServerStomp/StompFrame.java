@@ -83,7 +83,8 @@ public class  StompFrame implements StompFrameInterface{
                     frame += this.body;
             }
             frame += "\n";
-            frame += "\0";
+          //  frame += "\0";
+            frame += "\u0000";
             return frame;
     }
 

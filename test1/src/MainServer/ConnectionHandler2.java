@@ -123,25 +123,31 @@ public class ConnectionHandler2 implements Runnable{
                 	this.sendNewMessage();
                 }
                 // run handlers
-                if(frame.getStringCommend().equals("CONNECT")){
-                	this.CONNECT(frame);
+                try{
+                	 if(frame.getStringCommend().equals("CONNECT")){
+                     	this.CONNECT(frame);
+                     }
+                     else if(frame.getStringCommend().equals("DISCONNECT")){
+                     	this.DISCONNECT(frame);
+                     }
+                     else if(frame.getStringCommend().equals("SEND")){
+                     	this.SEND(frame);
+                     }
+                     else if(frame.getStringCommend().equals("SUBSCRIBE")){
+                     	this.SUBSCRIBE(frame);
+                     }
+                     else if(frame.getStringCommend().equals("UNSUBSCRIBE")){
+                     	 this.UNSUBSCRIBE(frame);
+                     }
+                     else{
+                     	this.error("Did not contain a destination header, which is required for message propagation.", frame);
+                     	
+                     }
                 }
-                else if(frame.getStringCommend().equals("DISCONNECT")){
-                	this.DISCONNECT(frame);
+                catch (Exception e){
+                	this.error("worng command", frame);
                 }
-                else if(frame.getStringCommend().equals("SEND")){
-                	this.SEND(frame);
-                }
-                else if(frame.getStringCommend().equals("SUBSCRIBE")){
-                	this.SUBSCRIBE(frame);
-                }
-                else if(frame.getStringCommend().equals("UNSUBSCRIBE")){
-                	 this.UNSUBSCRIBE(frame);
-                }
-                else{
-                	this.error("Did not contain a destination header, which is required for message propagation.", frame);
-                	
-                }
+               
             /*    switch (frame.command) {
                         case CONNECT:
 
@@ -229,6 +235,7 @@ public class ConnectionHandler2 implements Runnable{
         	 catch ( Exception e){
         		 out.println("\0");//ToDO my need to be delete
         	 }
+        	System.out.println("message send");
          /*    String response = protocol.processMessage(msg);
              if (response != null)
              {
@@ -296,7 +303,7 @@ public class ConnectionHandler2 implements Runnable{
         	MessageFrame messageFrame=new MessageFrame(frame,this.stats);
             this.messageFrameList.add(messageFrame);
             this.client.addNewMessage(messageFrame);
-            this.send(null);
+          //  this.send(null);
             
         }
         public void SUBSCRIBE(StompFrame frame){
@@ -313,7 +320,7 @@ public class ConnectionHandler2 implements Runnable{
         			}
         			else{
         				this.client.addClientToFollow(frame.getHeader("id:"), newClient);
-        				this.send(null);
+        			//	this.send(null);
         				return;
         			}
         		}

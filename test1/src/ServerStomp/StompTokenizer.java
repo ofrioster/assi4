@@ -8,6 +8,7 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import ServerClient.Client;
 import ServerClient.Topic;
@@ -99,8 +100,25 @@ public class StompTokenizer implements StompTokenizerInterface{
 			try {
 //				while (!br.ready()){}
 //				System.out.println("br ready");
-				while (((msg = br.readLine()) != null) &&!msg.equals("\0") &&!doneReading){
+			//	while (((msg = br.readLine()) != null) && !msg.equals("\u0000") && !doneReading){
+				///********************///
+				int msg2=br.read();
+				char msg3=(char) msg2;
+				while (msg3!= '\u0000'){
+					msg="";
+					while (msg3!='\n'){
+					msg+=msg3;	
+					msg2=br.read();
+					msg3=(char) msg2;
+					}
+						
+				
+				
+				//while ((msg2 = br.read()){
+					
+					//*******************//
 				try {
+
 //				System.out.println("read line"+msg);
 //				if(br.ready()){
 //					msg=br.readLine();
@@ -114,11 +132,16 @@ public class StompTokenizer implements StompTokenizerInterface{
 //				e.printStackTrace();
 				}
 				message+=msg+"\n";
-				if (msg.equals("\0")){
+				if (msg.contains("\u0000")){
 //					System.out.println("msg: "+msg);
 					doneReading=true;
 				}
 //			System.out.println("message: "+message);
+				
+				/**///
+				msg2=br.read();
+				msg3=(char) msg2;
+				//**//
 }
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block

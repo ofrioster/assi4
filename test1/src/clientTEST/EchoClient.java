@@ -12,7 +12,7 @@ public class EchoClient {
         BufferedReader in = null;
  
         // Get host and port
-        String host = "localhost";//args[0];
+        String host = "10.0.0.7";//args[0];
         int port =50001;// Integer.decode(args[1]).intValue();
         
         System.out.println("Connecting to " + host + ":" + port);
