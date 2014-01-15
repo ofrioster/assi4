@@ -8,7 +8,7 @@
 
 	#include <iostream>
     #include <stdlib.h>
-    #include "../include2/ConnectionHandler.h"
+ //   #include "../include2/ConnectionHandler.h"
 	#include <boost/thread.hpp>
     #include "../include2/Network.h"
     #include "../include2/Console.h"
@@ -23,15 +23,20 @@ using namespace std;
 int main(int argc, char *argv[]) {
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 	Network network("a");
-	Console console("\n");
+	Console console("'\n'");
+	Console console2("1");
+	string host= "127.0.0.1";
+	string port=("50001");
 
 
 
-    boost::thread th1(&Console::run, &network, boost::ref(network));
-    boost::thread th2(&Network::run, &console);
+    boost::thread th1(&Console::run, &console, boost::ref(network));
+    boost::thread th2(&Network::run, &network, (host), (atoi(port.c_str())));
+   // boost::thread th2(&Network::run, &network);
     th1.join();
-   	th2.join();
-
+    th2.join();
+   //	th2.join();
+cout<<"now"<<endl;
 
 /*
 string host= "127.0.0.1";
@@ -101,7 +106,7 @@ string host= "127.0.0.1";
 			}
 			std::cout << "ans: " <<answer << std::endl;
 	}*/
-	while (1){}//TODO need to add exit
+	while (1){cout<< "end main"<<endl;}//TODO need to add exit
 		cout<< "end main"<<endl;
 
 	return 0;
