@@ -11,7 +11,7 @@ namespace STOMP {
 // constructors
 
 StompFrame::StompFrame(string cmd){
-	  m_command="";
+	  m_command=cmd;
 //    m_headers= *(new hdrmap);
 //    m_body="";
     };

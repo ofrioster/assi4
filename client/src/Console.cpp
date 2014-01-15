@@ -50,6 +50,7 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
 
         	STOMP::SubscribeFrame *tmpFrame =  new STOMP::SubscribeFrame("/topic/"+arg, _counter);
         	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+//        	connectionHandler.sendBytes("\n",1);
 
     		_counter++;
 
@@ -70,6 +71,8 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
         else if (command == "tweet")
         {
 
+        	STOMP::SendFrame *tmpFrame =  new STOMP::SendFrame("/topic/TODO ",line);
+        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
 
 
         }

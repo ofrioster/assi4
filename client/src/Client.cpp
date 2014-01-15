@@ -80,39 +80,48 @@
                 std::cout << "Disconnected. Exiting...\n" << std::endl;
                 return 2;
             }
-            std::string line;
+            //std::string line;
             std::string delimiter = "\n";
             size_t pos = 0;
-            pos = line.find(delimiter);
-            string command = line.substr(0, pos);
-    		line.erase(0, pos + delimiter.length());
+            pos = answer.find(delimiter);
+            string command = answer.substr(0, pos);
+            answer.erase(0, pos + delimiter.length());
     		if (command == "MESSAGE"){
     			STOMP::hdrmap headers;
     			for (int var = 0; var < 3; ++var) {
-                    pos = line.find(":");
-                    string headerName = line.substr(0, pos);
-            		line.erase(0, pos + 1);
+                    pos = answer.find(":");
+                    string headerName = answer.substr(0, pos);
+                    answer.erase(0, pos + 1);
 
-                    pos = line.find("\n");
-                    string headerValue = line.substr(0, pos);
-            		line.erase(0, pos + 1);
+                    pos = answer.find("\n");
+                    string headerValue = answer.substr(0, pos);
+            		answer.erase(0, pos + 1);
             		headers.insert(std::make_pair(headerName , headerValue));
 				}
 
+    			pos = answer.find(" ");
+    			if (answer.substr(0, pos) == "following"){
+            		answer.erase(0, pos + 1);
+    				cout << "Now following" << answer << endl;
+    			}else if (answer.substr(0, pos) == "unfollowing"){
+            		answer.erase(0, pos + 1);
+    				cout << "No longer following" << answer << endl;
+    			}else
+    			{
+				 cout << headers.find("destination")->second << " Sent a Messege" << endl;
+				 cout << answer << endl;
+    		}
 
-       		 cout << headers.find("destination")->second << " Sent a Messege" << endl;
-    		 cout << line << endl;
-
-    		}else if (command == "RECEIPT"){
+    		}else if (command == ("RECEIPT")){
     			STOMP::hdrmap headers;
 
-                pos = line.find(":");
-                string headerName = line.substr(0, pos);
-        		line.erase(0, pos + 1);
+                pos = answer.find(":");
+                string headerName = answer.substr(0, pos);
+        		answer.erase(0, pos + 1);
         		if (headerName == "receipt-id"){
-                pos = line.find("\n");
-                string headerValue = line.substr(0, pos);
-        		line.erase(0, pos + 1);
+                pos = answer.find("\n");
+                string headerValue = answer.substr(0, pos);
+        		answer.erase(0, pos + 1);
         		char a_char[10];
   	    	  //strcpy(array, s.c_str());
         		strcpy (a_char,headerValue.c_str());
@@ -123,37 +132,46 @@
         			return 0;
         		}
         		}
-        		cout<<"problem with recipt"<<endl;
+        		cout<<"problem with RECEIPT"<<endl;
         		//headers.insert(std::make_pair(headerName , headerValue));
 
 
 
 
-    		}else if (command == "ERROR"){
+    		}else if (command == ("ERROR")){
     			STOMP::hdrmap headers;
 
-                pos = line.find(":");
-                string headerName = line.substr(0, pos);
-        		line.erase(0, pos + 1);
+                pos = answer.find(":");
+                string headerName = answer.substr(0, pos);
+        		answer.erase(0, pos + 1);
 
-                pos = line.find("\n");
-                string headerValue = line.substr(0, pos);
-        		line.erase(0, pos + 1);
+                pos = answer.find("\n");
+                string headerValue = answer.substr(0, pos);
+        		answer.erase(0, pos + 1);
         		headers.insert(std::make_pair(headerName , headerValue));
 
 
 
-    		}else if (command == ""){
+    		}else if (command == ("CONNECTED")){
 
-    		}else if (command == ""){
+                pos = answer.find(":");
+                string headerName = answer.substr(0, pos);
+        		answer.erase(0, pos + 1);
 
-    		}else if (command == ""){
+                pos = answer.find("\n");
+                string headerValue = answer.substr(0, pos);
+        		answer.erase(0, pos + 1);
 
+        		cout<<"Login successfully."<<endl;
+
+    		}else if (command == "123456782345678"){
+
+    		}else if (command == "234567890-=4567"){
+
+    		}else{
+                std::cout << "Reply: " << answer << " " << std::endl << std::endl;
     		}
 
-
-
-            std::cout << "Reply: " << answer << " " << std::endl << std::endl;
             if (answer == "bye") {
                 std::cout << "Exiting...\n" << std::endl;
                 break;

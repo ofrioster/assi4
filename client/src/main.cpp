@@ -81,6 +81,7 @@ int main(int argc, char *argv[]){
 	    }
 		STOMP::ConnectFrame *tmpFrame =  new STOMP::ConnectFrame(h,"");
 		connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+//    	connectionHandler.sendBytes("\n",1);
 
 
     //connectionHandler = connectionHandler(host,port);
@@ -97,9 +98,10 @@ int main(int argc, char *argv[]){
 
     th1.join();
     cout<< "th1 quit"<<endl;
-    connectionHandler.close();
     th2.join();
     cout<< "th2 quit"<<endl;
+    connectionHandler.close();
+    cout<< "    connectionHandler.close();"<<endl;
 
 	    }else{
 	        cout<< "wrong command"<<endl;
