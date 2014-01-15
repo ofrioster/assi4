@@ -31,6 +31,7 @@ public class Client implements ClientInterfce {
 	private int numberOfTimeClienMentionInHisTweets;
 	private Stats stats;
 	private ConnectionHandler2 connectionHandler2;
+	private String lastAction;
 
 	public Client(String userName, String hostIP, String hostPort,
 			String password, ArrayList<Client> clients, Stats stats,
@@ -318,8 +319,7 @@ public class Client implements ClientInterfce {
 	 *            .getBody()
 	 */
 	public void addNewMessage(MessageFrame frame) {
-		Tweet tweet = new Tweet(frame.getMessageId(), frame.getBody(),
-				this.followers.size(), this.userName);
+		Tweet tweet = new Tweet(frame.getMessageId(), frame.getBody(),this.followers.size(), this.userName);
 		this.tweets.add(tweet);
 		this.addMessageToFollowers(tweet);
 	}
@@ -583,6 +583,12 @@ public class Client implements ClientInterfce {
 		this.friendsMessage.add(tweet);
 		this.addTweet(tweet);
 
+	}
+	public void setClienLastAction(String lasAction){
+		this.lastAction=lasAction;
+	}
+	public String getClienLastAction(){
+		return this.lastAction;
 	}
 
 }
