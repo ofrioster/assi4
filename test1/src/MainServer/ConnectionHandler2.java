@@ -36,6 +36,7 @@ public class ConnectionHandler2 implements Runnable{
         private ByteBuffer inbuf;
         private Stats stats;
         private boolean keepGoing;
+        private int count;
         
         
         
@@ -51,6 +52,7 @@ public class ConnectionHandler2 implements Runnable{
             this.messageFrameList=new ArrayList<MessageFrame>();
             this.stats=stats;
             this.keepGoing=true;
+            this.count=0;
             logger.log(Level.INFO, "Accepted connection from client!");
             logger.log(Level.INFO, "The client is from: " + acceptedSocket.getInetAddress() + ":" + acceptedSocket.getPort());
 //            System.out.println("Accepted connection from client!");
@@ -94,6 +96,7 @@ public class ConnectionHandler2 implements Runnable{
 
             while (this.keepGoing)
             {
+            	//TODO what if the connectio is clise?
             	/*while (!tokenizer.hasMessage()) {
             		System.out.println("Trying to read until we have a massege");
             		 inbuf.clear();
@@ -282,7 +285,7 @@ public class ConnectionHandler2 implements Runnable{
         	if(newClient){
         		try{
         			this.client=new Client(frame, clients,this.stats,this);
-        			this.clients.add(client);
+//        			this.clients.add(client);
         		//	this.client=this.connectFrame.getClient();
         			StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, "CONNECTED");
                     this.send(receiptFramConnectFrameToSend);
@@ -303,6 +306,9 @@ public class ConnectionHandler2 implements Runnable{
         	}
         	this.client.setClientIsOnline(true);
         }
+        /** disconnect the connection and send message to the client
+         * @param frame
+         */
         public void DISCONNECT(StompFrame frame){
         	logger.log(Level.INFO, "DISCONNECT");
         //	this.disconnectFrame=new DisconnectFrame(frame, frame.command);
@@ -312,44 +318,66 @@ public class ConnectionHandler2 implements Runnable{
             this.keepGoing=false;
             this.close();
         }
+        /**take care of SEND message from the client
+         * @param frame
+         */
         public void SEND(StompFrame frame){
         	logger.log(Level.INFO, "send message");
-        	MessageFrame messageFrame=new MessageFrame(frame,this.stats);
+        	String messageId=""+this.count;
+        	this.count++;
+        	String subscription=""+this.count;
+        	this.count++;
+        	MessageFrame messageFrame=new MessageFrame(frame,this.stats,messageId,"00"+subscription );
             this.messageFrameList.add(messageFrame);
-            if (messageFrame.getHeader().equals("server")){
+            if (messageFrame.getHeader("destination").equals("/topic/server")){
             	if (messageFrame.getBody().equals("clients")){
             		this.printClients();
             	}
-            	else if(messageFrame.getBody().equals("clients")){
+            	
+            	else if( messageFrame.getBody().contains("stats")){
             		this.stats.updateStats(this.client);
             		StompFrame res=new MessageFrame(clients, topics, this.stats.toString(), stats);
                 	this.send(res);
             	}
+//            	String tempRes=messageFrame.getBody();
+//            	System.out.println("body:"+tempRes+"-end");
             }
             else{
             	this.client.addNewMessage(messageFrame);
             	this.client.setClienLastAction("tweet");
+            	this.send(messageFrame);
             }
             
           //  this.send(null);
             
         }
+        /** SUBSCRIBE the new client
+         * @param frame
+         */
         public void SUBSCRIBE(StompFrame frame){
         	logger.log(Level.INFO, "SUBSCRIBE user:"+frame.getHeader("destination"));
         	Client newClient=null;
-        	String clientName=frame.getHeader("destination");
+        	String tempUserName=frame.getHeader("destination");
+    		tempUserName=tempUserName.substring(7, tempUserName.length());
+        	String clientName=tempUserName;
+        	System.out.println("looking for: "+tempUserName);
         	Boolean found=false;
         	for (int i=0;i<this.clients.size();i++){
         		if (this.clients.get(i).getClientUserName().equals(clientName)){
         			newClient=this.clients.get(i);
         			found=true;
-        			if (this.clients.get(i).isClientFollowingClient(frame.getHeader("id:"))){
+        			if (this.clients.get(i).isClientFollowingClient(frame.getHeader("id"))){
         				this.error("Already following username:", frame,"Already following username");
         			}
         			else{
-        				this.client.addClientToFollow(frame.getHeader("id:"), newClient);
+        				this.client.addClientToFollow(frame.getHeader("id"), newClient);
         				this.client.setClienLastAction("follow "+clientName);
-        			//	this.send(null);
+        				String messageId=""+this.count;
+        				this.count++;
+        	        	String subscription=""+this.count;
+        	        	this.count++;
+        				StompFrame resMessage=new MessageFrame(frame,clients, topics, "following " +clientName, this.client.getClientUserName(),messageId,"00"+subscription);
+        				this.send(resMessage);
         				return;
         			}
         		}
@@ -358,15 +386,27 @@ public class ConnectionHandler2 implements Runnable{
         		this.error("Wrong username", frame,"Wrong username");
         	}
         }
+        /**UNSUBSCRIBE
+         * @param frame
+         */
         public void UNSUBSCRIBE(StompFrame frame){
-        	logger.log(Level.INFO, "UNSUBSCRIBE user:"+frame.getHeader("id:"));
-        	String res=this.client.removeFollowingClient(frame.getHeader("id:"));
-        	if (res!=null){
+        	logger.log(Level.INFO, "UNSUBSCRIBE user:"+frame.getHeader("id"));
+        	String res=this.client.removeFollowingClient(frame.getHeader("id"));
+        	if (!res.substring(0, 1).equals("1")){
         		this.error(res, frame,res);
         	}
-        	this.client.setClienLastAction("unfollow "+res);
+        	this.client.setClienLastAction("unfollow "+res.substring(1, res.length()));
+        	String messageId=""+this.count;
+        	this.count++;
+        	String subscription=""+this.count;
+        	this.count++;
+        	StompFrame resMessage=new MessageFrame(frame,clients, topics, "unfollowing " +res.substring(1, res.length()),this.client.getClientUserName(),messageId,"00"+subscription);
+			this.send(resMessage);
         }
-        public void sendNewMessage(){
+        /**
+         * send the message that receive for this client
+         */
+        public synchronized void sendNewMessage(){
         	logger.log(Level.INFO, "sending message");
         	if (this.client.hasNewMessage()){
         		this.send(this.client.getNextMessage());
@@ -393,6 +433,9 @@ public class ConnectionHandler2 implements Runnable{
         	this.send(res);
         }
         
+        /**send a message to the client of the all clients status
+         * 
+         */
         public void printClients(){
         	String msg="";
         	for (int i=0;i<this.clients.size();i++){

@@ -33,9 +33,7 @@ public class Client implements ClientInterfce {
 	private ConnectionHandler2 connectionHandler2;
 	private String lastAction;
 
-	public Client(String userName, String hostIP, String hostPort,
-			String password, ArrayList<Client> clients, Stats stats,
-			ConnectionHandler2 connectionHandler2) {
+	public Client(String userName, String hostIP, String hostPort,String password, ArrayList<Client> clients, Stats stats,ConnectionHandler2 connectionHandler2) {
 		this.userName = userName;
 		// this.followers= new ArrayList<Client>();
 		// this.following= new ArrayList<Client>();
@@ -56,8 +54,7 @@ public class Client implements ClientInterfce {
 
 	}
 
-	public Client(String userName, String hostIP, String password,
-			ArrayList<Client> clients, Stats stats,
+	public Client(String userName, String hostIP, String password,ArrayList<Client> clients, Stats stats,
 			ConnectionHandler2 connectionHandler2) {
 		this.userName = userName;
 		// this.followers= new ArrayList<Client>();
@@ -77,8 +74,7 @@ public class Client implements ClientInterfce {
 		this.following = new ArrayList<Follower>();
 	}
 
-	public Client(StompFrame frame, ArrayList<Client> clients, Stats stats,
-			ConnectionHandler2 connectionHandler2) {
+	public Client(StompFrame frame, ArrayList<Client> clients, Stats stats,	ConnectionHandler2 connectionHandler2) {
 		this.userName = frame.getHeader("login");
 		this.tweets = new ArrayList<Tweet>();
 		this.friendsMessage = new ArrayList<Tweet>();
@@ -216,15 +212,17 @@ public class Client implements ClientInterfce {
 	 *            Client Name
 	 */
 	public String removeFollowingClient(String followingClientName) {
-		String res = null;
+		String res = "1";
 		Boolean found = false;
 		if (this.userName.equals(followingClientName)) {
 			return "Trying to unfollow itself";
 		}
 		for (int i = 0; i < this.following.size() && !found; i++) {
-			if (this.following.get(i).getClient().getClientUserName().equals(followingClientName)) {
+			if (this.following.get(i).getID().equals(followingClientName)) {
+				res=this.following.get(i).getClient().getClientUserName();
 				this.following.remove(i);
 				found = true;
+				return ("1"+res);
 			}
 		}
 		if (!found) {

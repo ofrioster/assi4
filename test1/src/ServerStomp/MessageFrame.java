@@ -37,6 +37,28 @@ public class MessageFrame extends StompFrame implements MessageFrameInterface{
 			this.serchForMentionsClients();
 		}
 	}
+	public MessageFrame(StompFrame frame,Stats stats,String subscription,String messageId){
+		super(frame.getClients(),frame.getTopics());
+		this.command= StompCommand.valueOf("MESSAGE");
+		this.header=frame.getHeader();
+		this.body=frame.getBody();
+//		this.client=frame.getClient();
+		//this.client.setClientIsOnline(true);
+		this.messageId=messageId;
+		this.header.put("subscription", subscription);
+		this.header.put("message-id", messageId);
+		this.destination=frame.header.get("destination");
+		this.subscription=subscription;
+	//	this.client.addTweet(frame.body);
+		this.tweet=frame.body;
+		this.stats=stats;
+		if (this.header.get("destination").equals("server")){
+			this.stats.updateStats(this.client);
+		}
+		else{
+			this.serchForMentionsClients();
+		}
+	}
 	public MessageFrame(ArrayList<Client> clients,ArrayList<Topic> topics, String msg,Stats stats){
 		super(clients,topics);
 		this.command=StompCommand.valueOf("MESSAGE");
@@ -53,6 +75,27 @@ public class MessageFrame extends StompFrame implements MessageFrameInterface{
 		else{
 			this.serchForMentionsClients();
 		}
+	}
+	/**for SUBSCRIBE
+	 * @param clients
+	 * @param topics
+	 * @param msg
+	 * @param stats
+	 */
+	public MessageFrame(StompFrame frame, ArrayList<Client> clients,ArrayList<Topic> topics, String msg,String userName,String subscription,String messageId){
+		super(clients,topics);
+		this.command=StompCommand.valueOf("MESSAGE");
+	//	this.addHeaderAndBody(msg);
+		this.messageId=this.header.get("message-id");
+		this.destination=userName;
+		this.subscription=this.header.get("subscription");
+	//	this.client.addTweet(this.body);
+	//	this.tweet=this.body;
+		this.header.put("subscription", subscription);
+		this.header.put("message-id", messageId);
+
+		this.body=msg;
+
 	}
 	public String getTweet(){
 		return this.tweet;

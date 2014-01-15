@@ -12,7 +12,7 @@ public class EchoClient {
         BufferedReader in = null;
  
         // Get host and port
-        String host = "10.0.0.7";//args[0];
+        String host = "localhost";//args[0];
         int port =50001;// Integer.decode(args[1]).intValue();
         
         System.out.println("Connecting to " + host + ":" + port);
@@ -83,14 +83,14 @@ public class EchoClient {
      * @return
      */
     public static String connect(){
-    	String res="CONNECT"+"\n"+"accept-version:1.2"+"\n"+"host:GT3"+"\n"+"login:ofri1"+"\n"+"passcode:123"+"\n"+"\n"+"\0";
+    	String res="CONNECT"+"\n"+"accept-version:1.2"+"\n"+"host:GT3"+"\n"+"login:ofri1"+"\n"+"passcode:123"+"\n"+"\n"+"\u0000";
     	return res;
     }
     /**2
      * @return
      */
     public static String SEND(){
-    	String res="SEND"+"\n"+"destination:ofri2"+"\n"+"\n"+"whats my name?"+"\n"+"\0";
+    	String res="SEND"+"\n"+"destination:/topic/ofri2"+"\n"+"message-id: "+"\n"+"subscription: "+"\n"+"\n"+"whats my name?"+"\n"+"\u0000";
     	return res;
     }
     /**3

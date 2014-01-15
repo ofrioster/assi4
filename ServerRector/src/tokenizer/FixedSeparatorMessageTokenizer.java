@@ -151,7 +151,7 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
    public StompFrame CONNECT(StompFrame frame){
 	StompFrame resFrame=null;
    	logger.log(Level.INFO, "CONNECT");
-   	String userName=frame.getHeader("login:");
+   	String userName=frame.getHeader("login");
    	Boolean clientIsLogIn=false;
    	Boolean errorMessageHasBeenSend=false;
    	Boolean newClient=true;
@@ -159,7 +159,7 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
    		if (this.clients.get(i).isThisTheClient(userName)){
    			newClient=false;
    			clientIsLogIn=this.clients.get(i).isClientOnLine();
-   			if (!this.clients.get(i).isThisIsThePassword(frame.getHeader("passcode:"))){
+   			if (!this.clients.get(i).isThisIsThePassword(frame.getHeader("passcode"))){
    				resFrame=this.error("Wrong password", frame);
    				errorMessageHasBeenSend=true;
    			}
@@ -174,6 +174,7 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
    		//	this.client=this.connectFrame.getClient();
    			StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, "CONNECTED");
    			resFrame=receiptFramConnectFrameToSend;
+   			this.client.setClienLastAction("connected");
    		}
    		catch (Exception e){
    			resFrame=this.error("cant add new client", frame);
@@ -190,6 +191,9 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
    	}
    	return resFrame;
    }
+   /** disconnect the connection and send message to the client
+    * @param frame
+    */
    public StompFrame DISCONNECT(StompFrame frame){
    	logger.log(Level.INFO, "DISCONNECT");
    	StompFrame resFrame=null;
@@ -198,6 +202,9 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
     resFrame=receiptFramDisconnectFrameToSend;
     return resFrame;
    }
+   /**take care of SEND message from the client
+    * @param frame
+    */
    public StompFrame SEND(StompFrame frame){
    	logger.log(Level.INFO, "send message");
    	StompFrame resFrame=null;
@@ -207,21 +214,24 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
     return resFrame;
        
    }
+   /** SUBSCRIBE the new client
+    * @param frame
+    */
    public StompFrame SUBSCRIBE(StompFrame frame){
-   	logger.log(Level.INFO, "SUBSCRIBE user:"+frame.getHeader("id:"));
+   	logger.log(Level.INFO, "SUBSCRIBE user:"+frame.getHeader("id"));
    	StompFrame resFrame=null;
    	Client newClient=null;
-   	String clientName=frame.getHeader("destination:");
+   	String clientName=frame.getHeader("destination");
    	Boolean found=false;
    	for (int i=0;i<this.clients.size();i++){
    		if (this.clients.get(i).getClientUserName().equals(clientName)){
    			newClient=this.clients.get(i);
    			found=true;
-   			if (this.clients.get(i).isClientFollowingClient(frame.getHeader("id:"))){
+   			if (this.clients.get(i).isClientFollowingClient(frame.getHeader("id"))){
    				resFrame=this.error("Already following username:", frame);
    			}
    			else{
-   				this.client.addClientToFollow(frame.getHeader("id:"), newClient);
+   				this.client.addClientToFollow(frame.getHeader("id"), newClient);
    			}
    		}
    	}
@@ -231,9 +241,9 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
    	return resFrame;
    }
    public StompFrame UNSUBSCRIBE(StompFrame frame){
-   	logger.log(Level.INFO, "UNSUBSCRIBE user:"+frame.getHeader("id:"));
+   	logger.log(Level.INFO, "UNSUBSCRIBE user:"+frame.getHeader("id"));
    	StompFrame resFrame=null;
-   	String res=this.client.removeFollowingClient(frame.getHeader("id:"));
+   	String res=this.client.removeFollowingClient(frame.getHeader("id"));
    	if (res!=null){
    		resFrame=this.error(res, frame);
    	}

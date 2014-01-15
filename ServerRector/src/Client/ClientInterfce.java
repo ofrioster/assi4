@@ -45,6 +45,9 @@ public interface ClientInterfce {
 	public long totalSendTime();
 	public int totalNumberOfTweets();
 	public void statsSend(String msg);
+	public void setClienLastAction(String lasAction);
+	public String getClienLastAction();
+	
 	
 	
 

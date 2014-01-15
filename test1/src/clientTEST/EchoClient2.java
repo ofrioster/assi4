@@ -92,7 +92,7 @@ public class EchoClient2 {
      * @return
      */
     public static String SEND(){
-    	String res="SEND"+"\n"+"destination:ofri2"+"\n"+"\n"+"whats my name?"+"\n"+"\0";
+    	String res="SEND"+"\n"+"destination:/topic/ofri2"+"\n"+"\n"+"whats my name?"+"\n"+"\0";
     	return res;
     }
     /**3

@@ -30,6 +30,7 @@ public class Client implements ClientInterfce{
 	private int numberOfTimeClienMention;
 	private int numberOfTimeClienMentionInHisTweets;
 	private Stats stats;
+	private String lastAction;
 
 	
 	
@@ -465,7 +466,12 @@ public class Client implements ClientInterfce{
 		this.addTweet(tweet);
 		
 	}
-	
+	public void setClienLastAction(String lasAction){
+		this.lastAction=lasAction;
+	}
+	public String getClienLastAction(){
+		return this.lastAction;
+	}
 
 
 

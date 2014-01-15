@@ -180,26 +180,14 @@ public class StompTokenizer implements StompTokenizerInterface{
 		StompFrame frame = null;
 		String msg="";
 		String message="";
-		/*do{
-			try {
-				msg=br.readLine();
-//				System.out.println("read "+msg);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			message+=msg+"\n";
-//			System.out.println("message: "+message);
-		}
-		while(!msg.equals("\0"));*/
+		
 
         try{
 //        	System.out.println("try");
         	frame = new StompFrame(this.clients);
         	String commandheaderSections = br.split("\n\n")[0];
             String[] headerLines = commandheaderSections.split("\n");
-//System.out.println(headerLines[0]);//TODO delete
-//System.out.println(headerLines[1]);//TODO delete
+
             frame.command = StompCommand.valueOf(headerLines[0]);
 
             for (int i = 1; i < headerLines.length; i++) {
