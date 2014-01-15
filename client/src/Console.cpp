@@ -82,12 +82,12 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
         }
         else if (command == "clients")
         {
-        	STOMP::SendFrame *tmpFrame =  new STOMP::SendFrame("/topic/server ","clients");
+        	STOMP::SendFrame *tmpFrame =  new STOMP::SendFrame("/topic/server","clients");
         	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
         }
         else if (command == "stats")
         {
-        	STOMP::SendFrame *tmpFrame =  new STOMP::SendFrame("/topic/server ","stats");
+        	STOMP::SendFrame *tmpFrame =  new STOMP::SendFrame("/topic/server","stats");
         	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
         }
         else if (command == "logout")
@@ -106,7 +106,7 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
         }
         else if (command == "stop")
         {
-        	STOMP::SendFrame *tmpFrame =  new STOMP::SendFrame("/topic/server ","stop");
+        	STOMP::SendFrame *tmpFrame =  new STOMP::SendFrame("/topic/server","stop");
         	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
         }
         else

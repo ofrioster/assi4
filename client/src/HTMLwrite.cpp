@@ -39,9 +39,12 @@ void HTMLwrite::print(){
 	string title=this->username.append(".html");
 		listfile.open (title.c_str());
 		listfile <<"<HTML>"<<endl;
+		listfile <<"<HEAD>"<<endl;
 		listfile <<"<TITLE>Arnon & Ofri</TITLE>"<<endl;
 		listfile <<"</HEAD>"<<endl;
 		listfile <<"<BODY >"<<endl;
+
+
 /*
 		for(vector<string>::reverse_iterator print=TweetsVector.rbegin(); print !=TweetsVector.rend(); print++){
 		        listfile << *print<< endl;
