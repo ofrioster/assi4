@@ -40,7 +40,7 @@ public:
 	//Console  (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn , std::queue<STOMP::StompFrame*>* stompFramesOut) :_mutex(mutex) ,_stompFramesIn(stompFramesIn),_stompFramesOut(stompFramesOut) {}
 	Console (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn );
 	virtual ~Console();
-	int run (ConnectionHandler& connectionHandler, std::map<string, int> folowing,std::ofstream& outfile);
+	int run (ConnectionHandler& connectionHandler, std::map<string, int> folowing,bool close,string username);
 };
 
 #endif /* CONSOLE_H_ */

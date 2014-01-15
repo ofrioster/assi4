@@ -24,6 +24,7 @@
     #include "../include/SubscribeFrame.h"
     #include "../include/UnsubscribeFrame.h"
 #include <fstream>
+    #include "../include/HTMLwrite.h"
 
 
 
@@ -37,7 +38,7 @@
 	public:
 	   // Network (boost::mutex* mutex,std::queue<STOMP::StompFrame*> stompFramesIn , std::queue<STOMP::StompFrame*> stompFramesOut) :_mutex(mutex) ,_stompFramesIn(stompFramesIn),_stompFramesOut(stompFramesOut) {}
 	    Network (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn);
-	    int run(ConnectionHandler& connectionHandler, std::map<string, int> folowing,std::ofstream& outfile);
+	    int run(ConnectionHandler& connectionHandler, std::map<string, int> folowing,HTMLwrite& htmlwrite);
 		virtual ~Network();
 
 

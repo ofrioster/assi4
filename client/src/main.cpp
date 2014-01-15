@@ -8,9 +8,9 @@
     #include "../include/SendFrame.h"
     #include "../include/Client.h"
     #include "../include/Console.h"
-#include <queue>
-#include <fstream>
-
+	#include <queue>
+	#include <fstream>
+    #include "../include/HTMLwrite.h"
 	using namespace std;
     boost::mutex * _mutex;
     std::queue<STOMP::StompFrame*> stompFramesIn;                                // empty vector of ints
@@ -23,9 +23,10 @@ int main(int argc, char *argv[]){
 
     std::string host;
     unsigned short  port;
+    std::string user;
 
-
-	while(1){
+    bool close = false;
+	while(!close){
 
         const short bufsize = 1024;
         char buf[bufsize];
@@ -62,9 +63,9 @@ int main(int argc, char *argv[]){
 	    	  port = atoi(a_char);
 
 		        pos = line.find(' ');
-		        arg = line.substr(0, pos);
+		        user = line.substr(0, pos);
 		        line.erase(0, pos + 1);
-		    	h.insert(std::make_pair("login",arg));
+		    	h.insert(std::make_pair("login",user));
 
 	        pos = line.find(' ');
 	        arg = line.substr(0, pos);
@@ -75,12 +76,12 @@ int main(int argc, char *argv[]){
 
 	    ConnectionHandler connectionHandler(host,port);
 		std::ofstream outfile;
-	    if (!connectionHandler.connect()) {
-	        std::cerr << "Cannot connect to " << "host" << ":" << "port" << std::endl;
-	        return 1;
-	    }
+	    if (connectionHandler.connect()) {
+	        //std::cerr << "Cannot connect to " << "host" << ":" << "port" << std::endl;
+
 		STOMP::ConnectFrame *tmpFrame =  new STOMP::ConnectFrame(h,"");
 		connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+		HTMLwrite htmlwrite(user);
 //    	connectionHandler.sendBytes("\n",1);
 
 
@@ -91,9 +92,8 @@ int main(int argc, char *argv[]){
     Console task1(&mutex,&stompFramesIn);
     Network task2(&mutex,&stompFramesIn);
 
-
-    boost::thread th1(&Console::run, &task1, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(outfile));
-    boost::thread th2(&Network::run, &task2, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(outfile));
+    boost::thread th1(&Console::run, &task1, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(close),user);
+    boost::thread th2(&Network::run, &task2, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(htmlwrite));
 
 
     th1.join();
@@ -102,8 +102,18 @@ int main(int argc, char *argv[]){
     cout<< "th2 quit"<<endl;
     connectionHandler.close();
     cout<< "    connectionHandler.close();"<<endl;
+    htmlwrite.print();
+    if (close == true){
+        return 0;
 
+    }
 	    }else{
+	        std::cerr << "Cannot connect to " << "host" << ":" << "port" << std::endl;
+
+
+	    }
+	    }
+	    else{
 	        cout<< "wrong command"<<endl;
 
 
