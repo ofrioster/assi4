@@ -7,16 +7,16 @@ import ServerClient.Topic;
 
 public class ErorFrame extends StompFrame implements ErorFrameInterface{
 	
-	public ErorFrame(ArrayList<Client> clients,ArrayList<Topic> topics,String whatIsTheProblem,String msg){
+	public ErorFrame(ArrayList<Client> clients,ArrayList<Topic> topics,String whatIsTheProblem,String msg,String descriptionOfTheProblem){
 		super(clients,topics);
 		this.command=StompCommand.valueOf("ERROR");
-		this.header.put("message", "malformed STOMP frame received");
+		this.header.put("message", whatIsTheProblem);
 		this.header.put("The message", msg);
-		this.body=whatIsTheProblem;
+		this.body=descriptionOfTheProblem;
 		
 		
 	}
-	public ErorFrame(ArrayList<Client> clients,ArrayList<Topic> topics,String whatIsTheProblem,StompFrame frame){
+	public ErorFrame(ArrayList<Client> clients,ArrayList<Topic> topics,String whatIsTheProblem,StompFrame frame,String descriptionOfTheProblem){
 		super(clients,topics);
 		try{
 			this.command=StompCommand.valueOf("ERROR");
@@ -25,7 +25,7 @@ public class ErorFrame extends StompFrame implements ErorFrameInterface{
 			
 		}
 		try{
-			this.header.put("message", "malformed STOMP frame received");
+			this.header.put("message", whatIsTheProblem);
 		}
 		catch (Exception e){
 			
@@ -37,7 +37,7 @@ public class ErorFrame extends StompFrame implements ErorFrameInterface{
 			
 		}
 
-		this.body=whatIsTheProblem;
+		this.body=descriptionOfTheProblem;
 		
 		
 	}
