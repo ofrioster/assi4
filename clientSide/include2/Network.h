@@ -30,20 +30,24 @@ public:
 	//	Network(ConnectionHandler Connection_Handler);
 		Network();
 		Network(string delimiter);
-		void run();
+		Network(string host, unsigned short port);
+		void run(std::string host, unsigned short port);
 		void addStompFrameToSend(StompFrame frame);
 		bool getIsclientOnLine();
 		void setClineOnLine(bool status);
 		virtual ~Network();
 		bool connect(string host,unsigned short port);
 		void setExitClient(bool status);
+		void setConnection(string host, unsigned short port);
 
 private:
 
 		vector <StompFrame> tweet;
-		ConnectionHandler connection_Handler;
+	//	ConnectionHandler connection_Handler;
 		bool isClientOnline;
 		bool exitClient;
+		string host;
+		unsigned short port;
 
 
 	};

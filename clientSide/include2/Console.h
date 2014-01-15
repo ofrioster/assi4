@@ -11,7 +11,7 @@
 
 //	#include <queue>
     #include <stdlib.h>
-    #include "../include2/ConnectionHandler.h"
+//    #include "../include2/ConnectionHandler.h"
 	#include <boost/thread.hpp>
     #include "../include2/Client.h"
    // #include "../include2/StompFrame.h"
@@ -32,6 +32,7 @@ class Console {
 public:
 
 	Console (string delimiter);
+	Console ();
 	virtual ~Console();
 	void run(Network& network);
 	void login();
@@ -53,6 +54,7 @@ public:
 	void exitClient(Network network);
 	void stop(Network network);*/
 	void clientIsConnecting(string usersName,string password,string hostIP,string hostPort);
+	string readLine();
 
 
 private:

@@ -26,3 +26,4 @@ SEND
 בכל מקרה אפילו שאין לנו אפשרות לקידומות נוספות אלו, צריך להשתמש בפרוטוקול הסטנדרטי.
 * how we send the topic?
 * disconnect mean to close the socket? if yes you cant send connect again
+* in my client they need to recive an asnswer every time so i send them \0 answer if there is no need for a real answer
