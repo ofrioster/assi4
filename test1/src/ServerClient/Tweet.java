@@ -1,6 +1,9 @@
 package ServerClient;
 
+import java.awt.Frame;
 import java.util.concurrent.Semaphore;
+
+import ServerStomp.StompFrame;
 
 
 public class Tweet implements TweetInterface{
@@ -10,8 +13,19 @@ public class Tweet implements TweetInterface{
 	long totalSendTime;
 	Semaphore messagesThatSend;
 	String userNameTweet;
+	StompFrame stompFrame;
+	String destination;
 	
 	
+	public Tweet(String tweetId,String message,int HowManyFollowers,String userName,StompFrame stompFrame){
+		this.tweetID=tweetId;
+		this.message=message;
+		this.userNameTweet=userName;
+		this.messagesThatSend=new Semaphore(HowManyFollowers);
+		this.totalSendTime=System.currentTimeMillis();
+		this.stompFrame=stompFrame;
+		this.destination=stompFrame.getHeader("destination").substring(7, stompFrame.getHeader("destination").length());
+	}
 	public Tweet(String tweetId,String message,int HowManyFollowers,String userName){
 		this.tweetID=tweetId;
 		this.message=message;
@@ -52,6 +66,7 @@ public class Tweet implements TweetInterface{
 	public boolean isAllMessagesHasBeenSend(){
 		return this.messagesThatSend.availablePermits()==0;
 	}
+	
 	/**
 	 * @return -1 if not all messages has been send
 	 */
@@ -66,6 +81,12 @@ public class Tweet implements TweetInterface{
 	 * @return tweet message
 	 */
 	public String getTweet(){
+		return this.message;
+	}
+	/**
+	 * @return tweet destination
+	 */
+	public String getDestination(){
 		return this.message;
 	}
 	/**

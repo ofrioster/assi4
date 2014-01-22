@@ -155,32 +155,7 @@ public class ConnectionHandler2 implements Runnable{
                 catch (Exception e){
                 	this.error("malformed STOMP frame received", frame,"worng command");
                 }
-               
-            /*    switch (frame.command) {
-                        case CONNECT:
-
-                                this.CONNECT(frame);
-                                break;
-                        case DISCONNECT:
-                                this.DISCONNECT(frame);
-                                break;
-                        case SEND:
-                            this.SEND(frame);
-                            break;
-                        case SUBSCRIBE:
-                            this.SUBSCRIBE(frame);
-                            break;
-                        case UNSUBSCRIBE:
-                                this.UNSUBSCRIBE(frame);
-                                break;
-                        default:   
-                        	this.error("Did not contain a destination header, which is required for message propagation.", frame);
-                                break;
-                }*/
-                
-                
-                
-                
+                            
             }
         }
         
@@ -265,7 +240,7 @@ public class ConnectionHandler2 implements Runnable{
         }
         public void CONNECT(StompFrame frame){
         	logger.log(Level.INFO, "CONNECT");
-        	String userName=frame.getHeader("login:");
+        	String userName=frame.getHeader("login");
         	Boolean clientIsLogIn=false;
         	Boolean errorMessageHasBeenSend=false;
         	Boolean newClient=true;
@@ -273,9 +248,10 @@ public class ConnectionHandler2 implements Runnable{
         		if (this.clients.get(i).isThisTheClient(userName)){
         			newClient=false;
         			clientIsLogIn=this.clients.get(i).isClientOnLine();
-        			if (!this.clients.get(i).isThisIsThePassword(frame.getHeader("passcode:"))){
+        			if (!this.clients.get(i).isThisIsThePassword(frame.getHeader("passcode"))){
         				this.error("Wrong password", frame,"Wrong password");
         				errorMessageHasBeenSend=true;
+        				newClient=false;
         			}
         			else{
         				this.client=this.clients.get(i);
@@ -315,6 +291,7 @@ public class ConnectionHandler2 implements Runnable{
             StompFrame receiptFramDisconnectFrameToSend=new ReceiptFram(frame, "DISCONNECT");
             this.send(receiptFramDisconnectFrameToSend);
             this.client.setClienLastAction("disconnected");
+            this.client.setClientIsOnline(false);
             this.keepGoing=false;
             this.close();
         }
@@ -330,20 +307,20 @@ public class ConnectionHandler2 implements Runnable{
         	MessageFrame messageFrame=new MessageFrame(frame,this.stats,messageId,"00"+subscription );
             this.messageFrameList.add(messageFrame);
             if (messageFrame.getHeader("destination").equals("/topic/server")){
-            	if (messageFrame.getBody().equals("clients")){
+            	if (messageFrame.getBody().contains("clients")){
             		this.printClients();
             	}
             	
             	else if( messageFrame.getBody().contains("stats")){
             		this.stats.updateStats(this.client);
-            		StompFrame res=new MessageFrame(clients, topics, this.stats.toString(), stats);
+            		StompFrame res=new MessageFrame(clients, topics, this.stats.toStringForFrame(), stats,"server");
                 	this.send(res);
             	}
 //            	String tempRes=messageFrame.getBody();
 //            	System.out.println("body:"+tempRes+"-end");
             }
             else{
-            	this.client.addNewMessage(messageFrame);
+            //	this.client.addNewMessage(messageFrame);
             	this.client.setClienLastAction("tweet");
             	this.send(messageFrame);
             }
@@ -374,8 +351,8 @@ public class ConnectionHandler2 implements Runnable{
         				this.client.setClienLastAction("follow "+clientName);
         				String messageId=""+this.count;
         				this.count++;
-        	        	String subscription=""+this.count;
-        	        	this.count++;
+        	        	String subscription=frame.getHeader("id");
+        	    //    	this.count++;
         				StompFrame resMessage=new MessageFrame(frame,clients, topics, "following " +clientName, this.client.getClientUserName(),messageId,"00"+subscription);
         				this.send(resMessage);
         				return;
@@ -408,7 +385,7 @@ public class ConnectionHandler2 implements Runnable{
          */
         public synchronized void sendNewMessage(){
         	logger.log(Level.INFO, "sending message");
-        	if (this.client.hasNewMessage()){
+        	while (this.client.hasNewMessage()){
         		this.send(this.client.getNextMessage());
         		
         	}
@@ -437,11 +414,27 @@ public class ConnectionHandler2 implements Runnable{
          * 
          */
         public void printClients(){
-        	String msg="";
-        	for (int i=0;i<this.clients.size();i++){
-        		msg+=this.clients.get(i).getClientUserName()+" last action was: "+this.clients.get(i).getClienLastAction()+"\n";
+        	try{
+        		String msg="";
+            	String msg2="";
+            	for (int i=0;i<this.clients.size();i++){
+            		if (this.clients.get(i).isClientOnLine()){
+            			msg=this.clients.get(i).getClientUserName()+" last action was: "+this.clients.get(i).getClienLastAction()+"\n";
+                		System.out.println(msg);
+                		msg2+=msg;
+            		}
+            	}
+            	MessageFrame res=new MessageFrame(clients, topics, msg2, stats,"server");
+            	for (int i=0;i<this.clients.size();i++){
+            		if (this.clients.get(i).isThisTheClient("server")){
+            			this.clients.get(i).sendClientsMessage(res);
+            		}
+            	}
         	}
-        	StompFrame res=new MessageFrame(clients, topics, msg, stats);
-        	this.send(res);
+        	catch (Exception e){
+        		System.out.println("something worg::: "+e.getMessage());
+        	
+        	}
+      //  	this.send(res);
         }
 }

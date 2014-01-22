@@ -22,6 +22,8 @@ public class main {
 			// Get port
 		        int port = Integer.decode(args[0]).intValue();
 		        
+		        Client serverClient=new Client("server", clients, stats);
+		        
 		        MultipleClientProtocolServer server = new MultipleClientProtocolServer(port, new EchoProtocolFactory(),clients,topics,stats);
 		        Thread serverThread = new Thread(server);
 		        serverThread.start();

@@ -108,6 +108,9 @@ public class Stats {
 	 */
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
+		builder.append("Stats");
+		builder.append("\n");
+		builder.append("\n");
 		builder.append("Stats [MaxNumberOfTweetsPer5Seconds=");
 		builder.append(MaxNumberOfTweetsPer5Seconds);
 		builder.append(", AvgNumberOfTweetsPer5Seconds=");
@@ -125,6 +128,35 @@ public class Stats {
 		builder.append("]");
 		return builder.toString();
 	}
+	/** toString of the data
+	 */
+	public String toStringForFrame() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("MaxNumberOfTweetsPer5Seconds:");
+		builder.append(MaxNumberOfTweetsPer5Seconds);
+		builder.append("\n");
+		builder.append("AvgNumberOfTweetsPer5Seconds:");
+		builder.append(AvgNumberOfTweetsPer5Seconds);
+		builder.append("\n");
+		builder.append("AvgTimeToPassATweetToAllUsersFollowingAnAccount:");
+		builder.append(AvgTimeToPassATweetToAllUsersFollowingAnAccount);
+		builder.append("\n");
+		builder.append("NameOfTheUserWithTheMaximumNumberOfFollowersAndTheNumberOfTheFollowers:");
+		builder.append(NameOfTheUserWithTheMaximumNumberOfFollowersAndTheNumberOfTheFollowers);
+		builder.append("\n");
+		builder.append("nameOfTheUserWithTheMaximumNumberOfTweetsAndTheNumberOfTweets:");
+		builder.append(nameOfTheUserWithTheMaximumNumberOfTweetsAndTheNumberOfTweets);
+		builder.append("\n");
+		builder.append("nameOfTheUserWithTheMaximumMentionsInOtherFollowersTweets:");
+		builder.append(nameOfTheUserWithTheMaximumMentionsInOtherFollowersTweets);
+		builder.append("\n");
+		builder.append("nameOfTheUserWithTheMaximumNumberOfMentionsInHerOwnTweets:");
+		builder.append(nameOfTheUserWithTheMaximumNumberOfMentionsInHerOwnTweets);
+		builder.append("\n");
+		builder.append("\n");
+		
+		return builder.toString();
+	}
 	/** send to the given client stats message
 	 * @param client
 	 */
@@ -136,7 +168,7 @@ public class Stats {
 		this.updateNameOfTheUserWithTheMaximumNumberOfMentionsInHerOwnTweets();
 		this.updateNameOfTheUserWithTheMaximumNumberOfTweetsAndTheNumberOfTweets();
 		this.updateNameOfTheUserWithTheMaximumNumberOfFollowersAndTheNumberOfTheFollowers();
-		client.statsSend(this.toString());
+	//	client.statsSend(this.toString());
 	}
 	
 

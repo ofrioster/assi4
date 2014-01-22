@@ -53,9 +53,23 @@ public class Client implements ClientInterfce {
 		this.following = new ArrayList<Follower>();
 
 	}
+	public Client(String userName,ArrayList<Client> clients, Stats stats) {
+		this.userName = userName;
+		this.tweets = new ArrayList<Tweet>();
+		this.friendsMessage = new ArrayList<Tweet>();
+		this.hostIP = "null";
+		this.password = "password";
+		this.clientIsOnline = false;
+		this.clients = clients;
+		this.messageCount = 0;
+		this.clients.add(this);
+		this.stats = stats;
+		this.connectionHandler2 = null;
+		this.followers = new ArrayList<Follower>();
+		this.following = new ArrayList<Follower>();
+	}
 
-	public Client(String userName, String hostIP, String password,ArrayList<Client> clients, Stats stats,
-			ConnectionHandler2 connectionHandler2) {
+	public Client(String userName, String hostIP, String password,ArrayList<Client> clients, Stats stats,ConnectionHandler2 connectionHandler2) {
 		this.userName = userName;
 		// this.followers= new ArrayList<Client>();
 		// this.following= new ArrayList<Client>();
@@ -317,9 +331,11 @@ public class Client implements ClientInterfce {
 	 *            .getBody()
 	 */
 	public void addNewMessage(MessageFrame frame) {
-		Tweet tweet = new Tweet(frame.getMessageId(), frame.getBody(),this.followers.size(), this.userName);
-		this.tweets.add(tweet);
+		Tweet tweet = new Tweet(frame.getMessageId(), frame.getBody(),this.followers.size(), this.userName,frame);
+//		this.tweets.add(tweet);
 		this.addMessageToFollowers(tweet);
+		this.friendsMessage.add(tweet);
+		this.connectionHandler2.sendNewMessage();
 	}
 
 	/**
@@ -331,7 +347,7 @@ public class Client implements ClientInterfce {
 	public void addTweet(Tweet tweet) {
 		// Tweet tweetObject=new Tweet(tweetId, tweetId,
 		// this.followers.size(),this.userName);
-		this.tweets.add(tweet);
+		this.friendsMessage.add(tweet);
 		this.addMessageToFollowers(tweet);
 		this.stats.addTweet();
 	}
@@ -420,7 +436,7 @@ public class Client implements ClientInterfce {
 			StringBuilder builder = new StringBuilder();
 			builder.append("destination:");
 			// builder.append(this.following.get(this.friendsMessage.get(this.messageCount).userNameTweet).getClientUserName());
-			builder.append(this.following.get(messageCount).getClient().getClientUserName());
+			builder.append(this.friendsMessage.get(messageCount).getDestination());
 			builder.append('\n');
 			builder.append("subscription:");
 			builder.append(this.friendsMessage.get(this.messageCount).getTweetUserName());
@@ -430,7 +446,9 @@ public class Client implements ClientInterfce {
 			builder.append('\n');
 			builder.append('\n');
 			builder.append(this.friendsMessage.get(messageCount).getTweet());
-			this.friendsMessage.get(messageCount).oneMessageHasBennSend();
+			if (!this.friendsMessage.get(messageCount).isAllMessagesHasBeenSend()){
+				this.friendsMessage.get(messageCount).oneMessageHasBennSend();
+			}
 			this.messageCount++;
 			return builder.toString();
 		}
@@ -449,9 +467,16 @@ public class Client implements ClientInterfce {
 	 * }
 	 */
 	public synchronized MessageFrame getNextMessage() {
-		String msg = this.getNewMessage();
-		MessageFrame res = new MessageFrame(this.clients, this.topics, msg,	this.stats);
-		return res;
+		try{
+			String msg = this.getNewMessage();
+			MessageFrame res = new MessageFrame(this.clients, this.topics, msg,	this.stats);
+			return res;
+			
+		}
+		catch (Exception e){
+			System.out.println("problem with getNextMessage");
+		}
+		return null;
 	}
 
 	/**
@@ -509,7 +534,7 @@ public class Client implements ClientInterfce {
 	}
 
 	public int getNumberOfTweet() {
-		return this.tweets.size();
+		return this.friendsMessage.size();
 	}
 
 	/**
@@ -549,8 +574,8 @@ public class Client implements ClientInterfce {
 	 */
 	public int totalNumberOfTweets() {
 		int res = 0;
-		for (int i = 0; i < this.tweets.size(); i++) {
-			if (this.tweets.get(i).isAllMessagesHasBeenSend()) {
+		for (int i = 0; i < this.friendsMessage.size(); i++) {
+			if (this.friendsMessage.get(i).isAllMessagesHasBeenSend()) {
 				res++;
 			}
 
@@ -563,9 +588,9 @@ public class Client implements ClientInterfce {
 	 */
 	public long totalSendTime() {
 		long res = 0;
-		for (int i = 0; i < tweets.size(); i++) {
-			if (this.tweets.get(i).isAllMessagesHasBeenSend()) {
-				res += this.tweets.get(i).getTotalSendTime();
+		for (int i = 0; i < friendsMessage.size(); i++) {
+			if (this.friendsMessage.get(i).isAllMessagesHasBeenSend()) {
+				res += this.friendsMessage.get(i).getTotalSendTime();
 			}
 		}
 		return res;
@@ -578,7 +603,7 @@ public class Client implements ClientInterfce {
 	 */
 	public void statsSend(String msg) {
 		Tweet tweet = new Tweet(msg, this.followers.size(), this.userName);
-		this.friendsMessage.add(tweet);
+	//	this.friendsMessage.add(tweet);
 		this.addTweet(tweet);
 
 	}
@@ -589,4 +614,22 @@ public class Client implements ClientInterfce {
 		return this.lastAction;
 	}
 
+	/** send a frame to all followers
+	 * @param frame
+	 */
+	public void sendClientsMessage(StompFrame frame){
+		for (int i=0; i<this.followers.size();i++){
+			if (this.followers.get(i).getClient().isClientOnLine()){
+				this.followers.get(i).getClient().sendSingleMessage(frame);
+			}
+			
+		}
+		
+	}
+	/** send this frame to this client
+	 * @param frame
+	 */
+	public void sendSingleMessage(StompFrame frame){
+		this.connectionHandler2.send(frame);
+	}
 }

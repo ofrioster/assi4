@@ -73,8 +73,31 @@ public class MessageFrame extends StompFrame implements MessageFrameInterface{
 			this.stats.updateStats(this.client);
 		}
 		else{
-			this.serchForMentionsClients();
+	//		this.serchForMentionsClients();
 		}
+	}
+	public MessageFrame(ArrayList<Client> clients,ArrayList<Topic> topics, String msg,Stats stats,String destination){
+		super(clients,topics);
+		this.command=StompCommand.valueOf("MESSAGE");
+		this.destination=destination;
+		this.header.put("destination", destination);
+		//this.subscription=this.header.get("subscription");
+		this.subscription="02";
+		//this.messageId=this.header.get("message-id");
+		this.messageId="1.2";
+		this.header.put("message-id", messageId);
+		this.header.put("subscription", subscription);
+	//	String msg2="destination:"+destination+"\n"+msg;
+	//	this.addHeaderAndBody(msg2);
+		this.body=msg;
+		this.tweet=this.body;
+		this.stats=stats;
+	/*	if (this.destination.equals("server")){
+			this.stats.updateStats(this.client);
+		}
+		else{
+			this.serchForMentionsClients();
+		}*/
 	}
 	/**for SUBSCRIBE
 	 * @param clients
@@ -107,19 +130,19 @@ public class MessageFrame extends StompFrame implements MessageFrameInterface{
 	 * @param frame
 	 */
 	public void serchForMentionsClients(){
-		String[] msg=this.tweet.split(" ");
+		String[] msg=this.tweet.split(" |\n");
 		for (int i=0;i<msg.length;i++){
 			if(msg[i].startsWith("@")){
-				String userName=msg[i].substring(1, msg[i].length()-1);
+				String userName=msg[i].substring(1, msg[i].length());
 				for (int k=0;k<this.clients.size();k++){
 					if (this.clients.get(k).isThisTheClient(userName)){
 						this.clients.get(k).addNewMessage(this);
-						if (this.clients.get(k).isThisTheClient(this.destination)){
+				//		if (this.clients.get(k).isThisTheClient(this.destination)){
 							this.clients.get(k).updateClientMentionInHisTweets();
-						}
-						else{
-							this.clients.get(k).updateClientMention();
-						}
+			//			}
+			//			else{
+			//				this.clients.get(k).updateClientMention();
+			//			}
 						
 					}
 				}
