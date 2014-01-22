@@ -1,5 +1,5 @@
     #include <stdlib.h>
-    #include <boost/locale.hpp>
+    //#include <boost/locale.hpp>
     #include "../include/ConnectionHandler.h"
 	#include <boost/thread.hpp>
     #include "../include/StompFrame.h"
