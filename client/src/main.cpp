@@ -1,8 +1,6 @@
     #include <stdlib.h>
-    #include <boost/locale.hpp>
+    //#include <boost/locale.hpp>
     #include "../include/ConnectionHandler.h"
-    #include "../encoder/utf8.h"
-    #include "../encoder/encoder.h"
 	#include <boost/thread.hpp>
     #include "../include/StompFrame.h"
     #include "../include/SendFrame.h"
@@ -79,8 +77,11 @@ int main(int argc, char *argv[]){
 	    if (connectionHandler.connect()) {
 	        //std::cerr << "Cannot connect to " << "host" << ":" << "port" << std::endl;
 
+
 		STOMP::ConnectFrame *tmpFrame =  new STOMP::ConnectFrame(h,"");
 		connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+		tmpFrame->~StompFrame();
+
 		HTMLwrite htmlwrite(user);
 //    	connectionHandler.sendBytes("\n",1);
 
@@ -92,7 +93,7 @@ int main(int argc, char *argv[]){
     Console task1(&mutex);
     Network task2(&mutex);
 
-    boost::thread th1(&Console::run, &task1, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(close),user,boost::ref(receiptId));
+    boost::thread th1(&Console::run, &task1, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(close),boost::ref(user),boost::ref(receiptId));
     boost::thread th2(&Network::run, &task2, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(htmlwrite),boost::ref(receiptId));
 
 

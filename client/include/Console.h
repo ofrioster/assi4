@@ -11,10 +11,8 @@
 #include <queue>
 #include <stdlib.h>
     #include <stdlib.h>
-    #include <boost/locale.hpp>
+//    #include <boost/locale.hpp>
     #include "../include/ConnectionHandler.h"
-    #include "../encoder/utf8.h"
-    #include "../encoder/encoder.h"
 	#include <boost/thread.hpp>
     #include "../include/Client.h"
 
