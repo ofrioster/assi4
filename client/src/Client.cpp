@@ -15,9 +15,10 @@
 	Network::~Network() {
 		// TODO Auto-generated destructor stub
 	}
-	Network::Network(boost::mutex* mutex)
+	Network::Network(int number)
 	{
-		_mutex=mutex;
+		//_mutex=mutex;
+		_id = number;
 		//_connectionHandler=connectionHandler.get();
 	}
 

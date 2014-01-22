@@ -13,11 +13,11 @@
 
 	using namespace std;
 
-	Console::Console (boost::mutex* mutex)
+	Console::Console (int number)
 	{
-		_mutex=mutex;
+		_id = number;
 	}
-
+    //Task (int number) :
 	Console::~Console() {
 		// TODO Auto-generated destructor stub
 	}
@@ -53,6 +53,8 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
 
         	STOMP::SubscribeFrame *tmpFrame = new STOMP::SubscribeFrame("/topic/"+arg, _counter);
         	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+    		tmpFrame->~StompFrame();
+
 //        	connectionHandler.sendBytes("\n",1);
 
     		_counter++;
@@ -68,7 +70,10 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
    			if (folowing.find(arg)!= folowing.end()){
 	        	STOMP::UnsubscribeFrame *tmpFrame =  new STOMP::UnsubscribeFrame(folowing.find(arg)->second);
 	        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+	    		tmpFrame->~StompFrame();
+
 	        	folowing.erase(folowing.find(arg));
+
 			}else{
 	    		cout << "Not following this user:" << arg << endl;
 			}
@@ -79,6 +84,7 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
 
         	STOMP::SendFrame *tmpFrame =  new STOMP::SendFrame("/topic/"+ username,line);
         	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+    		tmpFrame->~StompFrame();
 
 
         }
@@ -86,17 +92,23 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
         {
         	STOMP::SendFrame *tmpFrame =  new STOMP::SendFrame("/topic/server","clients");
         	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+    		tmpFrame->~StompFrame();
+
         }
         else if (command == "stats")
         {
         	STOMP::SendFrame *tmpFrame =  new STOMP::SendFrame("/topic/server","stats");
         	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+    		tmpFrame->~StompFrame();
+
         }
         else if (command == "logout")
         {
         		receiptId=2345678;
 	        	STOMP::DisconnectFrame *tmpFrame =  new STOMP::DisconnectFrame(receiptId);//TODO Change to dynamic
 	        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+	    		tmpFrame->~StompFrame();
+
 	        	return 0;
         }
         else if (command == "exit_client")
@@ -104,6 +116,8 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
     		receiptId=98765;
         	STOMP::DisconnectFrame *tmpFrame =  new STOMP::DisconnectFrame(receiptId);//TODO Change to dynamic
         	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+    		tmpFrame->~StompFrame();
+
         	close = true;
         	return 1;
         }
@@ -111,6 +125,8 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
         {
         	STOMP::SendFrame *tmpFrame =  new STOMP::SendFrame("/topic/server","stop");
         	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
+    		tmpFrame->~StompFrame();
+
         }
         else
         {

@@ -10,8 +10,8 @@
 	#include <fstream>
     #include "../include/HTMLwrite.h"
 	using namespace std;
-    boost::mutex * _mutex;
-    std::queue<STOMP::StompFrame*> stompFramesIn;                                // empty vector of ints
+    //boost::mutex * _mutex;
+    //std::queue<STOMP::StompFrame*> stompFramesIn;                                // empty vector of ints
     //std::queue<STOMP::StompFrame*> stompFramesOut;                                // empty vector of ints
     //ConnectionHandler& connectionHandler("123",123);
 
@@ -88,10 +88,10 @@ int main(int argc, char *argv[]){
 
     //connectionHandler = connectionHandler(host,port);
 	std::map<string, int> folowing;
-    boost::mutex mutex;
+    //boost::mutex mutex;
     int receiptId = -1;
-    Console task1(&mutex);
-    Network task2(&mutex);
+    Console task1(1);
+    Network task2(2);
 
     boost::thread th1(&Console::run, &task1, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(close),boost::ref(user),boost::ref(receiptId));
     boost::thread th2(&Network::run, &task2, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(htmlwrite),boost::ref(receiptId));
