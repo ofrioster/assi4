@@ -36,15 +36,37 @@ string res=username+", "+ TweetBody+", "+DateAndTimeRecievedRtTheServer+"<BR/>";
 }
 void HTMLwrite::print(){
 	ofstream listfile;
-	string title=this->username.append(".html");
+	string title=this->username+".html";
 		listfile.open (title.c_str());
-		listfile <<"<HTML>"<<endl;
-		listfile <<"<HEAD>"<<endl;
-		listfile <<"<TITLE>Arnon & Ofri</TITLE>"<<endl;
-		listfile <<"</HEAD>"<<endl;
-		listfile <<"<BODY >"<<endl;
-
-
+//		listfile <<"<HTML>"<<endl;
+//		listfile <<"<HEAD>"<<endl;
+//		listfile <<"<TITLE>Arnon & Ofri</TITLE>"<<endl;
+//		listfile <<"</HEAD>"<<endl;
+//		listfile <<"<BODY >"<<endl;
+		listfile <<"<html> \n\
+					<head> \n\
+					<title>"<<username<<" tweeter site</title>\n\
+					<style type=\"text/css\">\n\
+					.username{\n\
+						font-weight:bold;\n\
+					}\n\
+					.tweet{\n\
+						font-weight:normal;\n\
+						margin-left: 50px;\n\
+					}\n\
+					.time{\n\
+						color: gray;\n\
+						margin-left: 35px;\n\
+					}\n\
+					.entry{\n\
+						margin-top: 10px;\n\
+						background-color: #AACCFF;\n\
+					}\n\
+					</style>\n\
+					</head>\n\
+					<body>\n\
+					<h1>"<<username<<"</h1>\n\
+					";
 /*
 		for(vector<string>::reverse_iterator print=TweetsVector.rbegin(); print !=TweetsVector.rend(); print++){
 		        listfile << *print<< endl;

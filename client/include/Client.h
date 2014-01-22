@@ -30,15 +30,14 @@
 
 	class Network{
 
-	    int _id;
 	    boost::mutex * _mutex;
-	    std::queue<STOMP::StompFrame*>* _stompFramesIn;                                // empty vector of ints
-	    std::queue<STOMP::StompFrame*>* _stompFramesOut;                                // empty vector of ints
+//	    std::queue<STOMP::StompFrame*>* _stompFramesIn;                                // empty vector of ints
+	    //std::queue<STOMP::StompFrame*>* _stompFramesOut;                                // empty vector of ints
 
 	public:
 	   // Network (boost::mutex* mutex,std::queue<STOMP::StompFrame*> stompFramesIn , std::queue<STOMP::StompFrame*> stompFramesOut) :_mutex(mutex) ,_stompFramesIn(stompFramesIn),_stompFramesOut(stompFramesOut) {}
-	    Network (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn);
-	    int run(ConnectionHandler& connectionHandler, std::map<string, int> folowing,HTMLwrite& htmlwrite);
+	    Network (boost::mutex* mutex);
+	    int run(ConnectionHandler& connectionHandler, std::map<string, int> folowing,HTMLwrite& htmlwrite,int& receiptId);
 		virtual ~Network();
 
 

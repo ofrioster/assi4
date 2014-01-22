@@ -13,11 +13,9 @@
 
 	using namespace std;
 
-	Console::Console (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn )
+	Console::Console (boost::mutex* mutex)
 	{
 		_mutex=mutex;
-		_stompFramesIn=stompFramesIn;
-
 	}
 
 	Console::~Console() {
@@ -25,8 +23,13 @@
 	}
 
 
-int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> folowing,bool close,string username) {
+int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> folowing,bool& close,string username,int& receiptId) {
     while (1) {
+    	if (close){
+    		return 0;
+    	}
+
+        int _counter;
         const short bufsize = 1024;
         char buf[bufsize];
         std::cin.getline(buf, bufsize);
@@ -48,7 +51,7 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
         	folowing.insert(std::make_pair(arg,_counter));
 
 
-        	STOMP::SubscribeFrame *tmpFrame =  new STOMP::SubscribeFrame("/topic/"+arg, _counter);
+        	STOMP::SubscribeFrame *tmpFrame = new STOMP::SubscribeFrame("/topic/"+arg, _counter);
         	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
 //        	connectionHandler.sendBytes("\n",1);
 
@@ -68,7 +71,6 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
 	        	folowing.erase(folowing.find(arg));
 			}else{
 	    		cout << "Not following this user:" << arg << endl;
-
 			}
 
         }
@@ -92,14 +94,15 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
         }
         else if (command == "logout")
         {
-
-	        	STOMP::DisconnectFrame *tmpFrame =  new STOMP::DisconnectFrame(10);//TODO Change to dynamic
+        		receiptId=2345678;
+	        	STOMP::DisconnectFrame *tmpFrame =  new STOMP::DisconnectFrame(receiptId);//TODO Change to dynamic
 	        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
 	        	return 0;
         }
         else if (command == "exit_client")
         {
-        	STOMP::DisconnectFrame *tmpFrame =  new STOMP::DisconnectFrame(11);//TODO Change to dynamic
+    		receiptId=98765;
+        	STOMP::DisconnectFrame *tmpFrame =  new STOMP::DisconnectFrame(receiptId);//TODO Change to dynamic
         	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
         	close = true;
         	return 1;

@@ -30,17 +30,15 @@
 
 class Console {
 
-    int _id;
     boost::mutex * _mutex;
-    std::queue<STOMP::StompFrame*>* _stompFramesIn;                                // empty vector of ints
-    std::queue<STOMP::StompFrame*>* _stompFramesOut;                                // empty vector of ints
-    int _counter;
+//    std::queue<STOMP::StompFrame*>* _stompFramesIn;                                // empty vector of ints
+    //std::queue<STOMP::StompFrame*>* _stompFramesOut;                                // empty vector of ints
 
 public:
 	//Console  (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn , std::queue<STOMP::StompFrame*>* stompFramesOut) :_mutex(mutex) ,_stompFramesIn(stompFramesIn),_stompFramesOut(stompFramesOut) {}
-	Console (boost::mutex* mutex,std::queue<STOMP::StompFrame*>* stompFramesIn );
+	Console (boost::mutex* mutex);
 	virtual ~Console();
-	int run (ConnectionHandler& connectionHandler, std::map<string, int> folowing,bool close,string username);
+	int run (ConnectionHandler& connectionHandler, std::map<string, int> folowing,bool& close,string username,int& receiptId);
 };
 
 #endif /* CONSOLE_H_ */

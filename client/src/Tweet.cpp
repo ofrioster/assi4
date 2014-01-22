@@ -36,6 +36,7 @@ string Tweet::getDateAndTimeRecievedRtTheServer(){
 	return this->DateAndTimeRecievedRtTheServer;
 }
 string Tweet::toString(){
-	string res=this->username+", "+ this->TweetBody+", "+this->DateAndTimeRecievedRtTheServer+"<BR/>";
+	//string res=this->username+", "+ this->TweetBody+", "+this->DateAndTimeRecievedRtTheServer+"<BR/>";
+	string res="<div class=\"entry\"><div class=\"username\">" + this->username +"<span class=\"time\">"+this->DateAndTimeRecievedRtTheServer+"</span></div><span class=\"tweet\">"+this->TweetBody+"</span></div>";
 	return res;
 }

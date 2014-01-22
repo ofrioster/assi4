@@ -54,7 +54,6 @@ public:
     bool recived();
 
 
-
     // Close down the connection properly.
     void close();
 

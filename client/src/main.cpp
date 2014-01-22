@@ -88,12 +88,12 @@ int main(int argc, char *argv[]){
     //connectionHandler = connectionHandler(host,port);
 	std::map<string, int> folowing;
     boost::mutex mutex;
+    int receiptId = -1;
+    Console task1(&mutex);
+    Network task2(&mutex);
 
-    Console task1(&mutex,&stompFramesIn);
-    Network task2(&mutex,&stompFramesIn);
-
-    boost::thread th1(&Console::run, &task1, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(close),user);
-    boost::thread th2(&Network::run, &task2, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(htmlwrite));
+    boost::thread th1(&Console::run, &task1, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(close),user,boost::ref(receiptId));
+    boost::thread th2(&Network::run, &task2, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(htmlwrite),boost::ref(receiptId));
 
 
     th1.join();
@@ -104,8 +104,8 @@ int main(int argc, char *argv[]){
     cout<< "    connectionHandler.close();"<<endl;
     htmlwrite.print();
     if (close == true){
+        //connectionHandler();
         return 0;
-
     }
 	    }else{
 	        std::cerr << "Cannot connect to " << "host" << ":" << "port" << std::endl;
