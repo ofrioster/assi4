@@ -320,7 +320,9 @@ public class ConnectionHandler2 implements Runnable{
 //            	System.out.println("body:"+tempRes+"-end");
             }
             else{
-            //	this.client.addNewMessage(messageFrame);
+            	
+            	this.client.setClienLastAction("tweet");
+            	this.client.addNewMessageThatSendByThis(messageFrame);
             	this.client.setClienLastAction("tweet");
             	this.send(messageFrame);
             }

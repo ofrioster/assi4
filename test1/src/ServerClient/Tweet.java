@@ -87,7 +87,7 @@ public class Tweet implements TweetInterface{
 	 * @return tweet destination
 	 */
 	public String getDestination(){
-		return this.message;
+		return this.destination;
 	}
 	/**
 	 * @return tweet ID

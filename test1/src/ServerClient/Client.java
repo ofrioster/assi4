@@ -337,6 +337,19 @@ public class Client implements ClientInterfce {
 		this.friendsMessage.add(tweet);
 		this.connectionHandler2.sendNewMessage();
 	}
+	/**
+	 * add new message that send by this client
+	 * 
+	 * @param frameframe
+	 *            .getBody()
+	 */
+	public void addNewMessageThatSendByThis(MessageFrame frame) {
+		Tweet tweet = new Tweet(frame.getMessageId(), frame.getBody(),this.followers.size(), this.userName,frame);
+//		this.tweets.add(tweet);
+		this.addMessageToFollowers(tweet);
+	//	this.friendsMessage.add(tweet);
+	//	this.connectionHandler2.sendNewMessage();
+	}
 
 	/**
 	 * (non-Javadoc)
@@ -436,6 +449,7 @@ public class Client implements ClientInterfce {
 			StringBuilder builder = new StringBuilder();
 			builder.append("destination:");
 			// builder.append(this.following.get(this.friendsMessage.get(this.messageCount).userNameTweet).getClientUserName());
+			builder.append("/topic/");
 			builder.append(this.friendsMessage.get(messageCount).getDestination());
 			builder.append('\n');
 			builder.append("subscription:");
