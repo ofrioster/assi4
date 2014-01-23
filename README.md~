@@ -13,17 +13,16 @@ server example:
 http://code.google.com/p/fourm/source/browse/trunk/StompServer/Domain/?r=105#Domain
 
 
-* to make sure that there is no 2 ID subscribe the same person
-* put the clients in hashMap?
+to run server:
+* ant compile
+* ant run -Darg0=50001
 
 
-כאשר שולחים הודעת STOMP:
+commands:
 
-SEND
+login 10.0.0.11 50002 ofri1 passofri1
 
-צריך לכלול בdestination את הקידומת topic מהסיבה שקיימות קידומות נוספות כגון queue
+"socat -v -x TCP-LISTEN:50002 TCP:127.0.0.1:50001"
 
-בכל מקרה אפילו שאין לנו אפשרות לקידומות נוספות אלו, צריך להשתמש בפרוטוקול הסטנדרטי.
-* how we send the topic?
-* disconnect mean to close the socket? if yes you cant send connect again
-* in my client they need to recive an asnswer every time so i send them \0 answer if there is no need for a real answer
+
+

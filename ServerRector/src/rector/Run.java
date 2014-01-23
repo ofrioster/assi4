@@ -21,7 +21,7 @@ package rector;
 
 	import protocol.*;
 	import tokenizer.*;
-	import Client.*;
+import Client.*;
 //	import tokenizer.http.HttpMessage;
 //	import tokenizer.http.HttpMessageTokenizer;
 
@@ -219,6 +219,7 @@ package rector;
 			try {
 				int port = Integer.parseInt(args[0]);
 				int poolSize = Integer.parseInt(args[1]);
+				Client serverClient=new Client("server", clients, stats);
 
 				//Reactor<HttpMessage> reactor = startHttpServer(port, poolSize);
 				Run<StringMessage> reactor = startEchoServer(port, poolSize);

@@ -1,8 +1,15 @@
 package Stomp;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import tokenizer.StringMessage;
 import Client.*;
 
 
@@ -17,6 +24,7 @@ public class  StompFrame implements StompFrameInterface{
     protected Client client;
     protected ArrayList<Client> clients;
   //  protected ArrayList<Topic> topics;
+    private Charset charset;
 
     /** constructor
      *
@@ -24,6 +32,7 @@ public class  StompFrame implements StompFrameInterface{
     public StompFrame(ArrayList<Client> clients) {
     	this.clients=clients;
     //	this.topics=topics;
+    	this.charset = Charset.forName("UTF-8");
     }
 
     /** constructor
@@ -31,6 +40,7 @@ public class  StompFrame implements StompFrameInterface{
      */
     public StompFrame(StompCommand command) {
             this.command = command;
+            this.charset = Charset.forName("UTF-8");
     }
     /** constructor
     *
@@ -40,6 +50,7 @@ public class  StompFrame implements StompFrameInterface{
 	   this.body=body;
 	   this.client=client;
 	   this.clients=clients;
+	   this.charset = Charset.forName("UTF-8");
    }
 
     public String toString() {
@@ -170,6 +181,19 @@ public class  StompFrame implements StompFrameInterface{
      */
     public String getStringCommend(){
     	return this.command.toString();
+    }
+    /**
+     * Convert the stomp message into bytes representation, taking care of encoding and framing.
+     *
+     * @return a ByteBuffer with the message content converted to bytes, after framing information has been added.
+     */
+    public ByteBuffer getBytesForMessage()  throws CharacterCodingException {
+    	String msg=this.getString();
+    	CharsetEncoder _encoder= this.charset.newEncoder();
+       StringBuilder sb = new StringBuilder(msg);
+//       sb.append(this._messageSeparator);
+       ByteBuffer bb = _encoder.encode(CharBuffer.wrap(msg));
+       return bb;
     }
 
 }

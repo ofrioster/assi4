@@ -20,7 +20,7 @@ public class EchoProtocol implements AsyncServerProtocol<StringMessage> {
 	 */
 	@Override
 	public StringMessage processMessage(StringMessage msg) {        
-		if (this._connectionTerminated) {
+		if (this._connectionTerminated || msg==null) {
 			return null;
 		}
 		if (this.isEnd(msg)) {

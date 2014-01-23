@@ -11,8 +11,9 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import rector.ConnectionHandler;
 import Client.*;
-import Stomp.*;;
+import Stomp.*;
 
 public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMessage> {
 
@@ -34,6 +35,7 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
    private ArrayList<MessageFrame> messageFrameList;
    private Stats stats;
    private ConnectFrame connectFrame;
+   private int count;
 //   private String allMessages;
    
    
@@ -47,6 +49,8 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
       this._encoder = charset.newEncoder();
       this.clients=clients;
       this.stats=stats;
+      this.count=0;
+      this.messageFrameList=new ArrayList<MessageFrame>();
 //      this.allMessages="";
    }
 
@@ -79,6 +83,7 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
 
    /**
     * Get the next complete message if it exists, advancing the tokenizer to the next message.
+ * @param <T>
     * @return the next complete message, and null if no complete message exist.
     */
    public synchronized StringMessage nextMessage() {
@@ -119,7 +124,7 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
    public String getLastMessageSend(){
 	   return this.lasMessageSend;
    }
-   public StompFrame processMessage(StompFrame frame){
+   public <T> StompFrame processMessage(StompFrame frame){
 	   StompFrame resFrame=null;
 	   if (frame==null){
 		   resFrame=this.error("problam with the message", frame);
@@ -185,10 +190,13 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
    	}
    	else if (!errorMessageHasBeenSend){
    		this.connectFrame=new ConnectFrame(frame,frame.getCommend());
-           this.client=this.connectFrame.getClient();
-           StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, "CONNECTED");
-           resFrame=receiptFramConnectFrameToSend;
+        this.client=this.connectFrame.getClient();
+        StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, "CONNECTED");
+        resFrame=receiptFramConnectFrameToSend;
+        
+        
    	}
+   	this.client.setClientIsOnline(true);
    	return resFrame;
    }
    /** disconnect the connection and send message to the client
@@ -200,7 +208,10 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
  //  	this.disconnectFrame=new DisconnectFrame(frame, frame.command);
     StompFrame receiptFramDisconnectFrameToSend=new ReceiptFram(frame, "DISCONNECT");
     resFrame=receiptFramDisconnectFrameToSend;
+    this.client.setClienLastAction("disconnected");
+    this.client.setClientIsOnline(false);
     return resFrame;
+    
    }
    /**take care of SEND message from the client
     * @param frame
@@ -208,11 +219,43 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
    public StompFrame SEND(StompFrame frame){
    	logger.log(Level.INFO, "send message");
    	StompFrame resFrame=null;
-   	MessageFrame messageFrame=new MessageFrame(frame,this.stats);
+  /* 	MessageFrame messageFrame=new MessageFrame(frame,this.stats);
     this.messageFrameList.add(messageFrame);
     this.client.addNewMessage(messageFrame);
     return resFrame;
-       
+    */   
+    /////******/////
+      
+//	logger.log(Level.INFO, "send message");
+	String messageId=""+this.count;
+	this.count++;
+	String subscription=""+this.count;
+	this.count++;
+	MessageFrame messageFrame=new MessageFrame(frame,this.stats,messageId,"00"+subscription );
+    this.messageFrameList.add(messageFrame);
+    if (messageFrame.getHeader("destination").equals("/topic/server")){
+    	if (messageFrame.getBody().contains("clients")){
+    		this.printClients();
+    	}
+    	
+    	else if( messageFrame.getBody().contains("stats")){
+    		this.stats.updateStats(this.client);
+    		StompFrame res=new MessageFrame(clients, this.stats.toStringForFrame(), stats,"server");
+    		resFrame=res;
+    	}
+//    	String tempRes=messageFrame.getBody();
+//    	System.out.println("body:"+tempRes+"-end");
+    }
+    else{
+    	
+    	this.client.setClienLastAction("tweet");
+    	this.client.addNewMessageThatSendByThis(messageFrame);
+    	this.client.setClienLastAction("tweet");
+    	resFrame=messageFrame;
+    }
+
+     ////******////
+    return resFrame;
    }
    /** SUBSCRIBE the new client
     * @param frame
@@ -221,7 +264,10 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
    	logger.log(Level.INFO, "SUBSCRIBE user:"+frame.getHeader("id"));
    	StompFrame resFrame=null;
    	Client newClient=null;
-   	String clientName=frame.getHeader("destination");
+   	String tempUserName=frame.getHeader("destination");
+   	tempUserName=tempUserName.substring(7, tempUserName.length());
+   	String clientName=tempUserName;
+//	System.out.println("looking for: "+tempUserName);
    	Boolean found=false;
    	for (int i=0;i<this.clients.size();i++){
    		if (this.clients.get(i).getClientUserName().equals(clientName)){
@@ -232,23 +278,46 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
    			}
    			else{
    				this.client.addClientToFollow(frame.getHeader("id"), newClient);
+				this.client.setClienLastAction("follow "+clientName);
+				String messageId=""+this.count;
+				this.count++;
+	        	String subscription=frame.getHeader("id");
+	    //    	this.count++;
+				StompFrame resMessage=new MessageFrame(frame,clients, "following " +clientName, this.client.getClientUserName(),messageId,"00"+subscription);
+				resFrame=(resMessage);
+				return resFrame;
    			}
    		}
    	}
    	if (!found){
-   		resFrame=this.error("Wrong username", frame);
+   		resFrame=this.error("Wrong username", frame,"Wrong username");
    	}
    	return resFrame;
    }
+   
+
+/**UNSUBSCRIBE
+* @param frame
+*/
    public StompFrame UNSUBSCRIBE(StompFrame frame){
    	logger.log(Level.INFO, "UNSUBSCRIBE user:"+frame.getHeader("id"));
    	StompFrame resFrame=null;
    	String res=this.client.removeFollowingClient(frame.getHeader("id"));
-   	if (res!=null){
+   	if (!res.substring(0, 1).equals("1")){
    		resFrame=this.error(res, frame);
    	}
-   	return resFrame;
+   	this.client.setClienLastAction("unfollow "+res.substring(1, res.length()));
+	String messageId=""+this.count;
+	this.count++;
+	String subscription=""+this.count;
+	this.count++;
+	StompFrame resMessage=new MessageFrame(frame,clients, "unfollowing " +res.substring(1, res.length()),this.client.getClientUserName(),messageId,"00"+subscription);
+   	return resMessage;
    }
+
+/**
+ * send the message that receive for this client
+ */
    public StompFrame sendNewMessage(){
    	logger.log(Level.INFO, "sending message");
    	StompFrame resFrame=null;
@@ -269,6 +338,15 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
    }
    /**sent to client an error frame
     * @param String whatIsTheProblam
+    * @param StompFrame frame
+    */
+   public StompFrame error(String whatIsTheProblam, StompFrame frame,String descriptionOfTheProblem){
+   	StompFrame res=new ErorFrame(clients, whatIsTheProblam, frame,descriptionOfTheProblem);
+   	logger.log(Level.INFO, "EROR1 " + res.getString());
+   	return(res);
+   }
+   /**sent to client an error frame
+    * @param String whatIsTheProblam
     * @param String msg that receive
     */
    public StompFrame error(String whatIsTheProblam, String msg){
@@ -276,6 +354,38 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
    	StompFrame res=new ErorFrame(clients, whatIsTheProblam, msg);
    	return(res);
    }
+   /**send a message to the client of the all clients status
+    * 
+    */
+   public void printClients(){
+   	try{
+   		String msg="";
+       	String msg2="";
+       	for (int i=0;i<this.clients.size();i++){
+       		if (this.clients.get(i).isClientOnLine()){
+       			msg=this.clients.get(i).getClientUserName()+" last action was: "+this.clients.get(i).getClienLastAction()+"\n";
+           		System.out.println(msg);
+           		msg2+=msg;
+       		}
+       	}
+       	MessageFrame res=new MessageFrame(clients, msg2, stats,"server");
+       	for (int i=0;i<this.clients.size();i++){
+       		if (this.clients.get(i).isThisTheClient("server")){
+       			this.clients.get(i).sendClientsMessage(res);
+       		}
+       	}
+   	}
+   	catch (Exception e){
+   		System.out.println("something worg::: "+e.getMessage());
+   	
+   	}
+ //  	this.send(res);
+   }
 
+@Override
+public <T> void setConnectionHandler(ConnectionHandler<T> _handler) {
+	this.client.setConnectionHandler(_handler);
+	
+}
 
 }

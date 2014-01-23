@@ -1,14 +1,20 @@
 package Client;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import rector.ConnectionHandler;
 import Stomp.MessageFrame;
 import Stomp.StompFrame;
 
 
-public class Client implements ClientInterfce{
+public class Client<T> implements ClientInterfce{
 	
 	private String userName;
 //	private ArrayList<Client> followers;
@@ -31,6 +37,8 @@ public class Client implements ClientInterfce{
 	private int numberOfTimeClienMentionInHisTweets;
 	private Stats stats;
 	private String lastAction;
+	private ConnectionHandler<T> connectionHandler;
+	
 
 	
 	
@@ -52,6 +60,22 @@ public class Client implements ClientInterfce{
 		this.followers = new ArrayList<Follower>();
 		this.following = new ArrayList<Follower>();
 		
+		
+	}
+	public Client(String userName,ArrayList<Client> clients, Stats stats) {
+		this.userName = userName;
+		this.tweets = new ArrayList<Tweet>();
+		this.friendsMessage = new ArrayList<Tweet>();
+		this.hostIP = "null";
+		this.password = "password";
+		this.clientIsOnline = false;
+		this.clients = clients;
+		this.messageCount = 0;
+		this.clients.add(this);
+		this.stats = stats;
+		this.followers = new ArrayList<Follower>();
+		this.following = new ArrayList<Follower>();
+		
 	}
 	public Client(String userName,String hostIP,String password,ArrayList<Client> clients,Stats stats){
 		this.userName=userName;
@@ -69,6 +93,7 @@ public class Client implements ClientInterfce{
 		this.stats=stats;
 		this.followers = new ArrayList<Follower>();
 		this.following = new ArrayList<Follower>();
+		
 	}
 	public Client(StompFrame frame,ArrayList<Client> clients,Stats stats){
 		this.userName=frame.getHeader("login");
@@ -84,6 +109,7 @@ public class Client implements ClientInterfce{
 		this.stats=stats;
 		this.followers = new ArrayList<Follower>();
 		this.following = new ArrayList<Follower>();
+		
 	}
 
 
@@ -184,15 +210,17 @@ public class Client implements ClientInterfce{
 	 * @param following Client Name
 	 */
 	public String removeFollowingClient(String followingClientName) {
-		String res = null;
+		String res = "1";
 		Boolean found = false;
 		if (this.userName.equals(followingClientName)) {
 			return "Trying to unfollow itself";
 		}
 		for (int i = 0; i < this.following.size() && !found; i++) {
-			if (this.following.get(i).getClient().getClientUserName().equals(followingClientName)) {
+			if (this.following.get(i).getID().equals(followingClientName)) {
+				res=this.following.get(i).getClient().getClientUserName();
 				this.following.remove(i);
 				found = true;
+				return ("1"+res);
 			}
 		}
 		if (!found) {
@@ -385,6 +413,45 @@ public class Client implements ClientInterfce{
 	public Boolean isThisTheClient(String userName){
 		return this.userName.equals(userName);
 	}
+	/** send a frame to all followers
+	 * @param frame
+	 */
+	public void sendClientsMessage(StompFrame frame){
+		for (int i=0; i<this.followers.size();i++){
+			if (this.followers.get(i).getClient().isClientOnLine()){
+				this.followers.get(i).getClient().sendSingleMessage(frame);
+			}
+			
+		}
+		
+	}
+	/** send this frame to this client
+	 * @param frame
+	 */
+	public void sendSingleMessage(StompFrame frame){
+		
+		ByteBuffer bytes;
+		try {
+			bytes = frame.getBytesForMessage();
+			///****///
+/*			String msg=frame.getString();
+			Charset charset= Charset.forName("UTF-8");
+	    	CharsetEncoder _encoder= charset.newEncoder();
+	       StringBuilder sb = new StringBuilder(msg);
+//	       sb.append(this._messageSeparator);
+	       ByteBuffer bb = _encoder.encode(CharBuffer.wrap(msg));
+	       this.connectionHandler.addOutData(bb);
+			///***///
+			this.connectionHandler.addOutData(bytes);
+		} catch (CharacterCodingException e) {
+			System.out.println("problem with stompFrame"); //TODO delete
+//			e.printStackTrace();
+		}
+		catch (Exception e){
+			System.out.println("problem with stompFrame:"+ e.getMessage()); //TODO delete
+		}
+		
+	}
 	public Boolean isThisIsThePassword(String password){
 		return this.password.equals(password);
 	}
@@ -471,6 +538,22 @@ public class Client implements ClientInterfce{
 	}
 	public String getClienLastAction(){
 		return this.lastAction;
+	}
+	/**
+	 * add new message that send by this client
+	 * 
+	 * @param frameframe
+	 *            .getBody()
+	 */
+	public void addNewMessageThatSendByThis(MessageFrame frame) {
+		Tweet tweet = new Tweet(frame.getMessageId(), frame.getBody(),this.followers.size(), this.userName,frame);
+//		this.tweets.add(tweet);
+		this.addMessageToFollowers(tweet);
+	//	this.friendsMessage.add(tweet);
+	//	this.connectionHandler2.sendNewMessage();
+	}
+	public void setConnectionHandler(ConnectionHandler<T> _handler){
+		this.connectionHandler=_handler;
 	}
 
 

@@ -3,6 +3,8 @@ package tokenizer;
 import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
 
+import rector.ConnectionHandler;
+
 public interface MessageTokenizer<T> {
 
    
@@ -30,5 +32,6 @@ public interface MessageTokenizer<T> {
     */
    ByteBuffer getBytesForMessage(T msg) throws CharacterCodingException;
    public String getLastMessageSend();
+   <T> void setConnectionHandler(ConnectionHandler<T> _handler);
 
 }

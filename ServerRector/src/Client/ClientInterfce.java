@@ -1,6 +1,8 @@
 package Client;
 
 import java.util.ArrayList;
+
+import rector.ConnectionHandler;
 import Stomp.*;
 
 
@@ -47,6 +49,7 @@ public interface ClientInterfce {
 	public void statsSend(String msg);
 	public void setClienLastAction(String lasAction);
 	public String getClienLastAction();
+	
 	
 	
 	

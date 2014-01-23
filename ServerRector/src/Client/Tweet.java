@@ -2,6 +2,8 @@ package Client;
 
 import java.util.concurrent.Semaphore;
 
+import Stomp.*;
+
 
 public class Tweet implements TweetInterface{
 
@@ -10,6 +12,8 @@ public class Tweet implements TweetInterface{
 	long totalSendTime;
 	Semaphore messagesThatSend;
 	String userNameTweet;
+	StompFrame stompFrame;
+	String destination;
 	
 	
 	public Tweet(String tweetId,String message,int HowManyFollowers,String userName){
@@ -18,6 +22,15 @@ public class Tweet implements TweetInterface{
 		this.userNameTweet=userName;
 		this.messagesThatSend=new Semaphore(HowManyFollowers);
 		this.totalSendTime=System.currentTimeMillis();
+	}
+	public Tweet(String tweetId,String message,int HowManyFollowers,String userName,StompFrame stompFrame){
+		this.tweetID=tweetId;
+		this.message=message;
+		this.userNameTweet=userName;
+		this.messagesThatSend=new Semaphore(HowManyFollowers);
+		this.totalSendTime=System.currentTimeMillis();
+		this.stompFrame=stompFrame;
+		this.destination=stompFrame.getHeader("destination").substring(7, stompFrame.getHeader("destination").length());
 	}
 	/** Constructor for stats tweet
 	 * @param message
@@ -76,5 +89,11 @@ public class Tweet implements TweetInterface{
 	}
 	public String getTweetUserName(){
 		return this.userNameTweet;
+	}
+	/**
+	 * @return tweet destination
+	 */
+	public String getDestination(){
+		return this.destination;
 	}
 }

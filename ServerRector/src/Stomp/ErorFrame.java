@@ -14,6 +14,40 @@ public class ErorFrame extends StompFrame implements ErorFrameInterface{
 		
 		
 	}
+	public ErorFrame(ArrayList<Client> clients,String whatIsTheProblem,String msg,String descriptionOfTheProblem){
+		super(clients);
+		this.command=StompCommand.valueOf("ERROR");
+		this.header.put("message", whatIsTheProblem);
+		this.header.put("The message", msg);
+		this.body=descriptionOfTheProblem;
+		
+		
+	}
+	public ErorFrame(ArrayList<Client> clients,String whatIsTheProblem,StompFrame frame,String descriptionOfTheProblem){
+		super(clients);
+		try{
+			this.command=StompCommand.valueOf("ERROR");
+		}
+		catch (Exception e){
+			
+		}
+		try{
+			this.header.put("message", whatIsTheProblem);
+		}
+		catch (Exception e){
+			
+		}
+		try{
+			this.header.put("The message", frame.getString());
+		}
+		catch (Exception e){
+			
+		}
+
+		this.body=descriptionOfTheProblem;
+		
+		
+	}
 	public ErorFrame(ArrayList<Client> clients,String whatIsTheProblem,StompFrame frame){
 		super(clients);
 		this.command=StompCommand.valueOf("ERROR");

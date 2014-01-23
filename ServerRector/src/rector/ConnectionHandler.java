@@ -157,10 +157,12 @@ public class ConnectionHandler<T> {
 				_sChannel.write(buf);
 				ByteBuffer aa = ByteBuffer.wrap("abc".getBytes()); 
 //				System.out.println(bb.capacity());
-				_sChannel.write(aa);
+	//			_sChannel.write(aa);
 				ByteBuffer bb = ByteBuffer.wrap("null".getBytes()); 
-				System.out.println(bb.capacity());
-				_sChannel.write(bb);
+	//			System.out.println("bb.capacity: "+bb.capacity());
+//				String msg=buf.toString();
+//				System.out.println("write: "+msg);
+	//			_sChannel.write(bb);
 			} catch (IOException e) {
 				// this should never happen.
 				e.printStackTrace();

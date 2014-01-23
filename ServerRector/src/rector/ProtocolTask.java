@@ -40,6 +40,7 @@ public class ProtocolTask<T> implements Runnable {
       while (_tokenizer.hasMessage()) {
          T msg = _tokenizer.nextMessage();
     	  String temp=_tokenizer.getLastMessageSend();
+    	  this._tokenizer.setConnectionHandler(_handler);
 //    	  T response = this._protocol.processMessage(temp2);
          T response = this._protocol.processMessage(msg);
 //         System.out.println("msg: "+msg);
@@ -54,7 +55,7 @@ public class ProtocolTask<T> implements Runnable {
             } catch (CharacterCodingException e) { e.printStackTrace(); }
          }
          else{
-        	 this._handler.addOutData(null);
+//        	 this._handler.addOutData(null);
          }
       }
 	}
