@@ -39,7 +39,7 @@ public class ProtocolTask<T> implements Runnable {
       // go over all complete messages and process them.
       while (_tokenizer.hasMessage()) {
          T msg = _tokenizer.nextMessage();
-    	  String temp=_tokenizer.getLastMessageSend();
+    	  String temp=_tokenizer.getLastMessageSend();//TODO delete
     	  this._tokenizer.setConnectionHandler(_handler);
 //    	  T response = this._protocol.processMessage(temp2);
          T response = this._protocol.processMessage(msg);

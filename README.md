@@ -24,4 +24,5 @@ login 10.0.0.11 50002 ofri1 passofri1
 
 socat -v -x TCP-LISTEN:50002 TCP:127.0.0.1:50001
 
-
+can be add:
+to check if connection is terminated in server, then close the connection.
