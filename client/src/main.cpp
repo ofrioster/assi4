@@ -101,6 +101,7 @@ int main(int argc, char *argv[]){
 		}
 
 		string command = answer.substr(0, pos);
+		answer.erase(0, pos + delimiter.length());
 
         if (command.compare("CONNECTED")== 0){
 
@@ -155,6 +156,8 @@ int main(int argc, char *argv[]){
 			if (headers.find("message") != headers.end()){
 			 cout << headers.find("message")->second << endl;
 			}
+		    connectionHandler.close();
+
         }
 	    }else{
 	        std::cerr << "Cannot connect to " << "host" << ":" << "port" << std::endl;
