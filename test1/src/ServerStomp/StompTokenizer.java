@@ -91,7 +91,7 @@ public class StompTokenizer implements StompTokenizerInterface{
 	 * @return the stomp frame that receive
 	 */
 	public StompFrame getFrame(BufferedReader br) {
-		System.out.println("getFrame");
+//		System.out.println("getFrame");
 		StompFrame frame = null;
 		String msg="";
 		String message="";
@@ -117,7 +117,7 @@ public class StompTokenizer implements StompTokenizerInterface{
 				//while ((msg2 = br.read()){
 					
 					//*******************//
-				try {
+//				try {
 
 //				System.out.println("read line"+msg);
 //				if(br.ready()){
@@ -125,12 +125,12 @@ public class StompTokenizer implements StompTokenizerInterface{
 //						System.out.println("read "+msg);
 //				}
 //				msg=br.readLine();
-					System.out.println("read "+msg);
-				} catch (Exception e) {
+//					System.out.println("read "+msg);
+//				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					System.out.println("some problem");
+//					System.out.println("some problem");
 //				e.printStackTrace();
-				}
+//				}
 				message+=msg+"\n";
 				if (msg.contains("\u0000")){
 //					System.out.println("msg: "+msg);
@@ -145,6 +145,7 @@ public class StompTokenizer implements StompTokenizerInterface{
 }
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
+				System.out.println("message: "+e1.getMessage());
 //				e1.printStackTrace();
 			}
 //		while(!msg.equals("\0"));

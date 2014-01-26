@@ -96,6 +96,7 @@ public class ConnectionHandler2 implements Runnable{
 
             while (this.keepGoing)
             {
+            	if (in!=null){
             /*	if (!this.clientSocket.getKeepAlive()){
             		this.client.setClientIsOnline(false);
                     this.keepGoing=false;
@@ -163,7 +164,7 @@ public class ConnectionHandler2 implements Runnable{
                             
             }
         }
-        
+        }
         // Starts listening
         public void initialize() throws IOException
         {
@@ -257,6 +258,14 @@ public class ConnectionHandler2 implements Runnable{
         				this.error("Wrong password", frame,"Wrong password");
         				errorMessageHasBeenSend=true;
         				newClient=false;
+        				this.keepGoing=false;
+        				try {
+							this.wait(100);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+        				this.close();
         			}
         			else{
         				this.client=this.clients.get(i);
