@@ -23,7 +23,7 @@ ServerRector:
 
 commands:
 
-login 10.0.0.11 50002 ofri1 passofri1
+login 172.20.10.3 50002 ofri1 passofri1
 
 socat -v -x TCP-LISTEN:50002 TCP:127.0.0.1:50001
 

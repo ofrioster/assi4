@@ -275,8 +275,8 @@ public class ConnectionHandler2 implements Runnable{
         		this.error("User is already logged in", frame,"User is already logged in");
         	}
         	else if (!errorMessageHasBeenSend){
-        		this.connectFrame=new ConnectFrame(frame,frame.getCommend());
-                this.client=this.connectFrame.getClient();
+  //      		this.connectFrame=new ConnectFrame(frame,frame.getCommend());
+  //              this.client=this.connectFrame.getClient();
                 StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, "CONNECTED");
                 this.send(receiptFramConnectFrameToSend);
         	}
