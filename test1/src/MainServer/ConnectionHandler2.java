@@ -96,7 +96,7 @@ public class ConnectionHandler2 implements Runnable{
 
             while (this.keepGoing)
             {
-            	if (!this.clientSocket.getKeepAlive()){
+            /*	if (!this.clientSocket.getKeepAlive()){
             		this.client.setClientIsOnline(false);
                     this.keepGoing=false;
             		this.close();
