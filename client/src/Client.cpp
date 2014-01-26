@@ -85,19 +85,14 @@
 				//std::string line;
 				size_t pos = 0;
 				std::string delimiter = "\n";
-
-				//while (pos == 0){
-				//answer = answer.substr(pos+1,(answer.length() - pos+1));
 				pos = answer.find(delimiter);
-				//}
-
 				if (pos == 0){
 					answer = answer.substr(1,(answer.length() - 1));
 					pos = answer.find(delimiter);
 				}
 
 				string command = answer.substr(0, pos);
-				cout<< "command:"  <<command<<endl;
+				//cout<< "command:"  <<command<<endl;
 				answer.erase(0, pos + delimiter.length());
 				if (command.compare("MESSAGE")== 0){
 					  time_t rawtime;
@@ -173,9 +168,6 @@
 
 					if (headers.find("message") != headers.end()){
 					 cout << headers.find("message")->second << endl;
-//					 if (headers.find("message")->second){
-//
-//					 }
 					}
 
 				}else if (command.compare("CONNECTED")== 0){

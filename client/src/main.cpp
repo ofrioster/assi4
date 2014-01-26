@@ -86,6 +86,37 @@ int main(int argc, char *argv[]){
 //    	connectionHandler.sendBytes("\n",1);
 
 
+        std::string answer;
+        if (!connectionHandler.getFrameAscii(answer,'\0')) {
+            std::cout << "Disconnected. Exiting...\n" << std::endl;
+            return 2;
+        }
+
+		size_t pos = 0;
+		std::string delimiter = "\n";
+		pos = answer.find(delimiter);
+		if (pos == 0){
+			answer = answer.substr(1,(answer.length() - 1));
+			pos = answer.find(delimiter);
+		}
+
+		string command = answer.substr(0, pos);
+
+        if (command.compare("CONNECTED")== 0){
+
+        					pos = answer.find(":");
+        					string headerName = answer.substr(0, pos);
+        					answer.erase(0, pos + 1);
+
+        					pos = answer.find("\n");
+        					string headerValue = answer.substr(0, pos);
+        					answer.erase(0, pos + 1);
+
+        					cout<<"Login successfully. (main)"<<endl;
+
+
+
+
     //connectionHandler = connectionHandler(host,port);
 	std::map<string, int> folowing;
     //boost::mutex mutex;
@@ -109,15 +140,33 @@ int main(int argc, char *argv[]){
         //connectionHandler();
         return 0;
     }
+        }else if (command.compare("ERROR")== 0){
+			STOMP::hdrmap headers;
+
+			pos = answer.find(":");
+			string headerName = answer.substr(0, pos);
+			answer.erase(0, pos + 1);
+
+			pos = answer.find("\n");
+			string headerValue = answer.substr(0, pos);
+			answer.erase(0, pos + 1);
+			headers.insert(std::make_pair(headerName , headerValue));
+
+			if (headers.find("message") != headers.end()){
+			 cout << headers.find("message")->second << endl;
+			}
+        }
 	    }else{
 	        std::cerr << "Cannot connect to " << "host" << ":" << "port" << std::endl;
 
 
 	    }
+
 	    }
 	    else{
 	        cout<< "Wrong Command \n You did not loging yet"<<endl;
 	    }
 	}
+
     return 0;
 }
