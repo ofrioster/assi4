@@ -96,7 +96,13 @@ public class ConnectionHandler2 implements Runnable{
 
             while (this.keepGoing)
             {
-            	if (in!=null){
+            	if(this.clientSocket.isClosed()){
+            		this.keepGoing=false;
+            	}
+            	if(this.clientSocket.isBound()){
+//            		this.keepGoing=false;
+            	}
+            	if (in!=null && this.keepGoing){
             /*	if (!this.clientSocket.getKeepAlive()){
             		this.client.setClientIsOnline(false);
                     this.keepGoing=false;
@@ -159,7 +165,16 @@ public class ConnectionHandler2 implements Runnable{
                      }
                 }
                 catch (Exception e){
-                	this.error("malformed STOMP frame received", frame,"worng command");
+                	if (!this.clientSocket.isBound()){
+                		this.keepGoing=false;
+                		this.close();
+                	}
+                	else if (this.clientSocket.isClosed()){
+                		this.keepGoing=false;
+                	}            
+                	else{
+                		this.error("malformed STOMP frame received", frame,"worng command");
+                	}
                 }
                             
             }
