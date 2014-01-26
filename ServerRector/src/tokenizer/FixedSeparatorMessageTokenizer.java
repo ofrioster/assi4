@@ -167,6 +167,7 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
    			if (!this.clients.get(i).isThisIsThePassword(frame.getHeader("passcode"))){
    				resFrame=this.error("Wrong password", frame,"Wrong password");
    				errorMessageHasBeenSend=true;
+   				return resFrame;
    			}
    			else{
    				this.client=this.clients.get(i);

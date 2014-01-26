@@ -25,7 +25,8 @@ public class EchoProtocol implements AsyncServerProtocol<StringMessage> {
 		}
 		if (this.isEnd(msg)) {
 			this._shouldClose = true;
-			return new StringMessage("Ok, bye bye");
+//			return new StringMessage("Ok, bye bye");
+			
 		}
 //		return new StringMessage("Your message \"" + msg + "\" has been received");
 		return msg;
@@ -39,7 +40,11 @@ public class EchoProtocol implements AsyncServerProtocol<StringMessage> {
 	 */
 	@Override
 	public boolean isEnd(StringMessage msg) {
-		return msg.equals("bye");
+		String disconnet=msg.getMessage();
+		if(msg.equals("bye") || disconnet.contains("DISCONNECT")){
+			return true;
+		}
+		return false;
 	}
 
 	/**
