@@ -96,6 +96,11 @@ public class ConnectionHandler2 implements Runnable{
 
             while (this.keepGoing)
             {
+            	if (!this.clientSocket.getKeepAlive()){
+            		this.client.setClientIsOnline(false);
+                    this.keepGoing=false;
+            		this.close();
+            	}
             	//TODO what if the connectio is clise?
             	/*while (!tokenizer.hasMessage()) {
             		System.out.println("Trying to read until we have a massege");
