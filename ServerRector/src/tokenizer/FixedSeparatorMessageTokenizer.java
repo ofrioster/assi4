@@ -165,7 +165,7 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
    			newClient=false;
    			clientIsLogIn=this.clients.get(i).isClientOnLine();
    			if (!this.clients.get(i).isThisIsThePassword(frame.getHeader("passcode"))){
-   				resFrame=this.error("Wrong password", frame);
+   				resFrame=this.error("Wrong password", frame,"Wrong password");
    				errorMessageHasBeenSend=true;
    			}
    			else{
@@ -182,11 +182,11 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<StringMe
    			this.client.setClienLastAction("connected");
    		}
    		catch (Exception e){
-   			resFrame=this.error("cant add new client", frame);
+   			resFrame=this.error("cant add new client", frame,"cant add new client");
    		}
    	}
    	else if (clientIsLogIn && !errorMessageHasBeenSend){
-   		resFrame=this.error("User is already logged in", frame);
+   		resFrame=this.error("User is already logged in", frame,"User is already logged in");
    	}
    	else if (!errorMessageHasBeenSend){
 //   		this.connectFrame=new ConnectFrame(frame,frame.getCommend());

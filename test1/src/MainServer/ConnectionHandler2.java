@@ -259,12 +259,15 @@ public class ConnectionHandler2 implements Runnable{
         				errorMessageHasBeenSend=true;
         				newClient=false;
         				this.keepGoing=false;
-        				try {
-							this.wait(100);
-						} catch (InterruptedException e) {
+        				for (int k=0; k<1000;k++){}
+        			/*	try {
+							
+						} catch (Exception e) {
 							// TODO Auto-generated catch block
+							System.out.println("eroooororororor"+e.getMessage());
 							e.printStackTrace();
 						}
+        				System.out.println("eroooororororor not here");*/
         				this.close();
         			}
         			else{
