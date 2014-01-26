@@ -16,6 +16,9 @@ http://code.google.com/p/fourm/source/browse/trunk/StompServer/Domain/?r=105#Dom
 to run server:
 * ant compile
 * ant run -Darg0=50001
+ServerRector:
+* ant run -Darg0=50001 -Darg0=6
+
 
 
 commands:
