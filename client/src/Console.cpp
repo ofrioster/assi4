@@ -51,9 +51,8 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
         	folowing.insert(std::make_pair(arg,_counter));
 
 
-        	STOMP::SubscribeFrame *tmpFrame = new STOMP::SubscribeFrame("/topic/"+arg, _counter);
-        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
-    		tmpFrame->~StompFrame();
+        	STOMP::SubscribeFrame tmpFrame("/topic/"+arg, _counter);
+        	connectionHandler.sendFrameAscii(tmpFrame.toSend(),'\0');
 
 //        	connectionHandler.sendBytes("\n",1);
 
@@ -68,9 +67,8 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
     		line.erase(0, pos + delimiter.length());
     		cout << "unfollow:" << arg << endl;
    			if (folowing.find(arg)!= folowing.end()){
-	        	STOMP::UnsubscribeFrame *tmpFrame =  new STOMP::UnsubscribeFrame(folowing.find(arg)->second);
-	        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
-	    		tmpFrame->~StompFrame();
+	        	STOMP::UnsubscribeFrame tmpFrame(folowing.find(arg)->second);
+	        	connectionHandler.sendFrameAscii(tmpFrame.toSend(),'\0');
 
 	        	folowing.erase(folowing.find(arg));
 
@@ -82,56 +80,49 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
         else if (command == "tweet")
         {
 
-        	STOMP::SendFrame *tmpFrame =  new STOMP::SendFrame("/topic/"+ username,line);
-        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
-    		tmpFrame->~StompFrame();
-
+        	STOMP::SendFrame tmpFrame("/topic/"+ username,line);
+        	connectionHandler.sendFrameAscii(tmpFrame.toSend(),'\0');
 
         }
         else if (command == "clients")
         {
-        	STOMP::SendFrame *tmpFrame =  new STOMP::SendFrame("/topic/server","clients");
-        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
-    		tmpFrame->~StompFrame();
+        	STOMP::SendFrame tmpFrame("/topic/server","clients");
+        	connectionHandler.sendFrameAscii(tmpFrame.toSend(),'\0');
 
         }
         else if (command == "stats")
         {
-        	STOMP::SendFrame *tmpFrame =  new STOMP::SendFrame("/topic/server","stats");
-        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
-    		tmpFrame->~StompFrame();
+        	STOMP::SendFrame tmpFrame("/topic/server","stats");
+        	connectionHandler.sendFrameAscii(tmpFrame.toSend(),'\0');
 
         }
         else if (command == "logout")
         {
         		receiptId=2345678;
-	        	STOMP::DisconnectFrame *tmpFrame =  new STOMP::DisconnectFrame(receiptId);//TODO Change to dynamic
-	        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
-	    		tmpFrame->~StompFrame();
+	        	STOMP::DisconnectFrame tmpFrame(receiptId);//TODO Change to dynamic
+	        	connectionHandler.sendFrameAscii(tmpFrame.toSend(),'\0');
+
 
 	        	return 0;
         }
         else if (command == "exit_client")
         {
     		receiptId=98765;
-        	STOMP::DisconnectFrame *tmpFrame =  new STOMP::DisconnectFrame(receiptId);//TODO Change to dynamic
-        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
-    		tmpFrame->~StompFrame();
+        	STOMP::DisconnectFrame tmpFrame(receiptId);//TODO Change to dynamic
+        	connectionHandler.sendFrameAscii(tmpFrame.toSend(),'\0');
 
         	close = true;
         	return 1;
         }
         else if (command == "stop")
         {
-        	STOMP::SendFrame *tmpFrame =  new STOMP::SendFrame("/topic/server","stop");
-        	connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
-    		tmpFrame->~StompFrame();
-
+        	STOMP::SendFrame tmpFrame("/topic/server","stop");
+        	connectionHandler.sendFrameAscii(tmpFrame.toSend(),'\0');
         }
         else
         {
            // ...
-            std::cout << "Something went wrong" << std::endl;
+            std::cout << "Wrong Command" << std::endl;
 
         }
 

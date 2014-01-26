@@ -20,7 +20,6 @@ namespace STOMP {
 
 /* STOMP Frame header map */
 typedef std::map<string, string> hdrmap;
-typedef std::map<string, string>         stomp_server_command_map_t;
 
 
 

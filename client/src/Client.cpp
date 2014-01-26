@@ -173,6 +173,9 @@
 
 					if (headers.find("message") != headers.end()){
 					 cout << headers.find("message")->second << endl;
+//					 if (headers.find("message")->second){
+//
+//					 }
 					}
 
 				}else if (command.compare("CONNECTED")== 0){

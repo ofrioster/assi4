@@ -77,11 +77,11 @@ int main(int argc, char *argv[]){
 	    if (connectionHandler.connect()) {
 	        //std::cerr << "Cannot connect to " << "host" << ":" << "port" << std::endl;
 
-
-		STOMP::ConnectFrame *tmpFrame =  new STOMP::ConnectFrame(h,"");
-		connectionHandler.sendFrameAscii(tmpFrame->toSend(),'\0');
-		tmpFrame->~StompFrame();
-
+		//STOMP::ConnectFrame *tmpFrame1 =  new STOMP::ConnectFrame();
+		STOMP::ConnectFrame tmpFrame(h,"");
+		connectionHandler.sendFrameAscii(tmpFrame.toSend(),'\0');
+		//tmpFrame->~StompFrame();
+		h.clear();
 		HTMLwrite htmlwrite(user);
 //    	connectionHandler.sendBytes("\n",1);
 
@@ -96,13 +96,14 @@ int main(int argc, char *argv[]){
     boost::thread th1(&Console::run, &task1, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(close),boost::ref(user),boost::ref(receiptId));
     boost::thread th2(&Network::run, &task2, boost::ref(connectionHandler),boost::ref(folowing),boost::ref(htmlwrite),boost::ref(receiptId));
 
-
     th1.join();
-    cout<< "th1 quit"<<endl;
+//    cout<< "th1 quit"<<endl;
     th2.join();
-    cout<< "th2 quit"<<endl;
+//    cout<< "th2 quit"<<endl;
     connectionHandler.close();
-    cout<< "    connectionHandler.close();"<<endl;
+    //task1.~Console();
+    //task2.~Network();
+//    cout<< "    connectionHandler.close();"<<endl;
     htmlwrite.print();
     if (close == true){
         //connectionHandler();
@@ -115,10 +116,7 @@ int main(int argc, char *argv[]){
 	    }
 	    }
 	    else{
-	        cout<< "wrong command"<<endl;
-
-
-
+	        cout<< "Wrong Command \n You did not loging yet"<<endl;
 	    }
 	}
     return 0;

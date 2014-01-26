@@ -24,6 +24,18 @@ StompFrame::StompFrame(string cmd, hdrmap h, string b){
 
 StompFrame::~StompFrame() {
 	// TODO Auto-generated destructor stub
+	//delete &m_command;
+	 //m_headers.delete;
+	//delete &m_body;
+//		for (hdrmap::iterator it = m_headers.begin(); it != m_headers.end(); ++it){
+//	    std::delete it->second;
+//		}
+//	    for ( hdrmap::iterator it = m_headers.begin(); it != m_headers.end(); ++it ) {
+//	        it->second;
+//	    }
+		m_headers.clear();
+
+
 }
 string StompFrame::toSend() {
 	string ret = m_command;
