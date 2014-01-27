@@ -379,4 +379,40 @@ public class ConnectionHandler2 implements Runnable{
         	
         	}
         }
+        /**
+         * Disconnect all client
+         * after STOP message arrive
+         */
+        public void stop(){
+        	StompFrame frame=new ReceiptFram( "DISCONNECT","1.2",this.topics,this.clients,"001");
+        	try{
+        		for (int i=0; i<this.clients.size();i++){
+            		if (!this.clients.get(i).isThisTheClient("server")){
+            			if (this.clients.get(i).isClientOnLine()){
+            				this.clients.get(i).stop(frame);
+            			}
+            		}
+            	}
+        	}
+        	catch (Exception e){}
+        	
+        }
+        /** disconnect the connection and send message to the client
+         * after STOP message arrive
+         * @param frame
+         */
+        public void stopDisconnect(StompFrame frame){
+        	try{
+            	logger.log(Level.INFO, "DISCONNECT");
+                this.send(frame);
+                this.client.setClienLastAction("disconnected");
+                this.client.setClientIsOnline(false);
+                this.keepGoing=false;
+                this.close();
+        	}
+        	catch (Exception e){
+        		
+        	}
+
+        }
 }

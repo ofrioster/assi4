@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ServerStomp.MessageFrame;
+import ServerStomp.ReceiptFram;
 import ServerStomp.StompFrame;
 import MainServer.*;
 
@@ -603,5 +604,12 @@ public class Client implements ClientInterfce {
 	 */
 	public void sendSingleMessage(StompFrame frame){
 		this.connectionHandler2.send(frame);
+	}
+	/**Disconnect client
+	 * 
+	 */
+	public void stop(StompFrame frame){
+		this.connectionHandler2.DISCONNECT(frame);
+		
 	}
 }
