@@ -17,12 +17,8 @@ import Stomp.StompFrame;
 public class Client<T> implements ClientInterfce{
 	
 	private String userName;
-//	private ArrayList<Client> followers;
-//	private Map<String, Client> following = new HashMap<String, Client>();
-//	private Map<String, Client> followers = new HashMap<String, Client>();
 	private ArrayList<Follower> followers;
-	private ArrayList<Follower> following;
-//	private ArrayList<Client> following; 
+	private ArrayList<Follower> following; 
 	private String hostIP;
 	private String hostPort;
 	private String password;
@@ -31,7 +27,6 @@ public class Client<T> implements ClientInterfce{
 	private ArrayList<Tweet> tweets;
 	private ArrayList<Tweet> friendsMessage;
 	private ArrayList<Client> clients;
-	//private ArrayList<Topic> topics;
 	private int messageCount;
 	private int numberOfTimeClienMention;
 	private int numberOfTimeClienMentionInHisTweets;
@@ -44,11 +39,8 @@ public class Client<T> implements ClientInterfce{
 	
 	public Client(String userName,String hostIP, String hostPort,String password,ArrayList<Client> clients,Stats stats){
 		this.userName=userName;
-//		this.followers= new ArrayList<Client>();
-	//	this.following= new ArrayList<Client>();
 		this.tweets= new ArrayList<Tweet>();
 		this.friendsMessage=new ArrayList<Tweet>();
-//		this.topics=new ArrayList<Topic>();
 		this.hostIP=hostIP;
 		this.hostPort=hostPort;
 		this.password=password;
@@ -79,12 +71,9 @@ public class Client<T> implements ClientInterfce{
 	}
 	public Client(String userName,String hostIP,String password,ArrayList<Client> clients,Stats stats){
 		this.userName=userName;
-//		this.followers= new ArrayList<Client>();
-//		this.following= new ArrayList<Client>();
 		this.tweets= new ArrayList<Tweet>();
 		this.friendsMessage=new ArrayList<Tweet>();
 		this.hostIP=hostIP;
-//		this.hostPort=hostPort;
 		this.password=password;
 		this.clientIsOnline=false;
 		this.clients=clients;
@@ -308,7 +297,6 @@ public class Client<T> implements ClientInterfce{
 	 * @param tweet to add
 	 */
 	public void addTweet(Tweet tweet){
-	//	Tweet tweetObject=new Tweet(tweetId, tweetId, this.followers.size(),this.userName);
 		this.tweets.add(tweet);
 		this.addMessageToFollowers(tweet);
 		this.stats.addTweet();
@@ -336,25 +324,6 @@ public class Client<T> implements ClientInterfce{
 			this.followers.get(i).getClient().addFriendsMessage(tweet);
 		}
 	}
-	/** (non-Javadoc)
-	 * @param topic to add
-	 */
-	/*public void addTopic(Topic newTopic) {
-		this.topics.add(newTopic);
-		
-	}*/
-
-	/** (non-Javadoc)
-	 * @param topic to remove
-	 */
-	/*public void removeTopic(Topic topicToRemove) {
-		for (int i=0;i<this.topics.size();i++){
-			if (this.topics.get(i).equals(topicToRemove)){
-				this.topics.remove(i);
-			}
-		}
-		
-	}*/
 	/**
 	 * @return Boolean if this client have a new message that has not been send
 	 */
@@ -368,7 +337,6 @@ public class Client<T> implements ClientInterfce{
 		if (this.messageCount < this.friendsMessage.size()) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("destination:");
-			// builder.append(this.following.get(this.friendsMessage.get(this.messageCount).userNameTweet).getClientUserName());
 			builder.append(this.following.get(messageCount).getClient().getClientUserName());
 			builder.append('\n');
 			builder.append("subscription:");
@@ -433,22 +401,10 @@ public class Client<T> implements ClientInterfce{
 		ByteBuffer bytes;
 		try {
 			bytes = frame.getBytesForMessage();
-			///****///
-/*			String msg=frame.getString();
-			Charset charset= Charset.forName("UTF-8");
-	    	CharsetEncoder _encoder= charset.newEncoder();
-	       StringBuilder sb = new StringBuilder(msg);
-//	       sb.append(this._messageSeparator);
-	       ByteBuffer bb = _encoder.encode(CharBuffer.wrap(msg));
-	       this.connectionHandler.addOutData(bb);
-			///***///
 			this.connectionHandler.addOutData(bytes);
 		} catch (CharacterCodingException e) {
-			System.out.println("problem with stompFrame"); //TODO delete
-//			e.printStackTrace();
 		}
 		catch (Exception e){
-			System.out.println("problem with stompFrame:"+ e.getMessage()); //TODO delete
 		}
 		
 	}
@@ -547,10 +503,7 @@ public class Client<T> implements ClientInterfce{
 	 */
 	public void addNewMessageThatSendByThis(MessageFrame frame) {
 		Tweet tweet = new Tweet(frame.getMessageId(), frame.getBody(),this.followers.size(), this.userName,frame);
-//		this.tweets.add(tweet);
 		this.addMessageToFollowers(tweet);
-	//	this.friendsMessage.add(tweet);
-	//	this.connectionHandler2.sendNewMessage();
 	}
 	public void setConnectionHandler(ConnectionHandler<T> _handler){
 		this.connectionHandler=_handler;

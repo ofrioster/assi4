@@ -23,14 +23,12 @@ public class ProtocolTask<T> implements Runnable {
 	private final MessageTokenizer<T> _tokenizer;
 	private final ConnectionHandler<T> _handler;
 	private ArrayList<Client> clients;
-//	private String allMessages;
 
 	public ProtocolTask(final ServerProtocol<T> protocol, final MessageTokenizer<T> tokenizer, final ConnectionHandler<T> h,ArrayList<Client> clients) {
 		this._protocol = protocol;
 		this._tokenizer = tokenizer;
 		this._handler = h;
 		this.clients=clients;
-//		this.allMessages="";
 	}
 
 	// we synchronize on ourselves, in case we are executed by several threads
@@ -44,13 +42,7 @@ public class ProtocolTask<T> implements Runnable {
     		  this._tokenizer.setConnectionHandler(_handler);
     	  }
     	  catch (Exception e){}
-//    	  T response = this._protocol.processMessage(temp2);
          T response = this._protocol.processMessage(msg);
-//         System.out.println("msg: "+msg);
-//         System.out.println("temp: "+temp);
-//         this.allMessages+=temp;
-//         System.out.println("allMessages: "+allMessages);
-//         System.out.println("response: "+response);
          if (response != null) {
             try {
                ByteBuffer bytes = _tokenizer.getBytesForMessage(response);
@@ -58,7 +50,6 @@ public class ProtocolTask<T> implements Runnable {
             } catch (CharacterCodingException e) { e.printStackTrace(); }
          }
          else{
-//        	 this._handler.addOutData(null);
          }
       }
 	}
@@ -77,23 +68,18 @@ public class ProtocolTask<T> implements Runnable {
 		do{
 			try {
 				msg=br.readLine();
-//				System.out.println("read "+msg);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			message+=msg+"\n";
-//			System.out.println("message: "+message);
 		}
 		while(!msg.equals("\0"));
 
         try{
-//        	System.out.println("try");
         	frame = new StompFrame(this.clients);
         	String commandheaderSections = message.split("\n\n")[0];
             String[] headerLines = commandheaderSections.split("\n");
-//System.out.println(headerLines[0]);//TODO delete
-//System.out.println(headerLines[1]);//TODO delete
             frame.commandAdd(headerLines[0]);
 
             for (int i = 1; i < headerLines.length; i++) {

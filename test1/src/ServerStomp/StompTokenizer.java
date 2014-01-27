@@ -91,17 +91,11 @@ public class StompTokenizer implements StompTokenizerInterface{
 	 * @return the stomp frame that receive
 	 */
 	public StompFrame getFrame(BufferedReader br) {
-//		System.out.println("getFrame");
 		StompFrame frame = null;
 		String msg="";
 		String message="";
 		boolean doneReading=false;
-//		do{
 			try {
-//				while (!br.ready()){}
-//				System.out.println("br ready");
-			//	while (((msg = br.readLine()) != null) && !msg.equals("\u0000") && !doneReading){
-				///********************///
 				int msg2=br.read();
 				char msg3=(char) msg2;
 				while (msg3!= '\u0000'){
@@ -111,62 +105,29 @@ public class StompTokenizer implements StompTokenizerInterface{
 					msg2=br.read();
 					msg3=(char) msg2;
 					}
-						
-				
-				
-				//while ((msg2 = br.read()){
-					
-					//*******************//
-//				try {
-
-//				System.out.println("read line"+msg);
-//				if(br.ready()){
-//					msg=br.readLine();
-//						System.out.println("read "+msg);
-//				}
-//				msg=br.readLine();
-//					System.out.println("read "+msg);
-//				} catch (Exception e) {
-					// TODO Auto-generated catch block
-//					System.out.println("some problem");
-//				e.printStackTrace();
-//				}
 				message+=msg+"\n";
 				if (msg.contains("\u0000")){
-//					System.out.println("msg: "+msg);
 					doneReading=true;
 				}
-//			System.out.println("message: "+message);
-				
-				/**///
+
 				msg2=br.read();
 				msg3=(char) msg2;
-				//**//
 }
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				System.out.println("message: "+e1.getMessage());
-//				e1.printStackTrace();
+
 			}
-//		while(!msg.equals("\0"));
 
         try{
-//        	System.out.println("try");
         	frame = new StompFrame(this.clients,this.topics);
         	String commandheaderSections = message.split("\n\n")[0];
             String[] headerLines = commandheaderSections.split("\n");
-//System.out.println(headerLines[0]);//TODO delete
-//System.out.println(headerLines[1]);//TODO delete
             frame.command = StompCommand.valueOf(headerLines[0]);
 
             for (int i = 1; i < headerLines.length; i++) {
                     String key = headerLines[i].split(":")[0];
-//                    System.out.println("key: "+key);
                     frame.header.put(key, headerLines[i].substring(key.length() + 1));
             }
-//            System.out.println("add msg to body");
             frame.body = message.substring(commandheaderSections.length() + 2);
-//            System.out.println("finish add msg to body");
         }
         catch(Exception e){
         	frame=null;
@@ -174,23 +135,8 @@ public class StompTokenizer implements StompTokenizerInterface{
 			
         System.out.println("finish getFrame");
         return frame;
-		/*
-		// used for reading
-        System.out.println("bufferReader"+ br);
-		String raw;
-		try {
-			System.out.println("here0");
-			raw = br.readLine();
-			System.out.println("here");
-			return this.parse(raw);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-		*/
 		
 	}
-	//TODO add "^@" in the end of the message
 	/** parse string to frame object
      * @param raw frame as string
      * @return frame object
@@ -202,8 +148,6 @@ public class StompTokenizer implements StompTokenizerInterface{
             	frame = new StompFrame(this.clients,this.topics);
             	String commandheaderSections = raw.split("\n\n")[0];
                 String[] headerLines = commandheaderSections.split("\n");
-//System.out.println(headerLines[0]);//TODO delete
-//System.out.println(headerLines[1]);//TODO delete
                 frame.command = StompCommand.valueOf(headerLines[0]);
 
                 for (int i = 1; i < headerLines.length; i++) {

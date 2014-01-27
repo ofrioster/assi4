@@ -24,7 +24,6 @@ public class DisconnectFrame extends StompFrame implements DisconnectFrameInterf
 		this.client=client;
 		this.sessionId=sessionId;
 		this.client.setClientIsOnline(false);
-	//	this.socket=socket;
 	}
 	/** constructor, set client is offline
     *
@@ -41,27 +40,4 @@ public class DisconnectFrame extends StompFrame implements DisconnectFrameInterf
 
 	}
 	
-
-
-    /**
-     * disconnect() - finalize work with STOMP server
-     */
-	/*
-    public void disconnect() {
-            if (socket.isConnected()) {
-                    try {
-                            // sending DISCONNECT command
-                            StompFrame frame = new StompFrame(StompCommand.DISCONNECTED);
-                            frame.header.put("session", sessionId);
-                            send(frame);
-
-                            // stopping reader thread
-                            running = false;
-                            
-                            // close socket
-                            socket.close();
-                    } catch (Exception e) {
-                    }
-            }
-    }*/
 }

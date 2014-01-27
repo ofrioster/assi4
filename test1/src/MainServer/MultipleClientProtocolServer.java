@@ -37,7 +37,6 @@ public class MultipleClientProtocolServer implements Runnable{
             try {
                 serverSocket = new ServerSocket(listenPort);
                 logger.log(Level.INFO, "Listening...");
-            //    System.out.println("Listening...");
             }
             catch (IOException e) {
                 System.out.println("Cannot listen on port " + listenPort);
@@ -46,13 +45,11 @@ public class MultipleClientProtocolServer implements Runnable{
             while (true)
             {
                 try {
-                    //ConnectionHandler newConnection = new ConnectionHandler(serverSocket.accept(), factory.create());
                     ConnectionHandler2 newConnection = new ConnectionHandler2(serverSocket.accept(), factory.create(),this.clients,this.topics,this.stats);
                 new Thread(newConnection).start();
                 }
                 catch (IOException e)
                 {
-                 //   System.out.println("Failed to accept on port " + listenPort);
                     logger.log(Level.INFO, "Failed to accept on port " + listenPort);
                 }
             }

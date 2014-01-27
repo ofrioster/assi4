@@ -41,7 +41,7 @@ public class ErorFrame extends StompFrame implements ErorFrameInterface{
 		
 		
 	}
-	//TODO check the end of message if \0
+
     /** getBytes convert frame object to array of bytes
      * @return array of bytes
      */

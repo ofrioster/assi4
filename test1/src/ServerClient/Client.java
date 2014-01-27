@@ -11,12 +11,8 @@ import MainServer.*;
 public class Client implements ClientInterfce {
 
 	private String userName;
-	// private ArrayList<Client> followers;
-	// private Map<String, Client> following = new HashMap<String, Client>();
 	private ArrayList<Follower> following;
-	// private Map<String, Client> followers = new HashMap<String, Client>();
 	private ArrayList<Follower> followers;
-	// private ArrayList<Client> following;
 	private String hostIP;
 	private String hostPort;
 	private String password;
@@ -35,8 +31,6 @@ public class Client implements ClientInterfce {
 
 	public Client(String userName, String hostIP, String hostPort,String password, ArrayList<Client> clients, Stats stats,ConnectionHandler2 connectionHandler2) {
 		this.userName = userName;
-		// this.followers= new ArrayList<Client>();
-		// this.following= new ArrayList<Client>();
 		this.tweets = new ArrayList<Tweet>();
 		this.friendsMessage = new ArrayList<Tweet>();
 		this.topics = new ArrayList<Topic>();
@@ -71,12 +65,9 @@ public class Client implements ClientInterfce {
 
 	public Client(String userName, String hostIP, String password,ArrayList<Client> clients, Stats stats,ConnectionHandler2 connectionHandler2) {
 		this.userName = userName;
-		// this.followers= new ArrayList<Client>();
-		// this.following= new ArrayList<Client>();
 		this.tweets = new ArrayList<Tweet>();
 		this.friendsMessage = new ArrayList<Tweet>();
 		this.hostIP = hostIP;
-		// this.hostPort=hostPort;
 		this.password = password;
 		this.clientIsOnline = false;
 		this.clients = clients;
@@ -175,7 +166,6 @@ public class Client implements ClientInterfce {
 					.equals(clienNameTofollow)) {
 				Follower follower = new Follower(id, this.clients.get(i));
 				this.following.add(follower);
-				// this.following.put(id,this.clients.get(i));
 				found = true;
 				this.clients.get(i).addFollower(id, this);
 			}
@@ -209,15 +199,7 @@ public class Client implements ClientInterfce {
 				this.following.remove(i);
 			}
 		}
-//		Client followinClient = this.following.get(clientID);
-//		followinClient.removeFollower(this);
-//		this.clients.remove(clientID);
-		/*
-		 * for (int i=0; i<this.following.size() && !found;i++){ if
-		 * (this.following.get(i).equals(followingClient)){
-		 * this.following.remove(i); found=true;
-		 * followingClient.removeFollower(this); } }
-		 */
+
 
 	}
 
@@ -280,9 +262,7 @@ public class Client implements ClientInterfce {
 	 */
 	public void setPassword(String password) {
 		this.password = password;
-		/*
-		 * public Socket getSocket(){ return this.socket; }
-		 */
+
 	}
 
 	/**
@@ -332,7 +312,6 @@ public class Client implements ClientInterfce {
 	 */
 	public void addNewMessage(MessageFrame frame) {
 		Tweet tweet = new Tweet(frame.getMessageId(), frame.getBody(),this.followers.size(), this.userName,frame);
-//		this.tweets.add(tweet);
 		this.addMessageToFollowers(tweet);
 		this.friendsMessage.add(tweet);
 		this.connectionHandler2.sendNewMessage();
@@ -345,10 +324,7 @@ public class Client implements ClientInterfce {
 	 */
 	public void addNewMessageThatSendByThis(MessageFrame frame) {
 		Tweet tweet = new Tweet(frame.getMessageId(), frame.getBody(),this.followers.size(), this.userName,frame);
-//		this.tweets.add(tweet);
 		this.addMessageToFollowers(tweet);
-	//	this.friendsMessage.add(tweet);
-	//	this.connectionHandler2.sendNewMessage();
 	}
 
 	/**
@@ -358,8 +334,6 @@ public class Client implements ClientInterfce {
 	 *            to add
 	 */
 	public void addTweet(Tweet tweet) {
-		// Tweet tweetObject=new Tweet(tweetId, tweetId,
-		// this.followers.size(),this.userName);
 		this.friendsMessage.add(tweet);
 		this.addMessageToFollowers(tweet);
 		this.stats.addTweet();
@@ -402,10 +376,6 @@ public class Client implements ClientInterfce {
 		for (int i = 0; i < this.followers.size(); i++) {
 			this.followers.get(i).getClient().addFriendsMessage(tweet);
 		}
-		/*
-		 * for (String key : this.followers.keySet()) {
-		 * this.followers.get(key).addFriendsMessage(tweet); }
-		 */
 	}
 
 	/**
@@ -448,7 +418,6 @@ public class Client implements ClientInterfce {
 		if (this.messageCount < this.friendsMessage.size()) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("destination:");
-			// builder.append(this.following.get(this.friendsMessage.get(this.messageCount).userNameTweet).getClientUserName());
 			builder.append("/topic/");
 			builder.append(this.friendsMessage.get(messageCount).getDestination());
 			builder.append('\n');
@@ -470,16 +439,6 @@ public class Client implements ClientInterfce {
 		return null;
 	}
 
-	/*
-	 * public String getFollowingUserName(int index){//TODO add to interface
-	 * String name=this.friendsMessage.get(index).userNameTweet;
-	 * System.out.println("following siza: "+this.following.size()); for (String
-	 * key : this.followers.keySet()) {
-	 * if(this.following.get(key).equals(name)){ return
-	 * this.following.get(key).getClientUserName(); } } return null;
-	 * 
-	 * }
-	 */
 	public synchronized MessageFrame getNextMessage() {
 		try{
 			String msg = this.getNewMessage();
@@ -617,7 +576,6 @@ public class Client implements ClientInterfce {
 	 */
 	public void statsSend(String msg) {
 		Tweet tweet = new Tweet(msg, this.followers.size(), this.userName);
-	//	this.friendsMessage.add(tweet);
 		this.addTweet(tweet);
 
 	}

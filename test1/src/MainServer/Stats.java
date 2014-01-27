@@ -168,7 +168,6 @@ public class Stats {
 		this.updateNameOfTheUserWithTheMaximumNumberOfMentionsInHerOwnTweets();
 		this.updateNameOfTheUserWithTheMaximumNumberOfTweetsAndTheNumberOfTweets();
 		this.updateNameOfTheUserWithTheMaximumNumberOfFollowersAndTheNumberOfTheFollowers();
-	//	client.statsSend(this.toString());
 	}
 	
 

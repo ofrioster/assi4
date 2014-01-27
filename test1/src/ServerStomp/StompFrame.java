@@ -20,7 +20,7 @@ public class  StompFrame implements StompFrameInterface{
     protected Client client;
     protected ArrayList<Client> clients;
     protected ArrayList<Topic> topics;
-  //  protected Stats stats;
+
 
     /** constructor
      *
@@ -28,7 +28,7 @@ public class  StompFrame implements StompFrameInterface{
     public StompFrame(ArrayList<Client> clients,ArrayList<Topic> topics) {
     	this.clients=clients;
     	this.topics=topics;
-//    	this.stats=stats;
+
     }
 
     /** constructor
@@ -51,7 +51,7 @@ public class  StompFrame implements StompFrameInterface{
             return String.format("command: %s, header: %s, body: %s", this.command,
                             this.header.toString(), this.body);
     }
-//TODO check the end of message if \0
+
     /** getBytes convert frame object to array of bytes
      * @return array of bytes
      */
@@ -68,7 +68,7 @@ public class  StompFrame implements StompFrameInterface{
             frame += "\0";
             return frame.getBytes();
     }
-  //TODO check the end of message if \0
+
     /** getBytes convert frame object to array of bytes
      * @return array of bytes
      */
@@ -82,8 +82,7 @@ public class  StompFrame implements StompFrameInterface{
             if (this.body != null) {
                     frame += this.body;
             }
-     //       frame += "\n";
-          //  frame += "\0";
+
             frame += "\u0000";
             return frame;
     }

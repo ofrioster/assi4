@@ -22,8 +22,7 @@ package rector;
 	import protocol.*;
 	import tokenizer.*;
 import Client.*;
-//	import tokenizer.http.HttpMessage;
-//	import tokenizer.http.HttpMessageTokenizer;
+
 
 	/**
 	 * An implementation of the Reactor pattern.
@@ -252,20 +251,5 @@ import Client.*;
 			return reactor;
 		}
 
-	/*	public static Reactor<HttpMessage> startHttpServer(int port, int poolSize) throws Exception{
-			ServerProtocolFactory<HttpMessage> protocolMaker = new ServerProtocolFactory<HttpMessage>() {
-				public AsyncServerProtocol<HttpMessage> create() {
-					return new HttpProtocol();
-				}
-			};
 
-			TokenizerFactory<HttpMessage> tokenizerMaker = new TokenizerFactory<HttpMessage>() {
-				public MessageTokenizer<HttpMessage> create() {
-					return new HttpMessageTokenizer();
-				}
-			};
-
-			Reactor<HttpMessage> reactor = new Reactor<HttpMessage>(port, poolSize, protocolMaker, tokenizerMaker);
-			return reactor;
-		}*/
 	}

@@ -23,7 +23,6 @@ public class  StompFrame implements StompFrameInterface{
     protected String body;
     protected Client client;
     protected ArrayList<Client> clients;
-  //  protected ArrayList<Topic> topics;
     private Charset charset;
 
     /** constructor
@@ -31,7 +30,6 @@ public class  StompFrame implements StompFrameInterface{
      */
     public StompFrame(ArrayList<Client> clients) {
     	this.clients=clients;
-    //	this.topics=topics;
     	this.charset = Charset.forName("UTF-8");
     }
 
@@ -57,7 +55,7 @@ public class  StompFrame implements StompFrameInterface{
             return String.format("command: %s, header: %s, body: %s", this.command,
                             this.header.toString(), this.body);
     }
-//TODO check the end of message if \0
+
     /** getBytes convert frame object to array of bytes
      * @return array of bytes
      */
@@ -74,7 +72,7 @@ public class  StompFrame implements StompFrameInterface{
             frame += "\0";
             return frame.getBytes();
     }
-  //TODO check the end of message if \0
+
     /** getBytes convert frame object to array of bytes
      * @return array of bytes
      */
@@ -89,7 +87,6 @@ public class  StompFrame implements StompFrameInterface{
                     frame += this.body;
             }
             frame += "\n";
-         //   frame += "\0";
             frame += "\u0000";
             return frame;
     }
@@ -136,9 +133,7 @@ public class  StompFrame implements StompFrameInterface{
 	public ArrayList<Client> getClients(){
 		return this.clients;
 	}
-/*	public ArrayList<Topic> getTopics(){
-		return this.topics;
-	}*/
+
 	/**add headar and body to frame
 	 * @param String
 	 */
@@ -191,7 +186,6 @@ public class  StompFrame implements StompFrameInterface{
     	String msg=this.getString();
     	CharsetEncoder _encoder= this.charset.newEncoder();
        StringBuilder sb = new StringBuilder(msg);
-//       sb.append(this._messageSeparator);
        ByteBuffer bb = _encoder.encode(CharBuffer.wrap(msg));
        return bb;
     }

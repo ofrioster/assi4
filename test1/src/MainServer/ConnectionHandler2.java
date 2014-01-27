@@ -55,8 +55,6 @@ public class ConnectionHandler2 implements Runnable{
             this.count=0;
             logger.log(Level.INFO, "Accepted connection from client!");
             logger.log(Level.INFO, "The client is from: " + acceptedSocket.getInetAddress() + ":" + acceptedSocket.getPort());
-//            System.out.println("Accepted connection from client!");
-//            System.out.println("The client is from: " + acceptedSocket.getInetAddress() + ":" + acceptedSocket.getPort());
             this.tokenizer=new StompTokenizer("\0",Charset.forName("UTF-8"),this.clients,this.topics);
             final int NUM_OF_BYTES = 1024;
             this.inbuf = ByteBuffer.allocate(NUM_OF_BYTES); 
@@ -71,7 +69,6 @@ public class ConnectionHandler2 implements Runnable{
                 initialize();
             }
             catch (IOException e) {
-  //             System.out.println("Error in initializing I/O");
                 logger.log(Level.INFO, "Error in initializing I/O");
             }
      
@@ -79,11 +76,9 @@ public class ConnectionHandler2 implements Runnable{
                 process();
             } 
             catch (IOException e) {
- //               System.out.println("Error in I/O");
                 logger.log(Level.INFO, "Error in I/O");
             } 
             
-    //        System.out.println("Connection closed - bye bye...");
             logger.log(Level.INFO, "Connection closed - bye bye...");
             close();
      
@@ -99,42 +94,9 @@ public class ConnectionHandler2 implements Runnable{
             	if(this.clientSocket.isClosed()){
             		this.keepGoing=false;
             	}
-            	if(this.clientSocket.isBound()){
-//            		this.keepGoing=false;
-            	}
             	if (in!=null && this.keepGoing){
-            /*	if (!this.clientSocket.getKeepAlive()){
-            		this.client.setClientIsOnline(false);
-                    this.keepGoing=false;
-            		this.close();
-            	}
-            	//TODO what if the connectio is clise?
-            	/*while (!tokenizer.hasMessage()) {
-            		System.out.println("Trying to read until we have a massege");
-            		 inbuf.clear();
-                     inbuf.put(in.readLine().getBytes());
-                     inbuf.flip();
-            		String temp=in.readLine();
-            		msg+=temp;
-            		inbuf.clear();
-                    inbuf.put(temp.getBytes());
-                    inbuf.flip();
-                    tokenizer.addBytes(inbuf);
-                    try {
-                        //Sleep because we want to give a chance to read several bytes from the channel
-                        System.out.println("Going to sleep , give a chance to read some bytes");
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-
-                        e.printStackTrace();
-                    }
-            	}*/
-           //     System.out.println("Received " + msg + " tokenzer: "+this.tokenizer.nextMessage());
-//                logger.log(Level.INFO, "Received \"" + msg + "\" from client");
-                // parsing raw data to StompFrame format
+                   // parsing raw data to StompFrame format
                 StompFrame frame=this.tokenizer.getFrame(in);
-//                StompFrame frame=new StompFrame(tokenizer.nextMessage(), clients);
-//                System.out.println("here");
                 if (frame==null){
                 	this.error("problam with the message", frame,"malformed STOMP frame received");
                 }
@@ -143,7 +105,6 @@ public class ConnectionHandler2 implements Runnable{
                 }
                 // run handlers
                 try{
-               // 	System.out.println("command: "+frame.getStringCommend());
                 	 if(frame.getStringCommend().equals("CONNECT")){
                      	this.CONNECT(frame);
                      }
@@ -186,7 +147,6 @@ public class ConnectionHandler2 implements Runnable{
             // Initialize I/O
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(),"UTF-8"));
             out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream(),"UTF-8"), true);
-  //          System.out.println("I/O initialized");
             logger.log(Level.INFO, "I/O initialized");
         }
         
@@ -207,57 +167,23 @@ public class ConnectionHandler2 implements Runnable{
             }
             catch (IOException e)
             {
- //               System.out.println("Exception in closing I/O");
                 logger.log(Level.INFO, "Exception in closing I/O");
             }
         }
-        /**
-         * send - help function for sending any frame to STOMP server
-         * @param frame
-         * @throws StompException
-         */
-        /*
-        private synchronized void send(StompFrame frame) throws StompExceptionn {
-        	out.println(frame.getString());
-                try {
-                        clientSocket.getOutputStream().write(frame.getBytes());
-                } catch (IOException e) {
-                        StompException ex = new StompException("Problem with sending frame");
-                        ex.initCause(e);
-                        throw ex;
-                }
-        }*/
+       
         /**
          * @param frame to send
          */
         public void send(StompFrame frame) {
-        	///***old***//
         	try{
         		String msg=frame.getString();
-//        		msg="what?";
                 out.println(msg);
-//                msg="now:";
-//                out.print(msg);
                 System.out.print("msg send:"+msg);
                 System.out.println("---msg end");
         	}
         	 catch ( Exception e){
-        		 out.println("\0");//ToDO my need to be delete
-        		 System.out.println("ERROR in send mes");
         	 }
-        	System.out.println("message send");
-         /*    String response = protocol.processMessage(msg);
-             if (response != null)
-             {
-                 out.println(response);
-             }*/
-             //TODO is needed?
-             /*
-             if (protocol.isEnd(msg))
-             {
-                 break;
-             }
- */
+   
         }
         public void CONNECT(StompFrame frame){
         	logger.log(Level.INFO, "CONNECT");
@@ -275,15 +201,7 @@ public class ConnectionHandler2 implements Runnable{
         				newClient=false;
         				this.keepGoing=false;
         				for (int k=0; k<1000;k++){}
-        			/*	try {
-							
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							System.out.println("eroooororororor"+e.getMessage());
-							e.printStackTrace();
-						}
-        				System.out.println("eroooororororor not here");*/
-        				this.close();
+         				this.close();
         			}
         			else{
         				this.client=this.clients.get(i);
@@ -293,8 +211,6 @@ public class ConnectionHandler2 implements Runnable{
         	if(newClient){
         		try{
         			this.client=new Client(frame, clients,this.stats,this);
-//        			this.clients.add(client);
-        		//	this.client=this.connectFrame.getClient();
         			StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, "CONNECTED");
                     this.send(receiptFramConnectFrameToSend);
                     this.client.setClienLastAction("connected");
@@ -307,8 +223,6 @@ public class ConnectionHandler2 implements Runnable{
         		this.error("User is already logged in", frame,"User is already logged in");
         	}
         	else if (!errorMessageHasBeenSend){
-  //      		this.connectFrame=new ConnectFrame(frame,frame.getCommend());
-  //              this.client=this.connectFrame.getClient();
                 StompFrame receiptFramConnectFrameToSend=new ReceiptFram(frame, "CONNECTED");
                 this.send(receiptFramConnectFrameToSend);
         	}
@@ -319,7 +233,6 @@ public class ConnectionHandler2 implements Runnable{
          */
         public void DISCONNECT(StompFrame frame){
         	logger.log(Level.INFO, "DISCONNECT");
-        //	this.disconnectFrame=new DisconnectFrame(frame, frame.command);
             StompFrame receiptFramDisconnectFrameToSend=new ReceiptFram(frame, "DISCONNECT");
             this.send(receiptFramDisconnectFrameToSend);
             this.client.setClienLastAction("disconnected");
@@ -348,8 +261,6 @@ public class ConnectionHandler2 implements Runnable{
             		StompFrame res=new MessageFrame(clients, topics, this.stats.toStringForFrame(), stats,"server");
                 	this.send(res);
             	}
-//            	String tempRes=messageFrame.getBody();
-//            	System.out.println("body:"+tempRes+"-end");
             }
             else{
             	
@@ -359,7 +270,6 @@ public class ConnectionHandler2 implements Runnable{
             	this.send(messageFrame);
             }
             
-          //  this.send(null);
             
         }
         /** SUBSCRIBE the new client
@@ -386,7 +296,6 @@ public class ConnectionHandler2 implements Runnable{
         				String messageId=""+this.count;
         				this.count++;
         	        	String subscription=frame.getHeader("id");
-        	    //    	this.count++;
         				StompFrame resMessage=new MessageFrame(frame,clients, topics, "following " +clientName, this.client.getClientUserName(),messageId,"00"+subscription);
         				this.send(resMessage);
         				return;
@@ -469,6 +378,5 @@ public class ConnectionHandler2 implements Runnable{
         		System.out.println("something worg::: "+e.getMessage());
         	
         	}
-      //  	this.send(res);
         }
 }
