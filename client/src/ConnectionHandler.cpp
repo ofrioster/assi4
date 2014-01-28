@@ -109,7 +109,6 @@
         return sendBytes(&delimiter,1);
     }
     bool ConnectionHandler::recived() {
-    	//socket_.available();
         return socket_.available();
     }
 

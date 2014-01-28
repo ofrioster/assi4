@@ -13,7 +13,6 @@ using namespace std;
 
 
 Tweet::Tweet() {
-	// TODO Auto-generated constructor stub
 
 }
 Tweet::Tweet(string username,string TweetBody,string DateAndTimeRecievedRtTheServer){
@@ -23,7 +22,6 @@ Tweet::Tweet(string username,string TweetBody,string DateAndTimeRecievedRtTheSer
 }
 
 Tweet::~Tweet() {
-	// TODO Auto-generated destructor stub
 }
 
 string Tweet::getUsername(){

@@ -16,7 +16,6 @@ m_body=body;
 }
 
 SendFrame::~SendFrame() {
-	// TODO Auto-generated destructor stub
 }
 
 } /* namespace STOMP */

@@ -12,7 +12,6 @@
 namespace STOMP {
 
 UnsubscribeFrame::UnsubscribeFrame() : StompFrame("UNSUBSCRIBE") {
-	// TODO Auto-generated constructor stub
 
 }
 
@@ -21,11 +20,9 @@ UnsubscribeFrame::UnsubscribeFrame(int id) : StompFrame("UNSUBSCRIBE"){
 	  sprintf(buffer, "%d",id);
 	  addheader("id",buffer);
 
-
 }
 
 UnsubscribeFrame::~UnsubscribeFrame() {
-	// TODO Auto-generated destructor stub
 }
 
 } /* namespace STOMP */

@@ -17,9 +17,7 @@
 	{
 		_id = number;
 	}
-    //Task (int number) :
 	Console::~Console() {
-		// TODO Auto-generated destructor stub
 	}
 
 
@@ -34,9 +32,6 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
         char buf[bufsize];
         std::cin.getline(buf, bufsize);
         std::string line(buf);
-//        int len=line.length();
-
-
         std::string delimiter = " ";
         size_t pos = 0;
         pos = line.find(delimiter);
@@ -53,8 +48,6 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
 
         	STOMP::SubscribeFrame tmpFrame("/topic/"+arg, _counter);
         	connectionHandler.sendFrameAscii(tmpFrame.toSend(),'\0');
-
-//        	connectionHandler.sendBytes("\n",1);
 
     		_counter++;
 
@@ -98,8 +91,8 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
         }
         else if (command == "logout")
         {
-        		receiptId=2345678;
-	        	STOMP::DisconnectFrame tmpFrame(receiptId);//TODO Change to dynamic
+        		receiptId=24567;
+	        	STOMP::DisconnectFrame tmpFrame(receiptId);
 	        	connectionHandler.sendFrameAscii(tmpFrame.toSend(),'\0');
 
 
@@ -107,8 +100,8 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
         }
         else if (command == "exit_client")
         {
-    		receiptId=98765;
-        	STOMP::DisconnectFrame tmpFrame(receiptId);//TODO Change to dynamic
+    		receiptId=34524;
+        	STOMP::DisconnectFrame tmpFrame(receiptId);
         	connectionHandler.sendFrameAscii(tmpFrame.toSend(),'\0');
 
         	close = true;
@@ -121,13 +114,9 @@ int Console::run (ConnectionHandler& connectionHandler , std::map<string, int> f
         }
         else
         {
-           // ...
             std::cout << "Wrong Command" << std::endl;
 
         }
-
-
-
 
 
     }

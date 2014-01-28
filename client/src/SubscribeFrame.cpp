@@ -12,7 +12,6 @@
 namespace STOMP {
 
 SubscribeFrame::SubscribeFrame() : StompFrame("SUBSCRIBE") {
-	// TODO Auto-generated constructor stub
 
 }
 
@@ -26,7 +25,6 @@ SubscribeFrame::SubscribeFrame(string destination, int id) : StompFrame("SUBSCRI
 }
 
 SubscribeFrame::~SubscribeFrame() {
-	// TODO Auto-generated destructor stub
 }
 
 } /* namespace STOMP */

@@ -1,88 +1,27 @@
-    #include <stdlib.h>
-    //#include <boost/locale.hpp>
-    #include "../include/ConnectionHandler.h"
-	#include <boost/thread.hpp>
-    #include "../include/StompFrame.h"
-    #include "../include/SendFrame.h"
     #include "../include/Client.h"
-    #include "../include/HTMLwrite.h"
-#include <time.h>       /* time_t, time, ctime */
-#include <exception>
 
 	using namespace std;
 
 
 	Network::~Network() {
-		// TODO Auto-generated destructor stub
 	}
 	Network::Network(int number)
 	{
-		//_mutex=mutex;
 		_id = number;
-		//_connectionHandler=connectionHandler.get();
 	}
 
 
 		int Network::run (ConnectionHandler& connectionHandler, std::map<string, int> folowing,HTMLwrite& htmlwrite,int& receiptId) {
-//	        try
-//	        {
-	            // Sleep and check for interrupt.
-	            // To check for interrupt without sleep,
-	            // use boost::this_thread::interruption_point()
-	            // which also throws boost::thread_interrupted
 
-
-//			ConnectionHandler connectionHandler(host, port);
-
-        //From here we will see the rest of the ehco client implementation:
         while (1) {
 
-        	//_stompFramesOut.
-
-//        	if (!_stompFramesOut->empty()){
-//        		string tmp = _stompFramesOut->front()->toSend();
-//        		_stompFramesOut->pop();
-//                if (!connectionHandler.sendFrameAscii(tmp,'\0')) {
-//                    std::cout << "Disconnected. Exiting...\n" << std::endl;
-//                    break;
-//                }
-//        	}
-
-
-
-
-
-
-
-
-
-
-
-//            const short bufsize = 1024;
-//            char buf[bufsize];
-//            std::string line(buf);
-//            int len=line.length();
-//            if (!connectionHandler.sendLine(line)) {
-//                std::cout << "Disconnected. Exiting...\n" << std::endl;
-//                break;
-//            }
-//            // connectionHandler.sendLine(line) appends '\n' to the message. Therefor we send len+1 bytes.
-//            std::cout << "Sent " << len+1 << " bytes to server" << std::endl;
-
-
-            // We can use one of two options to read data from the server:
-            // 1. Read a fixed number of characters.
-            // 2. Read a line (up to the newline character using getLine).
-            //if (connectionHandler.recived()){
-
-            std::string answer;
+        	std::string answer;
             if (!connectionHandler.getFrameAscii(answer,'\0')) {
                 std::cout << "Disconnected. Exiting...\n" << std::endl;
                 return 2;
             }
             try{
-				//cout<< "answer:"  <<answer<<endl;
-				//std::string line;
+
 				size_t pos = 0;
 				std::string delimiter = "\n";
 				pos = answer.find(delimiter);
@@ -138,21 +77,16 @@
 					string headerValue = answer.substr(0, pos);
 					answer.erase(0, pos + 1);
 					char a_char[10];
-				  //strcpy(array, s.c_str());
 					strcpy (a_char,headerValue.c_str());
-				  //cout<<"As an integer: "<<atoi(a_char);
 					int id = atoi(a_char);
 
-					if (id == receiptId){//TODO match with send messege
+					if (id == receiptId){
 						return 0;
 					}else{
 						cout<<"problem with RECEIPT"<<endl;
 					}
-	//        		if (id == 11){//TODO match with send messege
-	//        			return 1;
-	//        		}
+
 					}
-					//headers.insert(std::make_pair(headerName , headerValue));
 
 				}else if (command.compare("ERROR")== 0){
 					STOMP::hdrmap headers;
@@ -182,12 +116,8 @@
 
 					cout<<"Login successfully."<<endl;
 
-				}else if (command == "123456782345678"){
-
-				}else if (command == "234567890-=4567"){
-
 				}else{
-					std::cout << "Reply: " << command  << std::endl;
+					//std::cout << "Reply: " << command  << std::endl;
 				}
 
 				if (answer == "bye") {
@@ -199,13 +129,6 @@
             }
         }
 
-
-//        }
-//        catch(boost::thread_interrupted&)
-//        {
-//            cout << "Thread is stopped" << endl;
-//            return 1;
-//        }
         return 0;
     }
 

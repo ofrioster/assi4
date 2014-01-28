@@ -7,22 +7,22 @@
 
 #ifndef CLIENT_H_
 #define CLIENT_H_
-#include <stdlib.h>
-    #include <stdlib.h>
-//    #include <boost/locale.hpp>
     #include "../include/ConnectionHandler.h"
-	#include <boost/thread.hpp>
     #include "../include/Client.h"
-#include <queue>
-
     #include "../include/StompFrame.h"
     #include "../include/SendFrame.h"
     #include "../include/ConnectFrame.h"
-    #include "../include/DisconnectFrame.h"
-    #include "../include/SubscribeFrame.h"
-    #include "../include/UnsubscribeFrame.h"
-#include <fstream>
+    #include "../include/ConnectionHandler.h"
+    #include "../include/StompFrame.h"
+    #include "../include/SendFrame.h"
     #include "../include/HTMLwrite.h"
+    #include <stdlib.h>
+	#include <queue>
+	#include <fstream>
+	#include <boost/thread.hpp>
+	#include <time.h>       /* time_t, time, ctime */
+	#include <exception>
+
 
 
 

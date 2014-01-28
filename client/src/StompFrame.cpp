@@ -12,8 +12,6 @@ namespace STOMP {
 
 StompFrame::StompFrame(string cmd){
 	  m_command=cmd;
-//    m_headers= *(new hdrmap);
-//    m_body="";
     };
 
 StompFrame::StompFrame(string cmd, hdrmap h, string b){
@@ -23,19 +21,7 @@ StompFrame::StompFrame(string cmd, hdrmap h, string b){
     };
 
 StompFrame::~StompFrame() {
-	// TODO Auto-generated destructor stub
-	//delete &m_command;
-	 //m_headers.delete;
-	//delete &m_body;
-//		for (hdrmap::iterator it = m_headers.begin(); it != m_headers.end(); ++it){
-//	    std::delete it->second;
-//		}
-//	    for ( hdrmap::iterator it = m_headers.begin(); it != m_headers.end(); ++it ) {
-//	        it->second;
-//	    }
 		m_headers.clear();
-
-
 }
 string StompFrame::toSend() {
 	string ret = m_command;
@@ -46,8 +32,6 @@ string StompFrame::toSend() {
 		   ret.append(":");
 		   ret.append(ii->second);
 		   ret.append("\n");
-	       //cout << ii->first << ": " << ii->second << endl;
-	       //cout << (*ii).first << ": " << (*ii).second << endl;
 	   }
 	   ret.append("\n");
 	   ret.append(m_body);

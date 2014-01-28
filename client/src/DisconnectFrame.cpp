@@ -18,12 +18,10 @@ DisconnectFrame::DisconnectFrame(int receipt): StompFrame("DISCONNECT") {
 }
 
 DisconnectFrame::DisconnectFrame(): StompFrame("DISCONNECT") {
-	// TODO Auto-generated constructor stub
 
 }
 
 DisconnectFrame::~DisconnectFrame() {
-	// TODO Auto-generated destructor stub
 }
 
 } /* namespace STOMP */
