@@ -20,6 +20,7 @@ public class MultipleClientProtocolServer implements Runnable{
         private static ArrayList<Topic> topics;
         private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
         private static Stats stats;
+        private Boolean stop;
         
         
         public MultipleClientProtocolServer(int port, ServerProtocolFactory p,ArrayList<Client> clients,ArrayList<Topic> topics,Stats stats)
@@ -30,6 +31,7 @@ public class MultipleClientProtocolServer implements Runnable{
             this.clients=clients;
             this.topics=topics;
             this.stats=stats;
+            this.stop=false;
         }
         
         public void run()
@@ -42,15 +44,17 @@ public class MultipleClientProtocolServer implements Runnable{
                 System.out.println("Cannot listen on port " + listenPort);
             }
             
-            while (true)
+            while (!this.stop)
             {
                 try {
-                    ConnectionHandler2 newConnection = new ConnectionHandler2(serverSocket.accept(), factory.create(),this.clients,this.topics,this.stats);
+                    ConnectionHandler2 newConnection = new ConnectionHandler2(serverSocket.accept(), factory.create(),this.clients,this.topics,this.stats,this.stop,this);
                 new Thread(newConnection).start();
                 }
                 catch (IOException e)
                 {
-                    logger.log(Level.INFO, "Failed to accept on port " + listenPort);
+                   if(!this.stop){
+                	   logger.log(Level.INFO, "Failed to accept on port " + listenPort);
+                   }
                 }
             }
         }
@@ -60,6 +64,14 @@ public class MultipleClientProtocolServer implements Runnable{
         public void close() throws IOException
         {
             serverSocket.close();
+        }
+        public void stop(){
+        	this.stop=true;
+        	try {
+				this.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         }
         
         public static void main(String[] args) throws IOException

@@ -133,7 +133,6 @@ public class StompTokenizer implements StompTokenizerInterface{
         	frame=null;
         }
 			
-        System.out.println("finish getFrame");
         return frame;
 		
 	}

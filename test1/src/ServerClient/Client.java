@@ -609,7 +609,7 @@ public class Client implements ClientInterfce {
 	 * 
 	 */
 	public void stop(StompFrame frame){
-		this.connectionHandler2.DISCONNECT(frame);
+		this.connectionHandler2.stopDisconnect(frame);
 		
 	}
 }

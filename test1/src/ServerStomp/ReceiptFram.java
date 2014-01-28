@@ -23,6 +23,7 @@ public class ReceiptFram extends StompFrame implements ReceiptFramInterface{
 		this.command=StompCommand.valueOf(command);
 		if (this.command.equals(StompCommand.valueOf("DISCONNECT"))){
 			this.header.put("version", receipt);
+			this.header.put("version", receipt);
 		}
 		else{
 			this.header.put("version", version);

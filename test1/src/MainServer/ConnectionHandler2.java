@@ -37,22 +37,26 @@ public class ConnectionHandler2 implements Runnable{
         private Stats stats;
         private boolean keepGoing;
         private int count;
+        private Boolean stop;
+        private MultipleClientProtocolServer multipleClientProtocolServer;
         
         
         
         
-        public ConnectionHandler2(Socket acceptedSocket, ServerProtocol p,ArrayList<Client> clients,ArrayList<Topic> topics,Stats stats)
+        public ConnectionHandler2(Socket acceptedSocket, ServerProtocol p,ArrayList<Client> clients,ArrayList<Topic> topics,Stats stats,boolean stop,MultipleClientProtocolServer multipleClientProtocolServer)
         {
             in = null;
             out = null;
             clientSocket = acceptedSocket;
             protocol = p;
+            this.stop=stop;
             this.clients=clients;
             this.topics=topics;
             this.messageFrameList=new ArrayList<MessageFrame>();
             this.stats=stats;
             this.keepGoing=true;
             this.count=0;
+            this.multipleClientProtocolServer=multipleClientProtocolServer;
             logger.log(Level.INFO, "Accepted connection from client!");
             logger.log(Level.INFO, "The client is from: " + acceptedSocket.getInetAddress() + ":" + acceptedSocket.getPort());
             this.tokenizer=new StompTokenizer("\0",Charset.forName("UTF-8"),this.clients,this.topics);
@@ -178,8 +182,6 @@ public class ConnectionHandler2 implements Runnable{
         	try{
         		String msg=frame.getString();
                 out.println(msg);
-                System.out.print("msg send:"+msg);
-                System.out.println("---msg end");
         	}
         	 catch ( Exception e){
         	 }
@@ -260,6 +262,9 @@ public class ConnectionHandler2 implements Runnable{
             		this.stats.updateStats(this.client);
             		StompFrame res=new MessageFrame(clients, topics, this.stats.toStringForFrame(), stats,"server");
                 	this.send(res);
+            	}
+            	else if( messageFrame.getBody().contains("stop")){
+            		this.stop();
             	}
             }
             else{
@@ -385,6 +390,7 @@ public class ConnectionHandler2 implements Runnable{
          */
         public void stop(){
         	StompFrame frame=new ReceiptFram( "DISCONNECT","1.2",this.topics,this.clients,"001");
+        	this.stopDisconnect(frame);
         	try{
         		for (int i=0; i<this.clients.size();i++){
             		if (!this.clients.get(i).isThisTheClient("server")){
@@ -395,7 +401,8 @@ public class ConnectionHandler2 implements Runnable{
             	}
         	}
         	catch (Exception e){}
-        	
+        	this.stop=true;
+        	this.multipleClientProtocolServer.stop();
         }
         /** disconnect the connection and send message to the client
          * after STOP message arrive
@@ -404,7 +411,7 @@ public class ConnectionHandler2 implements Runnable{
         public void stopDisconnect(StompFrame frame){
         	try{
             	logger.log(Level.INFO, "DISCONNECT");
-                this.send(frame);
+//                this.send(frame);
                 this.client.setClienLastAction("disconnected");
                 this.client.setClientIsOnline(false);
                 this.keepGoing=false;
