@@ -411,7 +411,6 @@ public class ConnectionHandler2 implements Runnable{
         public void stopDisconnect(StompFrame frame){
         	try{
             	logger.log(Level.INFO, "DISCONNECT");
-//                this.send(frame);
                 this.client.setClienLastAction("disconnected");
                 this.client.setClientIsOnline(false);
                 this.keepGoing=false;
