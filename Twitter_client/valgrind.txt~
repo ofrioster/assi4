@@ -1,0 +1,79 @@
+==6489== Memcheck, a memory error detector
+==6489== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==6489== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==6489== Command: Debug/client
+==6489== Parent PID: 2951
+==6489== 
+==6489== 
+==6489== HEAP SUMMARY:
+==6489==     in use at exit: 2,696 bytes in 24 blocks
+==6489==   total heap usage: 51 allocs, 27 frees, 3,995 bytes allocated
+==6489== 
+==6489== 30 bytes in 1 blocks are possibly lost in loss record 7 of 23
+==6489==    at 0x4C2C7A7: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6489==    by 0x530D108: std::string::_Rep::_S_create(unsigned long, unsigned long, std::allocator<char> const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x530E914: char* std::string::_S_construct<char*>(char*, char*, std::allocator<char> const&, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x530E9E8: std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::string const&, unsigned long, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x530EA11: std::string::substr(unsigned long, unsigned long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x41A900: main (main.cpp:38)
+==6489== 
+==6489== 30 bytes in 1 blocks are possibly lost in loss record 8 of 23
+==6489==    at 0x4C2C7A7: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6489==    by 0x530D108: std::string::_Rep::_S_create(unsigned long, unsigned long, std::allocator<char> const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x530E914: char* std::string::_S_construct<char*>(char*, char*, std::allocator<char> const&, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x530E9E8: std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::string const&, unsigned long, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x530EA11: std::string::substr(unsigned long, unsigned long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x41AD7F: main (main.cpp:69)
+==6489== 
+==6489== 31 bytes in 1 blocks are possibly lost in loss record 9 of 23
+==6489==    at 0x4C2C7A7: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6489==    by 0x530D108: std::string::_Rep::_S_create(unsigned long, unsigned long, std::allocator<char> const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x530E914: char* std::string::_S_construct<char*>(char*, char*, std::allocator<char> const&, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x530E9E8: std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::string const&, unsigned long, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x530EA11: std::string::substr(unsigned long, unsigned long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x41AC32: main (main.cpp:64)
+==6489== 
+==6489== 34 bytes in 1 blocks are possibly lost in loss record 10 of 23
+==6489==    at 0x4C2C7A7: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6489==    by 0x530D108: std::string::_Rep::_S_create(unsigned long, unsigned long, std::allocator<char> const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x530E914: char* std::string::_S_construct<char*>(char*, char*, std::allocator<char> const&, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x530E9E8: std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::string const&, unsigned long, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x530EA11: std::string::substr(unsigned long, unsigned long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x41AA2E: main (main.cpp:48)
+==6489== 
+==6489== 59 bytes in 1 blocks are possibly lost in loss record 14 of 23
+==6489==    at 0x4C2C7A7: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6489==    by 0x530D108: std::string::_Rep::_S_create(unsigned long, unsigned long, std::allocator<char> const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x530EAE4: char* std::string::_S_construct<char const*>(char const*, char const*, std::allocator<char> const&, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x530EBC2: std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.17)
+==6489==    by 0x41A892: main (main.cpp:32)
+==6489== 
+==6489== 304 bytes in 1 blocks are possibly lost in loss record 20 of 23
+==6489==    at 0x4C2ABB4: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6489==    by 0x4012598: _dl_allocate_tls (dl-tls.c:296)
+==6489==    by 0x5B3B7B5: pthread_create@@GLIBC_2.2.5 (allocatestack.c:579)
+==6489==    by 0x5044E67: boost::thread::start_thread_noexcept() (in /usr/lib/libboost_thread.so.1.53.0)
+==6489==    by 0x41C17A: boost::thread::start_thread() (thread.hpp:180)
+==6489==    by 0x41CBAD: boost::thread::thread<int (Console::*)(ConnectionHandler&, std::map<std::string, int, std::less<std::string>, std::allocator<std::pair<std::string const, int> > >, bool&, std::string, int&), Console*, boost::reference_wrapper<ConnectionHandler>, boost::reference_wrapper<std::map<std::string, int, std::less<std::string>, std::allocator<std::pair<std::string const, int> > > >, boost::reference_wrapper<bool>, boost::reference_wrapper<std::string>, boost::reference_wrapper<int> >(int (Console::*)(ConnectionHandler&, std::map<std::string, int, std::less<std::string>, std::allocator<std::pair<std::string const, int> > >, bool&, std::string, int&), Console*, boost::reference_wrapper<ConnectionHandler>, boost::reference_wrapper<std::map<std::string, int, std::less<std::string>, std::allocator<std::pair<std::string const, int> > > >, boost::reference_wrapper<bool>, boost::reference_wrapper<std::string>, boost::reference_wrapper<int>) (thread.hpp:425)
+==6489==    by 0x41B12F: main (main.cpp:96)
+==6489== 
+==6489== 304 bytes in 1 blocks are possibly lost in loss record 21 of 23
+==6489==    at 0x4C2ABB4: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6489==    by 0x4012598: _dl_allocate_tls (dl-tls.c:296)
+==6489==    by 0x5B3B7B5: pthread_create@@GLIBC_2.2.5 (allocatestack.c:579)
+==6489==    by 0x5044E67: boost::thread::start_thread_noexcept() (in /usr/lib/libboost_thread.so.1.53.0)
+==6489==    by 0x41C17A: boost::thread::start_thread() (thread.hpp:180)
+==6489==    by 0x41CCBF: boost::thread::thread<int (Network::*)(ConnectionHandler&, std::map<std::string, int, std::less<std::string>, std::allocator<std::pair<std::string const, int> > >, HTMLwrite&, int&), Network*, boost::reference_wrapper<ConnectionHandler>, boost::reference_wrapper<std::map<std::string, int, std::less<std::string>, std::allocator<std::pair<std::string const, int> > > >, boost::reference_wrapper<HTMLwrite>, boost::reference_wrapper<int> >(int (Network::*)(ConnectionHandler&, std::map<std::string, int, std::less<std::string>, std::allocator<std::pair<std::string const, int> > >, HTMLwrite&, int&), Network*, boost::reference_wrapper<ConnectionHandler>, boost::reference_wrapper<std::map<std::string, int, std::less<std::string>, std::allocator<std::pair<std::string const, int> > > >, boost::reference_wrapper<HTMLwrite>, boost::reference_wrapper<int>) (thread.hpp:418)
+==6489==    by 0x41B1C0: main (main.cpp:97)
+==6489== 
+==6489== LEAK SUMMARY:
+==6489==    definitely lost: 0 bytes in 0 blocks
+==6489==    indirectly lost: 0 bytes in 0 blocks
+==6489==      possibly lost: 792 bytes in 7 blocks
+==6489==    still reachable: 1,904 bytes in 17 blocks
+==6489==         suppressed: 0 bytes in 0 blocks
+==6489== Reachable blocks (those to which a pointer was found) are not shown.
+==6489== To see them, rerun with: --leak-check=full --show-reachable=yes
+==6489== 
+==6489== For counts of detected and suppressed errors, rerun with: -v
+==6489== ERROR SUMMARY: 7 errors from 7 contexts (suppressed: 2 from 2)
